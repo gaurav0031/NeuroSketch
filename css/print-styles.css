@@ -1,0 +1,129 @@
+/* Print-specific styles */
+@media print {
+  /* Hide elements not needed for printing */
+  nav,
+  .navbar,
+  footer,
+  .btn,
+  section:not(#results),
+  .no-print {
+    display: none !important;
+  }
+
+  /* Show results section */
+  #results {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Reset background colors for better printing */
+  body {
+    background: white !important;
+    font-size: 12pt;
+    color: black !important;
+  }
+
+  /* Ensure the results card takes full width */
+  .card {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Adjust progress bars for printing */
+  .progress {
+    border: 1px solid #ddd;
+    position: relative;
+    height: 20px !important;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    position: relative;
+    border: none;
+    text-align: center;
+  }
+
+  .progress-bar::after {
+    content: attr(aria-valuenow) "%";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black !important;
+  }
+
+  /* User info section */
+  .user-info {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+  }
+
+  /* Add page breaks where needed */
+  .page-break {
+    page-break-after: always;
+  }
+
+  /* Ensure tables print well */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  table,
+  th,
+  td {
+    border: 1px solid #ddd !important;
+  }
+
+  th,
+  td {
+    padding: 8px !important;
+    text-align: left !important;
+  }
+
+  /* Logo and header for printed page */
+  .print-header {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .print-header h1 {
+    font-size: 24pt;
+    margin-bottom: 5px;
+  }
+
+  .print-header p {
+    font-size: 12pt;
+    color: #666;
+  }
+
+  /* Print date */
+  .print-date {
+    text-align: right;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  /* QR code for verification */
+  .verification-qr {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  /* Recommendations section */
+  .recommendations {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9 !important;
+  }
+}
+
