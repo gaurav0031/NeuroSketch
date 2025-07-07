@@ -2,22 +2,51 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Voice control system initialized")
 
-  const voiceControlBtn = document.getElementById("voiceControl")
   let recognition = null
   let isListening = false
 
-  // Initialize speech recognition
+  // Check for speech recognition support
   if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
     recognition = new SpeechRecognition()
 
-    recognition.continuous = true
+    // Configure recognition
+    recognition.continuous = false
     recognition.interimResults = false
     recognition.lang = "en-US"
+    recognition.maxAlternatives = 1
 
+    // Add voice control button to navbar if it doesn't exist
+    addVoiceControlButton()
+
+    // Set up event listeners
+    setupVoiceRecognition()
+  } else {
+    console.log("Speech recognition not supported")
+  }
+
+  function addVoiceControlButton() {
+    const navbar = document.querySelector(".navbar-nav")
+    if (navbar && !document.getElementById("voiceControlBtn")) {
+      const voiceItem = document.createElement("li")
+      voiceItem.className = "nav-item ms-2"
+      voiceItem.innerHTML = `
+        <button class="btn btn-outline-primary btn-sm" id="voiceControlBtn" title="Voice Control">
+          <i class="fas fa-microphone"></i>
+        </button>
+      `
+      navbar.appendChild(voiceItem)
+
+      // Add click handler
+      const voiceBtn = document.getElementById("voiceControlBtn")
+      voiceBtn.addEventListener("click", toggleVoiceRecognition)
+    }
+  }
+
+  function setupVoiceRecognition() {
     recognition.onstart = () => {
       isListening = true
-      voiceControlBtn?.classList.add("listening")
+      updateVoiceButton(true)
       if (window.showNotification) {
         window.showNotification("Voice control activated. Say a command...", "info")
       }
@@ -25,176 +54,200 @@ document.addEventListener("DOMContentLoaded", () => {
 
     recognition.onend = () => {
       isListening = false
-      voiceControlBtn?.classList.remove("listening")
+      updateVoiceButton(false)
     }
 
     recognition.onresult = (event) => {
-      const command = event.results[event.results.length - 1][0].transcript.toLowerCase().trim()
+      const command = event.results[0][0].transcript.toLowerCase().trim()
       console.log("Voice command:", command)
       processVoiceCommand(command)
     }
 
     recognition.onerror = (event) => {
-      console.error("Speech recognition error:", event.error)
       isListening = false
-      voiceControlBtn?.classList.remove("listening")
-
+      updateVoiceButton(false)
+      console.error("Speech recognition error:", event.error)
       if (window.showNotification) {
         window.showNotification("Voice recognition error. Please try again.", "error")
       }
     }
-  } else {
-    console.warn("Speech recognition not supported")
-    if (voiceControlBtn) {
-      voiceControlBtn.style.display = "none"
+  }
+
+  function toggleVoiceRecognition() {
+    if (isListening) {
+      recognition.stop()
+    } else {
+      try {
+        recognition.start()
+      } catch (error) {
+        console.error("Error starting voice recognition:", error)
+        if (window.showNotification) {
+          window.showNotification("Could not start voice recognition.", "error")
+        }
+      }
     }
   }
 
-  // Voice control button event listener
-  if (voiceControlBtn && recognition) {
-    voiceControlBtn.addEventListener("click", () => {
-      if (isListening) {
-        recognition.stop()
+  function updateVoiceButton(listening) {
+    const voiceBtn = document.getElementById("voiceControlBtn")
+    if (voiceBtn) {
+      const icon = voiceBtn.querySelector("i")
+      if (listening) {
+        voiceBtn.classList.remove("btn-outline-primary")
+        voiceBtn.classList.add("btn-danger")
+        icon.classList.remove("fa-microphone")
+        icon.classList.add("fa-stop")
+        voiceBtn.title = "Stop Voice Control"
       } else {
-        recognition.start()
+        voiceBtn.classList.remove("btn-danger")
+        voiceBtn.classList.add("btn-outline-primary")
+        icon.classList.remove("fa-stop")
+        icon.classList.add("fa-microphone")
+        voiceBtn.title = "Voice Control"
       }
-    })
+    }
   }
 
   function processVoiceCommand(command) {
     console.log("Processing command:", command)
 
     // Navigation commands
-    if (command.includes("go to home") || command.includes("home page")) {
-      if (window.showSection) window.showSection("home")
-      showCommandFeedback("Navigating to home")
-    } else if (command.includes("go to register") || command.includes("registration")) {
-      if (window.showSection) window.showSection("register")
-      showCommandFeedback("Navigating to registration")
-    } else if (command.includes("go to tests") || command.includes("test page")) {
-      if (window.showSection) window.showSection("tests")
-      showCommandFeedback("Navigating to tests")
-    } else if (command.includes("go to about") || command.includes("about page")) {
-      if (window.showSection) window.showSection("about")
-      showCommandFeedback("Navigating to about")
-    } else if (command.includes("go to contact") || command.includes("contact page")) {
-      if (window.showSection) window.showSection("contact")
-      showCommandFeedback("Navigating to contact")
+    if (command.includes("go to home") || command.includes("home page") || command.includes("go home")) {
+      if (window.showSection) {
+        window.showSection("home")
+        showCommandSuccess("Navigating to home")
+      }
+    } else if (command.includes("register") || command.includes("registration") || command.includes("sign up")) {
+      if (window.showSection) {
+        window.showSection("register")
+        showCommandSuccess("Navigating to registration")
+      }
+    } else if (command.includes("about") || command.includes("about us")) {
+      scrollToSection("about")
+      showCommandSuccess("Scrolling to about section")
+    } else if (command.includes("contact") || command.includes("contact us")) {
+      scrollToSection("contact")
+      showCommandSuccess("Scrolling to contact section")
     }
 
     // Test commands
     else if (command.includes("start spiral test") || command.includes("spiral test")) {
-      const spiralBtn = document.getElementById("startSpiralTest")
-      if (spiralBtn) {
-        spiralBtn.click()
-        showCommandFeedback("Starting spiral test")
-      }
+      startTestByVoice("spiral")
     } else if (command.includes("start tap test") || command.includes("tap test")) {
-      const tapBtn = document.getElementById("startTapTest")
-      if (tapBtn) {
-        tapBtn.click()
-        showCommandFeedback("Starting tap test")
-      }
+      startTestByVoice("tap")
     } else if (command.includes("start reaction test") || command.includes("reaction test")) {
-      const reactionBtn = document.getElementById("startReactionTest")
-      if (reactionBtn) {
-        reactionBtn.click()
-        showCommandFeedback("Starting reaction test")
-      }
+      startTestByVoice("reaction")
     } else if (command.includes("start voice test") || command.includes("voice test")) {
-      const voiceBtn = document.getElementById("startVoiceTest")
-      if (voiceBtn) {
-        voiceBtn.click()
-        showCommandFeedback("Starting voice test")
-      }
+      startTestByVoice("voice")
     }
 
     // Results commands
-    else if (command.includes("show results") || command.includes("view results")) {
-      const resultsBtn = document.getElementById("viewResults")
-      if (resultsBtn && !resultsBtn.disabled) {
-        resultsBtn.click()
-        showCommandFeedback("Showing results")
-      } else {
-        showCommandFeedback("Please complete at least one test first")
-      }
-    } else if (command.includes("save results")) {
-      const saveBtn = document.getElementById("saveResults")
-      if (saveBtn && !saveBtn.disabled) {
-        saveBtn.click()
-        showCommandFeedback("Saving results")
-      } else {
-        showCommandFeedback("No results to save")
+    else if (command.includes("show results") || command.includes("view results") || command.includes("results")) {
+      if (window.showResults) {
+        window.showResults()
+        showCommandSuccess("Showing results")
       }
     }
 
     // Theme commands
-    else if (command.includes("dark mode") || command.includes("switch to dark")) {
-      const currentTheme = document.documentElement.getAttribute("data-theme") || "light"
-      if (currentTheme === "light") {
-        const themeBtn = document.getElementById("themeToggle")
-        if (themeBtn) themeBtn.click()
+    else if (command.includes("dark mode") || command.includes("dark theme")) {
+      const themeToggle = document.getElementById("themeToggle")
+      if (themeToggle && document.body.getAttribute("data-theme") !== "dark") {
+        themeToggle.click()
+        showCommandSuccess("Switching to dark mode")
       }
-      showCommandFeedback("Switching to dark mode")
-    } else if (command.includes("light mode") || command.includes("switch to light")) {
-      const currentTheme = document.documentElement.getAttribute("data-theme") || "light"
-      if (currentTheme === "dark") {
-        const themeBtn = document.getElementById("themeToggle")
-        if (themeBtn) themeBtn.click()
+    } else if (command.includes("light mode") || command.includes("light theme")) {
+      const themeToggle = document.getElementById("themeToggle")
+      if (themeToggle && document.body.getAttribute("data-theme") !== "light") {
+        themeToggle.click()
+        showCommandSuccess("Switching to light mode")
       }
-      showCommandFeedback("Switching to light mode")
     }
 
     // Help command
     else if (command.includes("help") || command.includes("commands")) {
-      showHelpDialog()
+      showVoiceHelp()
     }
 
     // Unknown command
     else {
-      showCommandFeedback("Command not recognized. Say 'help' for available commands.")
-    }
-
-    // Stop listening after processing command
-    if (recognition && isListening) {
-      recognition.stop()
+      if (window.showNotification) {
+        window.showNotification("Command not recognized. Say 'help' for available commands.", "warning")
+      }
     }
   }
 
-  function showCommandFeedback(message) {
+  function startTestByVoice(testType) {
+    // Check if user is registered
+    const userData = localStorage.getItem("userData")
+    if (!userData) {
+      if (window.showNotification) {
+        window.showNotification("Please complete registration first!", "warning")
+      }
+      if (window.showSection) {
+        window.showSection("register")
+      }
+      return
+    }
+
+    // Navigate to tests section first
+    if (window.showSection) {
+      window.showSection("tests")
+    }
+
+    // Start the specific test
+    setTimeout(() => {
+      const testBtn = document.getElementById(`start${testType.charAt(0).toUpperCase() + testType.slice(1)}Test`)
+      if (testBtn) {
+        testBtn.click()
+        showCommandSuccess(`Starting ${testType} test`)
+      }
+    }, 500)
+  }
+
+  function scrollToSection(sectionId) {
+    // First ensure we're on home page
+    if (window.showSection) {
+      window.showSection("home")
+    }
+
+    // Then scroll to section
+    setTimeout(() => {
+      const element = document.getElementById(sectionId)
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" })
+      }
+    }, 100)
+  }
+
+  function showCommandSuccess(message) {
     if (window.showNotification) {
       window.showNotification(message, "success")
     }
   }
 
-  function showHelpDialog() {
+  function showVoiceHelp() {
     const helpMessage = `
       Available voice commands:
-      
-      Navigation:
       • "Go to home" - Navigate to home page
-      • "Go to register" - Navigate to registration
-      • "Go to tests" - Navigate to tests
-      • "Go to about" - Navigate to about page
-      • "Go to contact" - Navigate to contact page
-      
-      Tests:
-      • "Start spiral test" - Begin spiral drawing test
-      • "Start tap test" - Begin tap speed test
-      • "Start reaction test" - Begin reaction time test
-      • "Start voice test" - Begin voice analysis test
-      
-      Results:
+      • "Register" - Go to registration
+      • "About" - Scroll to about section
+      • "Contact" - Scroll to contact section
+      • "Start [test] test" - Start specific test
       • "Show results" - View test results
-      • "Save results" - Save results to storage
-      
-      Theme:
-      • "Dark mode" - Switch to dark theme
-      • "Light mode" - Switch to light theme
-      
-      • "Help" - Show this help dialog
+      • "Dark mode" / "Light mode" - Change theme
+      • "Help" - Show this help
     `
 
-    alert(helpMessage)
+    if (window.showNotification) {
+      window.showNotification(helpMessage, "info")
+    }
+  }
+
+  // Export for global access
+  window.voiceControl = {
+    isListening: () => isListening,
+    toggle: toggleVoiceRecognition,
+    processCommand: processVoiceCommand,
   }
 })
