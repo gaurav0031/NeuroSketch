@@ -8,11 +8,13 @@ const testResults = {
 
 let isRegistered = false
 let currentSection = "home"
-const bootstrap = window.bootstrap // Declare bootstrap variable
 
 // Initialize application
 document.addEventListener("DOMContentLoaded", () => {
   console.log("NeuroSketch initialized")
+
+  // Check registration status first
+  checkRegistrationStatus()
 
   // Initialize navigation
   initializeNavigation()
@@ -23,37 +25,32 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize test functionality
   initializeTests()
 
-  // Check if user is already registered
-  checkRegistrationStatus()
-
-  // Set initial section
+  // Show initial section
   showSection("home")
 })
 
+// Check registration status
+function checkRegistrationStatus() {
+  const userData = localStorage.getItem("userData")
+  if (userData) {
+    isRegistered = true
+    console.log("User is already registered")
+  } else {
+    isRegistered = false
+    console.log("User needs to register")
+  }
+}
+
 // Navigation functionality
 function initializeNavigation() {
-  // Handle navigation links
-  document.querySelectorAll("a[data-section]").forEach((anchor) => {
-    anchor.addEventListener("click", function (e) {
+  // Handle all navigation elements with data-section attribute
+  document.querySelectorAll("[data-section]").forEach((element) => {
+    element.addEventListener("click", function (e) {
       e.preventDefault()
+      e.stopPropagation()
+
       const targetSection = this.getAttribute("data-section")
-
-      // Check if trying to access tests without registration
-      if (targetSection === "tests" && !isRegistered) {
-        showNotification("Please complete registration first!", "warning")
-        showSection("register")
-        return
-      }
-
-      showSection(targetSection)
-    })
-  })
-
-  // Handle navbar links
-  document.querySelectorAll(".nav-link").forEach((link) => {
-    link.addEventListener("click", function (e) {
-      e.preventDefault()
-      const targetSection = this.getAttribute("data-section")
+      console.log("Navigation clicked:", targetSection)
 
       // Check if trying to access tests without registration
       if (targetSection === "tests" && !isRegistered) {
@@ -67,25 +64,21 @@ function initializeNavigation() {
   })
 }
 
-// Show section
+// Show section function
 function showSection(sectionId) {
   console.log(`Switching to section: ${sectionId}`)
 
   // Hide all sections
   document.querySelectorAll("section").forEach((section) => {
     section.classList.add("d-none")
+    section.style.display = "none"
   })
 
   // Show target section
   const targetSection = document.getElementById(sectionId)
   if (targetSection) {
     targetSection.classList.remove("d-none")
-    targetSection.classList.add("fade-in")
-
-    // Remove fade-in class after animation
-    setTimeout(() => {
-      targetSection.classList.remove("fade-in")
-    }, 500)
+    targetSection.style.display = "block"
 
     // Update current section
     currentSection = sectionId
@@ -95,62 +88,108 @@ function showSection(sectionId) {
       link.classList.remove("active")
     })
 
-    const activeLink = document.querySelector(`a[data-section="${sectionId}"]`)
-    if (activeLink) {
+    const activeLink = document.querySelector(`[data-section="${sectionId}"]`)
+    if (activeLink && activeLink.classList.contains("nav-link")) {
       activeLink.classList.add("active")
     }
 
     // Scroll to top
-    window.scrollTo(0, 0)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+
+    console.log(`Successfully switched to section: ${sectionId}`)
+  } else {
+    console.error(`Section not found: ${sectionId}`)
   }
 }
 
-// Form validation
+// Form validation and submission
 function initializeFormValidation() {
   const form = document.getElementById("registrationForm")
-  if (!form) return
+  if (!form) {
+    console.log("Registration form not found")
+    return
+  }
 
+  console.log("Initializing form validation")
+
+  // Prevent default form submission
   form.addEventListener("submit", (e) => {
     e.preventDefault()
+    e.stopPropagation()
+
+    console.log("Form submitted")
 
     if (validateForm(form)) {
-      // Show loading state
-      const submitBtn = form.querySelector('button[type="submit"]')
-      const originalText = submitBtn.innerHTML
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...'
-      submitBtn.disabled = true
-
-      // Store registration data
-      const formData = new FormData(form)
-      const userData = {
-        fullName: formData.get("fullName"),
-        email: formData.get("email"),
-        age: formData.get("age"),
-        gender: formData.get("gender"),
-        familyHistory: formData.get("familyHistory"),
-        medicalSituation: formData.get("medicalSituation"),
-        registrationDate: new Date().toISOString(),
-      }
-
-      // Simulate processing time
-      setTimeout(() => {
-        localStorage.setItem("userData", JSON.stringify(userData))
-        isRegistered = true
-
-        // Reset button
-        submitBtn.innerHTML = originalText
-        submitBtn.disabled = false
-
-        // Show success message
-        showNotification("Registration completed successfully! Redirecting to tests...", "success")
-
-        // Redirect to tests after a delay
-        setTimeout(() => {
-          showSection("tests")
-        }, 2000)
-      }, 1000)
+      handleFormSubmission(form)
     }
   })
+
+  // Add real-time validation
+  const inputs = form.querySelectorAll("input, textarea")
+  inputs.forEach((input) => {
+    input.addEventListener("blur", function () {
+      validateInput(this)
+    })
+
+    input.addEventListener("focus", function () {
+      clearValidation(this)
+    })
+  })
+}
+
+// Handle form submission
+function handleFormSubmission(form) {
+  console.log("Processing form submission")
+
+  // Show loading state
+  const submitBtn = form.querySelector('button[type="submit"]')
+  const originalText = submitBtn.innerHTML
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...'
+  submitBtn.disabled = true
+
+  // Get form data
+  const formData = new FormData(form)
+  const userData = {
+    fullName: formData.get("fullName"),
+    email: formData.get("email"),
+    age: formData.get("age"),
+    gender: formData.get("gender"),
+    familyHistory: formData.get("familyHistory"),
+    medicalSituation: formData.get("medicalSituation"),
+    registrationDate: new Date().toISOString(),
+  }
+
+  // Simulate processing time
+  setTimeout(() => {
+    try {
+      // Store user data
+      localStorage.setItem("userData", JSON.stringify(userData))
+      isRegistered = true
+
+      console.log("Registration completed successfully")
+
+      // Reset button
+      submitBtn.innerHTML = originalText
+      submitBtn.disabled = false
+
+      // Show success message
+      showNotification("Registration completed successfully!", "success")
+
+      // Wait a moment then redirect to tests
+      setTimeout(() => {
+        console.log("Redirecting to tests section")
+        showSection("tests")
+      }, 1500)
+    } catch (error) {
+      console.error("Error during registration:", error)
+
+      // Reset button
+      submitBtn.innerHTML = originalText
+      submitBtn.disabled = false
+
+      showNotification("Registration failed. Please try again.", "error")
+    }
+  }, 1000)
 }
 
 // Validate form
@@ -208,46 +247,111 @@ function validateForm(form) {
   return isValid
 }
 
-// Check registration status
-function checkRegistrationStatus() {
-  const userData = localStorage.getItem("userData")
-  if (userData) {
-    isRegistered = true
-    console.log("User is already registered")
+// Validate individual input
+function validateInput(input) {
+  const value = input.value.trim()
+  let isValid = true
+
+  // Clear previous validation
+  clearValidation(input)
+
+  // Check if field is required
+  if (input.hasAttribute("required")) {
+    if (!value) {
+      isValid = false
+    }
   }
+
+  // Specific validation based on field type
+  if (value && input.type === "email") {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(value)) {
+      isValid = false
+    }
+  }
+
+  if (value && input.type === "number") {
+    const num = Number.parseInt(value)
+    if (isNaN(num) || num < 1 || num > 120) {
+      isValid = false
+    }
+  }
+
+  // Apply validation styling
+  if (isValid) {
+    input.classList.remove("is-invalid")
+    input.classList.add("is-valid")
+  } else {
+    input.classList.remove("is-valid")
+    input.classList.add("is-invalid")
+  }
+
+  return isValid
+}
+
+// Clear field validation
+function clearValidation(input) {
+  input.classList.remove("is-invalid", "is-valid")
 }
 
 // Initialize tests
 function initializeTests() {
+  console.log("Initializing tests")
+
   // Test buttons
-  document.getElementById("startSpiralTest")?.addEventListener("click", () => {
-    if (!checkRegistration()) return
-    showModal("spiralTestModal")
-    setTimeout(() => initializeSpiralTest(), 500)
-  })
+  const spiralBtn = document.getElementById("startSpiralTest")
+  if (spiralBtn) {
+    spiralBtn.addEventListener("click", () => {
+      if (!checkRegistration()) return
+      showModal("spiralTestModal")
+      setTimeout(() => initializeSpiralTest(), 500)
+    })
+  }
 
-  document.getElementById("startTapTest")?.addEventListener("click", () => {
-    if (!checkRegistration()) return
-    showModal("tapTestModal")
-  })
+  const tapBtn = document.getElementById("startTapTest")
+  if (tapBtn) {
+    tapBtn.addEventListener("click", () => {
+      if (!checkRegistration()) return
+      showModal("tapTestModal")
+      setTimeout(() => initializeTapTest(), 500)
+    })
+  }
 
-  document.getElementById("startReactionTest")?.addEventListener("click", () => {
-    if (!checkRegistration()) return
-    showModal("reactionTestModal")
-  })
+  const reactionBtn = document.getElementById("startReactionTest")
+  if (reactionBtn) {
+    reactionBtn.addEventListener("click", () => {
+      if (!checkRegistration()) return
+      showModal("reactionTestModal")
+      setTimeout(() => initializeReactionTest(), 500)
+    })
+  }
 
-  document.getElementById("startVoiceTest")?.addEventListener("click", () => {
-    if (!checkRegistration()) return
-    showModal("voiceTestModal")
-    setTimeout(() => initializeVoiceTest(), 500)
-  })
+  const voiceBtn = document.getElementById("startVoiceTest")
+  if (voiceBtn) {
+    voiceBtn.addEventListener("click", () => {
+      if (!checkRegistration()) return
+      showModal("voiceTestModal")
+      setTimeout(() => initializeVoiceTest(), 500)
+    })
+  }
 
   // Results buttons
-  document.getElementById("viewResults")?.addEventListener("click", showResults)
-  document.getElementById("backToTests")?.addEventListener("click", () => {
-    showSection("tests")
-  })
-  document.getElementById("saveResults")?.addEventListener("click", saveResults)
+  const viewResultsBtn = document.getElementById("viewResults")
+  if (viewResultsBtn) {
+    viewResultsBtn.addEventListener("click", showResults)
+  }
+
+  const backToTestsBtn = document.getElementById("backToTests")
+  if (backToTestsBtn) {
+    backToTestsBtn.addEventListener("click", () => {
+      showSection("tests")
+    })
+  }
+
+  const saveResultsBtn = document.getElementById("saveResults")
+  if (saveResultsBtn) {
+    saveResultsBtn.addEventListener("click", saveResults)
+  }
 }
 
 // Check registration
@@ -260,21 +364,24 @@ function checkRegistration() {
   return true
 }
 
-// Spiral Test
+// Spiral Test Implementation
 function initializeSpiralTest() {
+  console.log("Initializing spiral test")
+
   const canvas = document.getElementById("spiralCanvas")
-  if (!canvas) return
+  if (!canvas) {
+    console.error("Spiral canvas not found")
+    return
+  }
 
   const ctx = canvas.getContext("2d")
   let isDrawing = false
   let path = []
 
-  // Clear canvas
+  // Clear canvas and draw guide
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   ctx.strokeStyle = "#000"
   ctx.lineWidth = 2
-
-  // Draw guide spiral
   drawGuideSpiral(ctx, canvas.width, canvas.height)
 
   // Mouse events
@@ -328,30 +435,36 @@ function initializeSpiralTest() {
   }
 
   // Clear button
-  document.getElementById("clearCanvas").onclick = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    drawGuideSpiral(ctx, canvas.width, canvas.height)
-    path = []
+  const clearBtn = document.getElementById("clearCanvas")
+  if (clearBtn) {
+    clearBtn.onclick = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      drawGuideSpiral(ctx, canvas.width, canvas.height)
+      path = []
+    }
   }
 
   // Submit button
-  document.getElementById("submitSpiral").onclick = () => {
-    if (path.length < 10) {
-      showNotification("Please draw a complete spiral before submitting.", "warning")
-      return
-    }
+  const submitBtn = document.getElementById("submitSpiral")
+  if (submitBtn) {
+    submitBtn.onclick = () => {
+      if (path.length < 10) {
+        showNotification("Please draw a complete spiral before submitting.", "warning")
+        return
+      }
 
-    const score = analyzeSpiralDrawing(path)
-    testResults.spiral = {
-      completed: true,
-      score: score,
-      details: { pathLength: path.length, timestamp: new Date().toISOString() },
-    }
+      const score = analyzeSpiralDrawing(path)
+      testResults.spiral = {
+        completed: true,
+        score: score,
+        details: { pathLength: path.length, timestamp: new Date().toISOString() },
+      }
 
-    updateTestStatus("spiral", "completed")
-    showNotification("Spiral test completed!", "success")
-    hideModal("spiralTestModal")
-    checkAllTestsCompleted()
+      updateTestStatus("spiral", "completed")
+      showNotification("Spiral test completed!", "success")
+      hideModal("spiralTestModal")
+      checkAllTestsCompleted()
+    }
   }
 }
 
@@ -386,7 +499,6 @@ function drawGuideSpiral(ctx, width, height) {
 function analyzeSpiralDrawing(path) {
   if (path.length < 10) return 0
 
-  // Simple scoring based on path smoothness and length
   let smoothness = 0
   for (let i = 1; i < path.length - 1; i++) {
     const prev = path[i - 1]
@@ -406,42 +518,56 @@ function analyzeSpiralDrawing(path) {
   return Math.round(score)
 }
 
-// Tap Test
-let tapTestActive = false
-let tapScore = 0
-let tapCount = 0
-let tapTimeout
+// Tap Test Implementation
+function initializeTapTest() {
+  console.log("Initializing tap test")
 
-document.getElementById("startTapTestBtn")?.addEventListener("click", startTapTest)
-
-function startTapTest() {
-  tapTestActive = true
-  tapScore = 0
-  tapCount = 0
+  let tapTestActive = false
+  let tapScore = 0
+  let tapCount = 0
+  let tapTimeout
 
   const container = document.getElementById("tapTestContainer")
   const dot = document.getElementById("tapDot")
   const countdown = document.getElementById("tapCountdown")
   const scoreDisplay = document.getElementById("tapScoreValue")
 
-  // Countdown
-  let count = 3
-  countdown.style.display = "block"
-  countdown.textContent = count
+  if (!container || !dot) {
+    console.error("Tap test elements not found")
+    return
+  }
 
-  const countdownInterval = setInterval(() => {
-    count--
-    if (count > 0) {
+  // Start test automatically
+  startTapTest()
+
+  function startTapTest() {
+    tapTestActive = true
+    tapScore = 0
+    tapCount = 0
+
+    if (scoreDisplay) scoreDisplay.textContent = "0/10"
+
+    // Countdown
+    let count = 3
+    if (countdown) {
+      countdown.style.display = "block"
       countdown.textContent = count
-    } else {
-      countdown.textContent = "GO!"
-      setTimeout(() => {
-        countdown.style.display = "none"
-        showNextDot()
-      }, 500)
-      clearInterval(countdownInterval)
+
+      const countdownInterval = setInterval(() => {
+        count--
+        if (count > 0) {
+          countdown.textContent = count
+        } else {
+          countdown.textContent = "GO!"
+          setTimeout(() => {
+            countdown.style.display = "none"
+            showNextDot()
+          }, 500)
+          clearInterval(countdownInterval)
+        }
+      }, 1000)
     }
-  }, 1000)
+  }
 
   function showNextDot() {
     if (tapCount >= 10) {
@@ -449,8 +575,9 @@ function startTapTest() {
       return
     }
 
+    tapCount++
+
     // Position dot randomly
-    const containerRect = container.getBoundingClientRect()
     const dotSize = 60
     const maxX = container.offsetWidth - dotSize
     const maxY = container.offsetHeight - dotSize
@@ -462,11 +589,11 @@ function startTapTest() {
     dot.style.top = y + "px"
     dot.style.display = "block"
 
-    // Auto-hide after 2 seconds
+    // Auto-hide after 500ms
     tapTimeout = setTimeout(() => {
       dot.style.display = "none"
-      setTimeout(showNextDot, 500)
-    }, 2000)
+      setTimeout(showNextDot, 300)
+    }, 500)
   }
 
   // Dot click handler
@@ -475,10 +602,9 @@ function startTapTest() {
 
     clearTimeout(tapTimeout)
     tapScore++
-    tapCount++
     dot.style.display = "none"
 
-    scoreDisplay.textContent = `${tapScore}/10`
+    if (scoreDisplay) scoreDisplay.textContent = `${tapScore}/10`
 
     setTimeout(showNextDot, 300)
   }
@@ -504,20 +630,33 @@ function startTapTest() {
   }
 }
 
-// Reaction Test
-let reactionTestActive = false
-let reactionTimes = []
-let currentTrial = 0
-let reactionStartTime = 0
+// Reaction Test Implementation
+function initializeReactionTest() {
+  console.log("Initializing reaction test")
 
-document.getElementById("startReactionTestBtn")?.addEventListener("click", startReactionTest)
+  let reactionTestActive = false
+  let reactionTimes = []
+  let currentTrial = 0
+  let reactionStartTime = 0
 
-function startReactionTest() {
-  reactionTestActive = true
-  reactionTimes = []
-  currentTrial = 0
+  const container = document.getElementById("reactionTestContainer")
+  const countdown = document.getElementById("reactionCountdown")
+  const result = document.getElementById("reactionResult")
 
-  startNextTrial()
+  if (!container) {
+    console.error("Reaction test container not found")
+    return
+  }
+
+  // Start test automatically
+  startReactionTest()
+
+  function startReactionTest() {
+    reactionTestActive = true
+    reactionTimes = []
+    currentTrial = 0
+    startNextTrial()
+  }
 
   function startNextTrial() {
     if (currentTrial >= 3) {
@@ -525,56 +664,60 @@ function startReactionTest() {
       return
     }
 
-    const container = document.getElementById("reactionTestContainer")
-    const countdown = document.getElementById("reactionCountdown")
-    const result = document.getElementById("reactionResult")
-
-    container.className = "position-relative border rounded waiting"
     container.style.background = "#f8f9fa"
-    countdown.style.display = "block"
-    countdown.textContent = `Trial ${currentTrial + 1}/3 - Get Ready...`
-    result.textContent = "Click when the screen turns green!"
+    if (countdown) countdown.style.display = "block"
+    if (result) result.textContent = `Trial ${currentTrial + 1}/3 - Click when the screen turns green!`
 
-    // Random delay before green
-    const delay = 2000 + Math.random() * 3000
+    // Countdown
+    if (countdown) {
+      countdown.textContent = "3"
 
-    const greenTimeout = setTimeout(() => {
-      container.className = "position-relative border rounded ready"
-      countdown.textContent = "CLICK NOW!"
-      reactionStartTime = Date.now()
-    }, delay)
-
-    // Click handler
-    container.onclick = () => {
-      if (!reactionTestActive) return
-
-      if (reactionStartTime === 0) {
-        // Clicked too early
-        clearTimeout(greenTimeout)
-        container.className = "position-relative border rounded too-early"
-        countdown.textContent = "Too Early!"
-        result.textContent = "Wait for green before clicking. Try again..."
-
+      setTimeout(() => {
+        countdown.textContent = "2"
         setTimeout(() => {
-          startNextTrial()
-        }, 2000)
-        return
-      }
+          countdown.textContent = "1"
+          setTimeout(() => {
+            countdown.style.display = "none"
 
-      // Valid click
-      const reactionTime = Date.now() - reactionStartTime
-      reactionTimes.push(reactionTime)
+            // Random delay before green
+            const delay = 1000 + Math.random() * 3000
+            setTimeout(() => {
+              container.style.background = "#28a745"
+              reactionStartTime = Date.now()
+            }, delay)
+          }, 1000)
+        }, 1000)
+      }, 1000)
+    }
+  }
 
-      countdown.textContent = `${reactionTime}ms`
-      result.textContent = `Reaction time: ${reactionTime}ms`
+  // Click handler
+  container.onclick = () => {
+    if (!reactionTestActive) return
 
-      reactionStartTime = 0
-      currentTrial++
+    if (reactionStartTime === 0) {
+      // Clicked too early
+      container.style.background = "#dc3545"
+      if (result) result.textContent = "Too early! Try again..."
 
       setTimeout(() => {
         startNextTrial()
-      }, 1500)
+      }, 2000)
+      return
     }
+
+    // Valid click
+    const reactionTime = Date.now() - reactionStartTime
+    reactionTimes.push(reactionTime)
+
+    if (result) result.textContent = `Reaction time: ${reactionTime}ms`
+
+    reactionStartTime = 0
+    currentTrial++
+
+    setTimeout(() => {
+      startNextTrial()
+    }, 1500)
   }
 
   function endReactionTest() {
@@ -603,14 +746,21 @@ function startReactionTest() {
   }
 }
 
-// Voice Test
+// Voice Test Implementation
 function initializeVoiceTest() {
+  console.log("Initializing voice test")
+
   let mediaRecorder
   let audioChunks = []
 
   const startBtn = document.getElementById("startVoiceRecording")
   const stopBtn = document.getElementById("stopVoiceRecording")
   const result = document.getElementById("voiceResult")
+
+  if (!startBtn || !stopBtn || !result) {
+    console.error("Voice test elements not found")
+    return
+  }
 
   startBtn.onclick = async () => {
     try {
@@ -640,7 +790,6 @@ function initializeVoiceTest() {
       }, 30000)
     } catch (error) {
       result.innerHTML = '<div class="text-danger">Microphone access denied or not available.</div>'
-      // Simulate voice test completion for demo
       setTimeout(() => {
         completeVoiceTest(75)
       }, 2000)
@@ -658,9 +807,8 @@ function initializeVoiceTest() {
   }
 
   function analyzeVoice(audioBlob) {
-    // Simulate voice analysis
     setTimeout(() => {
-      const score = 70 + Math.random() * 25 // Random score between 70-95
+      const score = 70 + Math.random() * 25
       completeVoiceTest(Math.round(score))
     }, 2000)
   }
@@ -701,8 +849,8 @@ function checkAllTestsCompleted() {
   const printResultsBtn = document.getElementById("printResults")
 
   if (completedTests > 0) {
-    viewResultsBtn.disabled = false
-    printResultsBtn.disabled = false
+    if (viewResultsBtn) viewResultsBtn.disabled = false
+    if (printResultsBtn) printResultsBtn.disabled = false
   }
 
   if (completedTests === 4) {
@@ -723,74 +871,78 @@ function showResults() {
   const avgScore = completedTests.reduce((sum, test) => sum + test.score, 0) / completedTests.length
 
   const resultsHTML = `
-        <div class="text-center mb-4">
-            <h3>Assessment Summary</h3>
-            <div class="row">
-                <div class="col-md-6">
-                    <h4>Patient Information</h4>
-                    <p><strong>Name:</strong> ${userData.fullName || "N/A"}</p>
-                    <p><strong>Age:</strong> ${userData.age || "N/A"}</p>
-                    <p><strong>Gender:</strong> ${userData.gender || "N/A"}</p>
-                </div>
-                <div class="col-md-6">
-                    <h4>Overall Score</h4>
-                    <div class="display-4 text-primary">${Math.round(avgScore)}%</div>
-                    <p class="text-muted">Based on ${completedTests.length} completed test(s)</p>
-                </div>
-            </div>
+    <div class="text-center mb-4">
+      <h3>Assessment Summary</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <h4>Patient Information</h4>
+          <p><strong>Name:</strong> ${userData.fullName || "N/A"}</p>
+          <p><strong>Age:</strong> ${userData.age || "N/A"}</p>
+          <p><strong>Gender:</strong> ${userData.gender || "N/A"}</p>
         </div>
-        
-        <div class="row">
-            ${Object.entries(testResults)
-              .map(
-                ([testName, result]) => `
-                <div class="col-md-6 mb-3">
-                    <div class="card ${result.completed ? "border-success" : "border-secondary"}">
-                        <div class="card-body">
-                            <h5 class="card-title">${testName.charAt(0).toUpperCase() + testName.slice(1)} Test</h5>
-                            <p class="card-text">
-                                Status: <span class="badge ${result.completed ? "bg-success" : "bg-secondary"}">
-                                    ${result.completed ? "Completed" : "Not Completed"}
-                                </span>
-                            </p>
-                            ${
-                              result.completed
-                                ? `
-                                <p class="card-text">Score: <strong>${result.score}%</strong></p>
-                                <div class="progress">
-                                    <div class="progress-bar ${result.score >= 70 ? "bg-success" : result.score >= 50 ? "bg-warning" : "bg-danger"}" 
-                                         style="width: ${result.score}%"></div>
-                                </div>
-                            `
-                                : ""
-                            }
-                        </div>
-                    </div>
-                </div>
-            `,
-              )
-              .join("")}
+        <div class="col-md-6">
+          <h4>Overall Score</h4>
+          <div class="display-4 text-primary">${Math.round(avgScore)}%</div>
+          <p class="text-muted">Based on ${completedTests.length} completed test(s)</p>
         </div>
-        
-        <div class="mt-4 p-3 border rounded ${avgScore >= 70 ? "border-success bg-light-success" : avgScore >= 50 ? "border-warning bg-light-warning" : "border-danger bg-light-danger"}">
-            <h5>Assessment Interpretation</h5>
-            <p>
+      </div>
+    </div>
+    
+    <div class="row">
+      ${Object.entries(testResults)
+        .map(
+          ([testName, result]) => `
+          <div class="col-md-6 mb-3">
+            <div class="card ${result.completed ? "border-success" : "border-secondary"}">
+              <div class="card-body">
+                <h5 class="card-title">${testName.charAt(0).toUpperCase() + testName.slice(1)} Test</h5>
+                <p class="card-text">
+                  Status: <span class="badge ${result.completed ? "bg-success" : "bg-secondary"}">
+                    ${result.completed ? "Completed" : "Not Completed"}
+                  </span>
+                </p>
                 ${
-                  avgScore >= 70
-                    ? "Your assessment results indicate normal neurological function. Continue regular health monitoring."
-                    : avgScore >= 50
-                      ? "Your assessment shows some areas that may benefit from further evaluation. Consider consulting with a healthcare professional."
-                      : "Your assessment indicates potential areas of concern. We recommend consulting with a neurologist for comprehensive evaluation."
+                  result.completed
+                    ? `
+                    <p class="card-text">Score: <strong>${result.score}%</strong></p>
+                    <div class="progress">
+                      <div class="progress-bar ${result.score >= 70 ? "bg-success" : result.score >= 50 ? "bg-warning" : "bg-danger"}" 
+                           style="width: ${result.score}%"></div>
+                    </div>
+                `
+                    : ""
                 }
-            </p>
-            <small class="text-muted">
-                <strong>Disclaimer:</strong> This assessment is for screening purposes only and does not constitute a medical diagnosis. 
-                Please consult with qualified healthcare professionals for proper medical evaluation.
-            </small>
-        </div>
-    `
+              </div>
+            </div>
+          </div>
+        `,
+        )
+        .join("")}
+    </div>
+    
+    <div class="mt-4 p-3 border rounded ${avgScore >= 70 ? "border-success bg-light-success" : avgScore >= 50 ? "border-warning bg-light-warning" : "border-danger bg-light-danger"}">
+      <h5>Assessment Interpretation</h5>
+      <p>
+        ${
+          avgScore >= 70
+            ? "Your assessment results indicate normal neurological function. Continue regular health monitoring."
+            : avgScore >= 50
+              ? "Your assessment shows some areas that may benefit from further evaluation. Consider consulting with a healthcare professional."
+              : "Your assessment indicates potential areas of concern. We recommend consulting with a neurologist for comprehensive evaluation."
+        }
+      </p>
+      <small class="text-muted">
+        <strong>Disclaimer:</strong> This assessment is for screening purposes only and does not constitute a medical diagnosis. 
+        Please consult with qualified healthcare professionals for proper medical evaluation.
+      </small>
+    </div>
+  `
 
-  document.getElementById("resultsContent").innerHTML = resultsHTML
+  const resultsContent = document.getElementById("resultsContent")
+  if (resultsContent) {
+    resultsContent.innerHTML = resultsHTML
+  }
+
   showSection("results")
 }
 
@@ -817,14 +969,34 @@ function saveResults() {
 
 // Utility functions
 function showModal(modalId) {
-  const modal = new bootstrap.Modal(document.getElementById(modalId))
-  modal.show()
+  const modal = document.getElementById(modalId)
+  if (modal) {
+    modal.style.display = "block"
+    modal.classList.add("show")
+
+    // Add backdrop
+    const backdrop = document.createElement("div")
+    backdrop.className = "modal-backdrop fade show"
+    backdrop.id = `${modalId}-backdrop`
+    document.body.appendChild(backdrop)
+
+    document.body.classList.add("modal-open")
+  }
 }
 
 function hideModal(modalId) {
-  const modal = bootstrap.Modal.getInstance(document.getElementById(modalId))
+  const modal = document.getElementById(modalId)
   if (modal) {
-    modal.hide()
+    modal.style.display = "none"
+    modal.classList.remove("show")
+
+    // Remove backdrop
+    const backdrop = document.getElementById(`${modalId}-backdrop`)
+    if (backdrop) {
+      backdrop.remove()
+    }
+
+    document.body.classList.remove("modal-open")
   }
 }
 
@@ -835,10 +1007,11 @@ function showNotification(message, type = "info") {
   // Create notification element
   const notification = document.createElement("div")
   notification.className = `alert alert-${type} alert-dismissible fade show notification`
+  notification.style.cssText = "position: fixed; top: 20px; right: 20px; z-index: 9999; max-width: 400px;"
   notification.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  `
 
   document.body.appendChild(notification)
 

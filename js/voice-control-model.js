@@ -1,312 +1,200 @@
-// Advanced Voice Control Model
-class VoiceControlModel {
-  constructor() {
-    this.isListening = false
-    this.recognition = null
-    this.commands = new Map()
-    this.setupCommands()
-    this.initializeRecognition()
+// Advanced Voice Control System
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("Voice control system initialized")
+
+  const voiceControlBtn = document.getElementById("voiceControl")
+  let recognition = null
+  let isListening = false
+
+  // Initialize speech recognition
+  if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    recognition = new SpeechRecognition()
+
+    recognition.continuous = true
+    recognition.interimResults = false
+    recognition.lang = "en-US"
+
+    recognition.onstart = () => {
+      isListening = true
+      voiceControlBtn?.classList.add("listening")
+      if (window.showNotification) {
+        window.showNotification("Voice control activated. Say a command...", "info")
+      }
+    }
+
+    recognition.onend = () => {
+      isListening = false
+      voiceControlBtn?.classList.remove("listening")
+    }
+
+    recognition.onresult = (event) => {
+      const command = event.results[event.results.length - 1][0].transcript.toLowerCase().trim()
+      console.log("Voice command:", command)
+      processVoiceCommand(command)
+    }
+
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error:", event.error)
+      isListening = false
+      voiceControlBtn?.classList.remove("listening")
+
+      if (window.showNotification) {
+        window.showNotification("Voice recognition error. Please try again.", "error")
+      }
+    }
+  } else {
+    console.warn("Speech recognition not supported")
+    if (voiceControlBtn) {
+      voiceControlBtn.style.display = "none"
+    }
   }
 
-  setupCommands() {
-    // Navigation commands
-    this.commands.set("go home", () => window.showSection("home"))
-    this.commands.set("go to home", () => window.showSection("home"))
-    this.commands.set("home page", () => window.showSection("home"))
-    this.commands.set("go to register", () => window.showSection("register"))
-    this.commands.set("go to registration", () => window.showSection("register"))
-    this.commands.set("register", () => window.showSection("register"))
-    this.commands.set("go to tests", () => {
-      if (window.isRegistered) {
-        window.showSection("tests")
+  // Voice control button event listener
+  if (voiceControlBtn && recognition) {
+    voiceControlBtn.addEventListener("click", () => {
+      if (isListening) {
+        recognition.stop()
       } else {
-        window.showNotification("Please complete registration first!", "warning")
-        window.showSection("register")
+        recognition.start()
       }
     })
-    this.commands.set("go to about", () => window.showSection("about"))
-    this.commands.set("about page", () => window.showSection("about"))
-    this.commands.set("go to contact", () => window.showSection("contact"))
-    this.commands.set("contact page", () => window.showSection("contact"))
+  }
+
+  function processVoiceCommand(command) {
+    console.log("Processing command:", command)
+
+    // Navigation commands
+    if (command.includes("go to home") || command.includes("home page")) {
+      if (window.showSection) window.showSection("home")
+      showCommandFeedback("Navigating to home")
+    } else if (command.includes("go to register") || command.includes("registration")) {
+      if (window.showSection) window.showSection("register")
+      showCommandFeedback("Navigating to registration")
+    } else if (command.includes("go to tests") || command.includes("test page")) {
+      if (window.showSection) window.showSection("tests")
+      showCommandFeedback("Navigating to tests")
+    } else if (command.includes("go to about") || command.includes("about page")) {
+      if (window.showSection) window.showSection("about")
+      showCommandFeedback("Navigating to about")
+    } else if (command.includes("go to contact") || command.includes("contact page")) {
+      if (window.showSection) window.showSection("contact")
+      showCommandFeedback("Navigating to contact")
+    }
 
     // Test commands
-    this.commands.set("start spiral test", () => {
-      if (window.isRegistered) {
-        document.getElementById("startSpiralTest")?.click()
-      } else {
-        window.showNotification("Please complete registration first!", "warning")
+    else if (command.includes("start spiral test") || command.includes("spiral test")) {
+      const spiralBtn = document.getElementById("startSpiralTest")
+      if (spiralBtn) {
+        spiralBtn.click()
+        showCommandFeedback("Starting spiral test")
       }
-    })
-    this.commands.set("spiral test", () => {
-      if (window.isRegistered) {
-        document.getElementById("startSpiralTest")?.click()
-      } else {
-        window.showNotification("Please complete registration first!", "warning")
+    } else if (command.includes("start tap test") || command.includes("tap test")) {
+      const tapBtn = document.getElementById("startTapTest")
+      if (tapBtn) {
+        tapBtn.click()
+        showCommandFeedback("Starting tap test")
       }
-    })
-    this.commands.set("start tap test", () => {
-      if (window.isRegistered) {
-        document.getElementById("startTapTest")?.click()
-      } else {
-        window.showNotification("Please complete registration first!", "warning")
+    } else if (command.includes("start reaction test") || command.includes("reaction test")) {
+      const reactionBtn = document.getElementById("startReactionTest")
+      if (reactionBtn) {
+        reactionBtn.click()
+        showCommandFeedback("Starting reaction test")
       }
-    })
-    this.commands.set("tap test", () => {
-      if (window.isRegistered) {
-        document.getElementById("startTapTest")?.click()
-      } else {
-        window.showNotification("Please complete registration first!", "warning")
+    } else if (command.includes("start voice test") || command.includes("voice test")) {
+      const voiceBtn = document.getElementById("startVoiceTest")
+      if (voiceBtn) {
+        voiceBtn.click()
+        showCommandFeedback("Starting voice test")
       }
-    })
-    this.commands.set("start reaction test", () => {
-      if (window.isRegistered) {
-        document.getElementById("startReactionTest")?.click()
-      } else {
-        window.showNotification("Please complete registration first!", "warning")
-      }
-    })
-    this.commands.set("reaction test", () => {
-      if (window.isRegistered) {
-        document.getElementById("startReactionTest")?.click()
-      } else {
-        window.showNotification("Please complete registration first!", "warning")
-      }
-    })
-    this.commands.set("start voice test", () => {
-      if (window.isRegistered) {
-        document.getElementById("startVoiceTest")?.click()
-      } else {
-        window.showNotification("Please complete registration first!", "warning")
-      }
-    })
-    this.commands.set("voice test", () => {
-      if (window.isRegistered) {
-        document.getElementById("startVoiceTest")?.click()
-      } else {
-        window.showNotification("Please complete registration first!", "warning")
-      }
-    })
+    }
 
     // Results commands
-    this.commands.set("view results", () => {
-      const completedTests = Object.values(window.testResults).filter((test) => test.completed).length
-      if (completedTests > 0) {
-        document.getElementById("viewResults")?.click()
+    else if (command.includes("show results") || command.includes("view results")) {
+      const resultsBtn = document.getElementById("viewResults")
+      if (resultsBtn && !resultsBtn.disabled) {
+        resultsBtn.click()
+        showCommandFeedback("Showing results")
       } else {
-        window.showNotification("Please complete at least one test first!", "warning")
+        showCommandFeedback("Please complete at least one test first")
       }
-    })
-    this.commands.set("show results", () => {
-      const completedTests = Object.values(window.testResults).filter((test) => test.completed).length
-      if (completedTests > 0) {
-        document.getElementById("viewResults")?.click()
+    } else if (command.includes("save results")) {
+      const saveBtn = document.getElementById("saveResults")
+      if (saveBtn && !saveBtn.disabled) {
+        saveBtn.click()
+        showCommandFeedback("Saving results")
       } else {
-        window.showNotification("Please complete at least one test first!", "warning")
+        showCommandFeedback("No results to save")
       }
-    })
+    }
 
     // Theme commands
-    this.commands.set("dark mode", () => window.setDarkMode?.())
-    this.commands.set("light mode", () => window.setLightMode?.())
-    this.commands.set("toggle theme", () => window.toggleTheme?.())
-    this.commands.set("switch theme", () => window.toggleTheme?.())
+    else if (command.includes("dark mode") || command.includes("switch to dark")) {
+      const currentTheme = document.documentElement.getAttribute("data-theme") || "light"
+      if (currentTheme === "light") {
+        const themeBtn = document.getElementById("themeToggle")
+        if (themeBtn) themeBtn.click()
+      }
+      showCommandFeedback("Switching to dark mode")
+    } else if (command.includes("light mode") || command.includes("switch to light")) {
+      const currentTheme = document.documentElement.getAttribute("data-theme") || "light"
+      if (currentTheme === "dark") {
+        const themeBtn = document.getElementById("themeToggle")
+        if (themeBtn) themeBtn.click()
+      }
+      showCommandFeedback("Switching to light mode")
+    }
 
     // Help command
-    this.commands.set("help", () => this.showHelp())
-    this.commands.set("voice commands", () => this.showHelp())
-    this.commands.set("what can you do", () => this.showHelp())
+    else if (command.includes("help") || command.includes("commands")) {
+      showHelpDialog()
+    }
 
-    // Stop listening command
-    this.commands.set("stop listening", () => this.stopListening())
-    this.commands.set("stop voice control", () => this.stopListening())
-  }
+    // Unknown command
+    else {
+      showCommandFeedback("Command not recognized. Say 'help' for available commands.")
+    }
 
-  initializeRecognition() {
-    if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-      this.recognition = new SpeechRecognition()
-
-      this.recognition.continuous = true
-      this.recognition.interimResults = false
-      this.recognition.lang = "en-US"
-
-      this.recognition.onresult = (event) => {
-        const command = event.results[event.results.length - 1][0].transcript.toLowerCase().trim()
-        console.log("Voice command received:", command)
-        this.processCommand(command)
-      }
-
-      this.recognition.onerror = (event) => {
-        console.error("Speech recognition error:", event.error)
-        if (event.error === "not-allowed") {
-          window.showNotification?.(
-            "Microphone access denied. Please allow microphone access for voice control.",
-            "error",
-          )
-        }
-      }
-
-      this.recognition.onend = () => {
-        if (this.isListening) {
-          // Restart recognition if we're still supposed to be listening
-          setTimeout(() => {
-            if (this.isListening) {
-              this.recognition.start()
-            }
-          }, 100)
-        }
-      }
-    } else {
-      console.warn("Speech recognition not supported in this browser")
+    // Stop listening after processing command
+    if (recognition && isListening) {
+      recognition.stop()
     }
   }
 
-  processCommand(command) {
-    // Find matching command
-    for (const [key, action] of this.commands) {
-      if (command.includes(key)) {
-        window.showNotification?.(`Voice command: "${key}"`, "info")
-        action()
-        return
-      }
-    }
-
-    // If no exact match, try partial matches
-    const partialMatches = Array.from(this.commands.keys()).filter((key) =>
-      key.split(" ").some((word) => command.includes(word)),
-    )
-
-    if (partialMatches.length > 0) {
-      window.showNotification?.(`Did you mean: ${partialMatches[0]}?`, "warning")
-    } else {
-      window.showNotification?.('Voice command not recognized. Say "help" for available commands.', "warning")
+  function showCommandFeedback(message) {
+    if (window.showNotification) {
+      window.showNotification(message, "success")
     }
   }
 
-  startListening() {
-    if (!this.recognition) {
-      window.showNotification?.("Voice recognition not supported in this browser.", "error")
-      return
-    }
-
-    if (this.isListening) {
-      this.stopListening()
-      return
-    }
-
-    this.isListening = true
-    this.recognition.start()
-
-    const voiceBtn = document.getElementById("voiceControl")
-    if (voiceBtn) {
-      voiceBtn.classList.add("listening")
-    }
-
-    window.showNotification?.('Voice control activated. Say "help" for commands.', "success")
-  }
-
-  stopListening() {
-    this.isListening = false
-    if (this.recognition) {
-      this.recognition.stop()
-    }
-
-    const voiceBtn = document.getElementById("voiceControl")
-    if (voiceBtn) {
-      voiceBtn.classList.remove("listening")
-    }
-
-    window.showNotification?.("Voice control deactivated.", "info")
-  }
-
-  showHelp() {
+  function showHelpDialog() {
     const helpMessage = `
-      <div class="voice-help">
-        <h5>Available Voice Commands:</h5>
-        <div class="row">
-          <div class="col-md-6">
-            <h6>Navigation:</h6>
-            <ul class="list-unstyled">
-              <li>• "Go home"</li>
-              <li>• "Go to register"</li>
-              <li>• "Go to tests"</li>
-              <li>• "Go to about"</li>
-              <li>• "Go to contact"</li>
-            </ul>
-          </div>
-          <div class="col-md-6">
-            <h6>Tests:</h6>
-            <ul class="list-unstyled">
-              <li>• "Start spiral test"</li>
-              <li>• "Start tap test"</li>
-              <li>• "Start reaction test"</li>
-              <li>• "Start voice test"</li>
-              <li>• "View results"</li>
-            </ul>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <h6>Theme:</h6>
-            <ul class="list-unstyled">
-              <li>• "Dark mode"</li>
-              <li>• "Light mode"</li>
-              <li>• "Toggle theme"</li>
-            </ul>
-          </div>
-          <div class="col-md-6">
-            <h6>Control:</h6>
-            <ul class="list-unstyled">
-              <li>• "Help"</li>
-              <li>• "Stop listening"</li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      Available voice commands:
+      
+      Navigation:
+      • "Go to home" - Navigate to home page
+      • "Go to register" - Navigate to registration
+      • "Go to tests" - Navigate to tests
+      • "Go to about" - Navigate to about page
+      • "Go to contact" - Navigate to contact page
+      
+      Tests:
+      • "Start spiral test" - Begin spiral drawing test
+      • "Start tap test" - Begin tap speed test
+      • "Start reaction test" - Begin reaction time test
+      • "Start voice test" - Begin voice analysis test
+      
+      Results:
+      • "Show results" - View test results
+      • "Save results" - Save results to storage
+      
+      Theme:
+      • "Dark mode" - Switch to dark theme
+      • "Light mode" - Switch to light theme
+      
+      • "Help" - Show this help dialog
     `
 
-    // Create help modal
-    const helpModal = document.createElement("div")
-    helpModal.className = "modal fade"
-    helpModal.innerHTML = `
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Voice Control Help</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            ${helpMessage}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it!</button>
-          </div>
-        </div>
-      </div>
-    `
-
-    document.body.appendChild(helpModal)
-    const modal = window.bootstrap.Modal.getOrCreateInstance(helpModal)
-    modal.show()
-
-    // Remove modal from DOM when hidden
-    helpModal.addEventListener("hidden.bs.modal", () => {
-      helpModal.remove()
-    })
+    alert(helpMessage)
   }
-}
-
-// Initialize voice control
-document.addEventListener("DOMContentLoaded", () => {
-  const voiceControl = new VoiceControlModel()
-
-  const voiceBtn = document.getElementById("voiceControl")
-  if (voiceBtn) {
-    voiceBtn.addEventListener("click", () => {
-      voiceControl.startListening()
-    })
-  }
-
-  // Make voice control globally accessible
-  window.voiceControl = voiceControl
 })

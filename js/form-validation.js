@@ -1,8 +1,12 @@
 // Form validation with animations
 document.addEventListener("DOMContentLoaded", () => {
-  const registrationForm = document.getElementById("registrationForm")
+  console.log("Form validation initialized")
 
-  if (!registrationForm) return
+  const registrationForm = document.getElementById("registrationForm")
+  if (!registrationForm) {
+    console.log("Registration form not found")
+    return
+  }
 
   const inputs = registrationForm.querySelectorAll("input, textarea")
 
@@ -14,11 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Remove validation classes on focus
     input.addEventListener("focus", function () {
-      this.classList.remove("is-invalid")
-      const feedbackElement = this.nextElementSibling
-      if (feedbackElement && feedbackElement.classList.contains("invalid-feedback")) {
-        feedbackElement.remove()
-      }
+      clearFieldValidation(this)
     })
 
     // Real-time validation for email
@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let errorMessage = ""
 
     // Clear previous validation
-    clearValidation(input)
+    clearFieldValidation(input)
 
     // Check if field is required
     if (input.hasAttribute("required")) {
@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Clear field validation
-  function clearValidation(input) {
+  function clearFieldValidation(input) {
     input.classList.remove("is-invalid", "is-valid")
     clearFieldError(input.closest(".mb-3") || input.closest(".col-md-6"))
   }
@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
         r.classList.remove("is-invalid")
         r.classList.add("is-valid")
       })
-      clearFieldError(this)
+      clearFieldError(this.closest(".col-md-6"))
     })
   })
 
@@ -222,11 +222,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (this.checked) {
         this.classList.remove("is-invalid")
         this.classList.add("is-valid")
-        clearFieldError(this)
+        clearFieldError(this.closest(".mb-3"))
       } else {
         this.classList.remove("is-valid")
         this.classList.add("is-invalid")
-        showFieldError(this, "You must consent to proceed with the assessment.")
+        showFieldError(this.closest(".mb-3"), "You must consent to proceed with the assessment.")
       }
     })
   }

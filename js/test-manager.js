@@ -1,4 +1,4 @@
-// Test Manager - Enhanced test functionality
+// Test Manager - Comprehensive test management
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Test Manager loaded")
 
@@ -10,257 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
     voice: { status: "Not Tested", healthy: 0, parkinsons: 0, rawScore: 0, details: {} },
   }
 
-  // Initialize all tests
-  initializeTapTest()
-  initializeReactionTest()
-
-  // Setup test buttons
-  setupTestButtons()
-
-  // Setup view results button
-  const viewResultsBtn = document.getElementById("viewResults")
-  if (viewResultsBtn) {
-    viewResultsBtn.addEventListener("click", showResults)
-  }
-
-  // Setup back to tests button
-  const backToTestsBtn = document.getElementById("backToTests")
-  if (backToTestsBtn) {
-    backToTestsBtn.addEventListener("click", () => {
-      hideSection("results")
-      showSection("tests")
-    })
-  }
-
-  // Setup save results button
-  const saveResultsBtn = document.getElementById("saveResults")
-  if (saveResultsBtn) {
-    saveResultsBtn.addEventListener("click", saveResults)
-  }
-
-  // Setup registration form to show tests
-  setupRegistrationForm()
-
-  // Initialize test event listeners
-  initializeTestButtons()
-
-  // Initialize modal event listeners
+  // Initialize modal close handlers
   initializeModalHandlers()
+
+  // Setup test button handlers
+  setupTestButtons()
 })
 
-function initializeTestButtons() {
-  // Spiral Test
-  const spiralBtn = document.getElementById("startSpiralTest")
-  if (spiralBtn) {
-    spiralBtn.addEventListener("click", () => {
-      if (!window.isRegistered) {
-        window.showNotification("Please complete registration first!", "warning")
-        window.showSection("register")
-        return
-      }
-      showModal("spiralTestModal")
-      setTimeout(() => initializeSpiralTest(), 500)
-    })
-  }
-
-  // Tap Test
-  const tapBtn = document.getElementById("startTapTest")
-  if (tapBtn) {
-    tapBtn.addEventListener("click", () => {
-      if (!window.isRegistered) {
-        window.showNotification("Please complete registration first!", "warning")
-        window.showSection("register")
-        return
-      }
-      showModal("tapTestModal")
-    })
-  }
-
-  // Reaction Test
-  const reactionBtn = document.getElementById("startReactionTest")
-  if (reactionBtn) {
-    reactionBtn.addEventListener("click", () => {
-      if (!window.isRegistered) {
-        window.showNotification("Please complete registration first!", "warning")
-        window.showSection("register")
-        return
-      }
-      showModal("reactionTestModal")
-    })
-  }
-
-  // Voice Test
-  const voiceBtn = document.getElementById("startVoiceTest")
-  if (voiceBtn) {
-    voiceBtn.addEventListener("click", () => {
-      if (!window.isRegistered) {
-        window.showNotification("Please complete registration first!", "warning")
-        window.showSection("register")
-        return
-      }
-      showModal("voiceTestModal")
-      setTimeout(() => initializeVoiceTest(), 500)
-    })
-  }
-}
-
 function initializeModalHandlers() {
-  // Handle modal close events
-  document.querySelectorAll(".modal").forEach((modal) => {
-    modal.addEventListener("hidden.bs.modal", () => {
-      // Reset any ongoing tests when modal is closed
-      resetTestStates()
-    })
-  })
-}
-
-function checkRegistration() {
-  const userData = localStorage.getItem("userData")
-  if (!userData) {
-    showNotification("Please complete registration first!", "warning")
-    showSection("register")
-    return false
-  }
-  return true
-}
-
-function resetTestStates() {
-  // Reset tap test
-  if (window.tapTestActive) {
-    window.tapTestActive = false
-    clearTimeout(window.tapTimeout)
-  }
-
-  // Reset reaction test
-  if (window.reactionTestActive) {
-    window.reactionTestActive = false
-  }
-
-  // Reset any other test states as needed
-}
-
-// Export functions for global access
-window.initializeTestButtons = initializeTestButtons
-window.checkRegistration = checkRegistration
-
-// Setup registration form
-function setupRegistrationForm() {
-  const registrationForm = document.getElementById("registrationForm")
-  if (registrationForm) {
-    registrationForm.addEventListener("submit", (e) => {
-      e.preventDefault()
-
-      // Show success message
-      const successAlert = document.createElement("div")
-      successAlert.className = "alert alert-success fade show"
-      successAlert.innerHTML = "Registration successful! Redirecting to tests..."
-      registrationForm.prepend(successAlert)
-
-      // Disable the submit button
-      const submitBtn = registrationForm.querySelector('button[type="submit"]')
-      if (submitBtn) {
-        submitBtn.disabled = true
-        submitBtn.innerHTML = "Submitted"
-      }
-
-      // Store user data for later use
-      const userData = {
-        fullName: document.getElementById("fullName").value,
-        email: document.getElementById("email").value,
-        age: document.getElementById("age").value,
-        gender: document.querySelector('input[name="gender"]:checked')?.value || "Not specified",
-        familyHistory: document.getElementById("familyHistory").value,
-        medicalSituation: document.getElementById("medicalSituation").value,
-        testDate: new Date().toISOString(),
-      }
-
-      // Store in localStorage
-      localStorage.setItem("userData", JSON.stringify(userData))
-
-      // Hide registration section and show tests section after a delay
-      setTimeout(() => {
-        hideSection("register")
-        showSection("tests")
-
-        // Scroll to tests section
-        document.getElementById("tests").scrollIntoView({ behavior: "smooth" })
-      }, 1000)
-    })
-  }
-}
-
-// Setup test buttons
-function setupTestButtons() {
-  // Spiral Test
-  const startSpiralTest = document.getElementById("startSpiralTest")
-  if (startSpiralTest) {
-    startSpiralTest.addEventListener("click", () => {
-      showModal("spiralTestModal")
-    })
-  }
-
-  // Tap Test
-  const startTapTest = document.getElementById("startTapTest")
-  if (startTapTest) {
-    startTapTest.addEventListener("click", () => {
-      showModal("tapTestModal")
-      // Start the tap test after showing the modal
-      setTimeout(() => {
-        if (typeof window.startTapTestFunction === "function") {
-          window.startTapTestFunction()
-        } else {
-          console.error("startTapTestFunction is not defined.")
-        }
-      }, 500)
-    })
-  }
-
-  // Reaction Test
-  const startReactionTest = document.getElementById("startReactionTest")
-  if (startReactionTest) {
-    startReactionTest.addEventListener("click", () => {
-      showModal("reactionTestModal")
-      // Start the reaction test after showing the modal
-      setTimeout(() => {
-        if (typeof window.startReactionTestFunction === "function") {
-          window.startReactionTestFunction()
-        } else {
-          console.error("startReactionTestFunction is not defined.")
-        }
-      }, 500)
-    })
-  }
-
-  // Voice Test
-  const startVoiceTest = document.getElementById("startVoiceTest")
-  if (startVoiceTest) {
-    startVoiceTest.addEventListener("click", () => {
-      showModal("voiceTestModal")
-    })
-  }
-
-  // Setup close buttons for all modals
-  setupModalCloseButtons()
-}
-
-// Show modal function
-function showModal(modalId) {
-  const modal = window.bootstrap.Modal(document.getElementById(modalId))
-  modal.show()
-}
-
-// Hide modal function
-function hideModal(modalId) {
-  const modal = window.bootstrap.Modal.getInstance(document.getElementById(modalId))
-  if (modal) {
-    modal.hide()
-  }
-}
-
-// Setup close buttons for all modals
-function setupModalCloseButtons() {
-  const closeButtons = document.querySelectorAll(".modal .btn-close, .modal [data-bs-dismiss='modal']")
-  closeButtons.forEach((button) => {
+  // Handle modal close buttons
+  document.querySelectorAll(".modal .btn-close, .modal [data-bs-dismiss='modal']").forEach((button) => {
     button.addEventListener("click", function () {
       const modal = this.closest(".modal")
       if (modal) {
@@ -268,52 +27,132 @@ function setupModalCloseButtons() {
       }
     })
   })
+
+  // Handle modal backdrop clicks
+  document.querySelectorAll(".modal").forEach((modal) => {
+    modal.addEventListener("click", function (e) {
+      if (e.target === this) {
+        hideModal(this.id)
+      }
+    })
+  })
 }
 
-// Show section
-function showSection(sectionId) {
-  const section = document.getElementById(sectionId)
-  if (section) {
-    section.classList.remove("d-none")
-    section.style.display = "block"
+function setupTestButtons() {
+  // Spiral Test Button
+  const spiralBtn = document.getElementById("startSpiralTest")
+  if (spiralBtn) {
+    spiralBtn.addEventListener("click", () => {
+      if (!checkRegistration()) return
+      showModal("spiralTestModal")
+      setTimeout(() => initializeSpiralTest(), 500)
+    })
+  }
+
+  // Tap Test Button
+  const tapBtn = document.getElementById("startTapTest")
+  if (tapBtn) {
+    tapBtn.addEventListener("click", () => {
+      if (!checkRegistration()) return
+      showModal("tapTestModal")
+      setTimeout(() => {
+        const startTapBtn = document.getElementById("startTapTestBtn")
+        if (startTapBtn) {
+          startTapBtn.click()
+        }
+      }, 500)
+    })
+  }
+
+  // Reaction Test Button
+  const reactionBtn = document.getElementById("startReactionTest")
+  if (reactionBtn) {
+    reactionBtn.addEventListener("click", () => {
+      if (!checkRegistration()) return
+      showModal("reactionTestModal")
+      setTimeout(() => {
+        const startReactionBtn = document.getElementById("startReactionTestBtn")
+        if (startReactionBtn) {
+          startReactionBtn.click()
+        }
+      }, 500)
+    })
+  }
+
+  // Voice Test Button
+  const voiceBtn = document.getElementById("startVoiceTest")
+  if (voiceBtn) {
+    voiceBtn.addEventListener("click", () => {
+      if (!checkRegistration()) return
+      showModal("voiceTestModal")
+    })
   }
 }
 
-// Hide section
-function hideSection(sectionId) {
-  const section = document.getElementById(sectionId)
-  if (section) {
-    section.classList.add("d-none")
-    section.style.display = "none"
+function checkRegistration() {
+  const userData = localStorage.getItem("userData")
+  if (!userData) {
+    if (window.showNotification) {
+      window.showNotification("Please complete registration first!", "warning")
+    }
+    if (window.showSection) {
+      window.showSection("register")
+    }
+    return false
+  }
+  return true
+}
+
+function showModal(modalId) {
+  const modal = document.getElementById(modalId)
+  if (modal) {
+    modal.style.display = "block"
+    modal.classList.add("show")
+
+    // Add backdrop
+    const backdrop = document.createElement("div")
+    backdrop.className = "modal-backdrop fade show"
+    backdrop.id = `${modalId}-backdrop`
+    document.body.appendChild(backdrop)
+
+    document.body.classList.add("modal-open")
+  }
+}
+
+function hideModal(modalId) {
+  const modal = document.getElementById(modalId)
+  if (modal) {
+    modal.style.display = "none"
+    modal.classList.remove("show")
+
+    // Remove backdrop
+    const backdrop = document.getElementById(`${modalId}-backdrop`)
+    if (backdrop) {
+      backdrop.remove()
+    }
+
+    document.body.classList.remove("modal-open")
   }
 }
 
 // Calculate test results based on raw score
 function calculateTestResults(testName, rawScore, details = {}) {
-  // Different calculation methods for each test
   let healthy, parkinsons, status
 
   switch (testName) {
     case "spiral":
-      // Spiral test: Higher score = better (smoother drawing)
-      // Score range: 0-100
       healthy = Math.round(rawScore)
       parkinsons = 100 - healthy
       status = healthy >= 60 ? "Healthy" : "Not Healthy"
       break
 
     case "tap":
-      // Tap test: Higher score = better (more accurate taps)
-      // Score range: 0-100
       healthy = Math.round(rawScore)
       parkinsons = 100 - healthy
       status = healthy >= 60 ? "Healthy" : "Not Healthy"
       break
 
     case "reaction":
-      // Reaction test: Lower time = better
-      // Convert reaction time (ms) to a 0-100 score
-      // Typical reaction times: 200ms (excellent) to 800ms (poor)
       const normalizedScore = Math.max(0, Math.min(100, 100 - (rawScore - 200) / 6))
       healthy = Math.round(normalizedScore)
       parkinsons = 100 - healthy
@@ -321,8 +160,6 @@ function calculateTestResults(testName, rawScore, details = {}) {
       break
 
     case "voice":
-      // Voice test: Higher score = better
-      // Score range: 0-100
       healthy = Math.round(rawScore)
       parkinsons = 100 - healthy
       status = healthy >= 60 ? "Healthy" : "Not Healthy"
@@ -342,9 +179,6 @@ function calculateTestResults(testName, rawScore, details = {}) {
     rawScore: rawScore,
     details: details,
   }
-
-  // Update UI
-  updateTestStatusDisplay()
 
   console.log(`Test results for ${testName}:`, window.testResults[testName])
 
@@ -679,7 +513,7 @@ function initializeSpiralTest() {
   canvas.addEventListener("mouseup", stopDrawing)
   canvas.addEventListener("mouseout", stopDrawing)
 
-  // Touch events for mobile
+  // Touch events
   canvas.addEventListener("touchstart", handleTouch)
   canvas.addEventListener("touchmove", handleTouch)
   canvas.addEventListener("touchend", stopDrawing)
@@ -724,30 +558,38 @@ function initializeSpiralTest() {
   }
 
   // Clear button
-  document.getElementById("clearCanvas").onclick = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    drawGuideSpiral(ctx, canvas.width, canvas.height)
-    path = []
+  const clearBtn = document.getElementById("clearCanvas")
+  if (clearBtn) {
+    clearBtn.onclick = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      drawGuideSpiral(ctx, canvas.width, canvas.height)
+      path = []
+    }
   }
 
   // Submit button
-  document.getElementById("submitSpiral").onclick = () => {
-    if (path.length < 10) {
-      window.showNotification("Please draw a complete spiral before submitting.", "warning")
-      return
-    }
+  const submitBtn = document.getElementById("submitSpiral")
+  if (submitBtn) {
+    submitBtn.onclick = () => {
+      if (path.length < 10) {
+        if (window.showNotification) {
+          window.showNotification("Please draw a complete spiral before submitting.", "warning")
+        }
+        return
+      }
 
-    const score = analyzeSpiralDrawing(path)
-    window.testResults.spiral = {
-      completed: true,
-      score: score,
-      details: { pathLength: path.length, timestamp: new Date().toISOString() },
-    }
+      const score = analyzeSpiralDrawing(path)
+      calculateTestResults("spiral", score, {
+        pathLength: path.length,
+        timestamp: new Date().toISOString(),
+      })
 
-    updateTestStatusDisplay()
-    window.showNotification("Spiral test completed!", "success")
-    hideModal("spiralTestModal")
-    checkAllTestsCompleted()
+      if (window.showNotification) {
+        window.showNotification("Spiral test completed!", "success")
+      }
+
+      hideModal("spiralTestModal")
+    }
   }
 }
 
@@ -1426,3 +1268,24 @@ window.bootstrap.Modal =
       return this
     }
   }
+
+// Export functions
+window.initializeSpiralTest = initializeSpiralTest
+window.calculateTestResults = calculateTestResults
+window.showModal = showModal
+window.hideModal = hideModal
+
+// Declare hideSection and showSection functions
+function hideSection(sectionId) {
+  const section = document.getElementById(sectionId)
+  if (section) {
+    section.style.display = "none"
+  }
+}
+
+function showSection(sectionId) {
+  const section = document.getElementById(sectionId)
+  if (section) {
+    section.style.display = "block"
+  }
+}
