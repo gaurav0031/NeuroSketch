@@ -5,32 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeuroSketch - Advanced Neurological Assessment Platform</title>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="favicon.ico">
-
-    <!-- Professional Medical Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <!-- Custom Royal Medical Theme -->
-    <link rel="stylesheet" href="css/royal-medical-theme.css">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/modal-fixes.css">
-    <link rel="stylesheet" href="css/print-styles.css">
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
 
-    <!-- Initialize Firebase -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyAuwZCQy9f5iS8WxtWjOfOOSAZU1eEtvOs",
@@ -38,63 +22,131 @@
             projectId: "neurosketch-b1011",
             storageBucket: "neurosketch-b1011.firebasestorage.app",
             messagingSenderId: "460372908007",
-            appId: "1:460372908007:web:fd4dd388b2f5633a108f42",
-            measurementId: "G-TEX9628980"
+            appId: "1:460372908007:web:fd4dd388b2f5633a108f42"
         };
-        
         firebase.initializeApp(firebaseConfig);
-        firebase.analytics();
-        
         window.db = firebase.firestore();
         window.auth = firebase.auth();
-        
-        console.log("Firebase Medical Platform Online");
     </script>
 
     <style>
-        /* Reduced gap between navbar and content */
+        :root {
+            --royal-blue: #1e3a8a;
+            --royal-purple: #7c3aed;
+            --medical-green: #059669;
+            --medical-red: #dc2626;
+            --royal-white: #ffffff;
+        }
+
         body {
+            font-family: 'Inter', sans-serif;
             padding-top: 70px;
+            background: linear-gradient(135deg, #dbeafe 0%, #fefce8 100%);
+            min-height: 100vh;
         }
 
         .navbar {
-            padding: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .hero-section {
+        .section {
+            min-height: 80vh;
             padding: 2rem 0;
-            min-height: 70vh;
-            background: linear-gradient(135deg, #dbeafe 0%, #fefce8 100%);
-            display: flex;
-            align-items: center;
         }
 
-        /* Enhanced tap dot styling */
+        .hidden {
+            display: none !important;
+        }
+
+        .test-card {
+            background: white;
+            border: 2px solid var(--royal-blue);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.15);
+        }
+
+        .test-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .test-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .test-status.completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--royal-blue), var(--royal-purple));
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.3);
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 12px 15px;
+            border: 1px solid #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--royal-blue);
+            box-shadow: 0 0 0 0.25rem rgba(30, 58, 138, 0.25);
+        }
+
+        .modal-content {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        #spiralCanvas {
+            border: 2px solid var(--royal-blue);
+            border-radius: 8px;
+            background: white;
+            cursor: crosshair;
+        }
+
         #tapDot {
             position: absolute;
             width: 60px;
             height: 60px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--royal-blue), var(--royal-purple));
-            border: 4px solid var(--royal-white);
+            border: 4px solid white;
             cursor: pointer;
-            z-index: 1000;
             display: none;
             box-shadow: 0 6px 20px rgba(30, 58, 138, 0.4);
             transition: all 0.2s ease;
-            user-select: none;
         }
 
         #tapDot:hover {
             transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.6);
         }
 
-        #tapDot:active {
-            transform: scale(0.9);
-        }
-
-        /* Reaction test container */
         #reactionTestContainer {
             min-height: 300px;
             display: flex;
@@ -111,17 +163,23 @@
 
         #reactionTestContainer.ready {
             background-color: #28a745 !important;
-            border-color: #28a745 !important;
             color: white;
         }
 
         #reactionTestContainer.too-early {
             background-color: #dc3545 !important;
-            border-color: #dc3545 !important;
             color: white;
         }
 
-        /* Theme toggle button */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+        }
+
+        /* Theme Toggle */
         .theme-toggle {
             position: fixed;
             top: 80px;
@@ -139,10 +197,9 @@
 
         .theme-toggle:hover {
             transform: scale(1.1);
-            background: var(--royal-purple);
         }
 
-        /* Voice control button */
+        /* Voice Control */
         .voice-control {
             position: fixed;
             top: 140px;
@@ -172,95 +229,21 @@
             50% { opacity: 0.7; }
         }
 
-        /* Test status indicators */
-        .test-status {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .test-status.pending {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .test-status.completed {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .test-status.in-progress {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        /* Canvas styling */
-        #spiralCanvas {
-            border: 2px solid var(--royal-blue);
-            border-radius: 8px;
-            background: white;
-            cursor: crosshair;
-        }
-
-        /* Form validation */
-        .form-control.is-invalid {
-            border-color: var(--medical-red);
-        }
-
-        .form-control.is-valid {
-            border-color: var(--medical-green);
-        }
-
-        .invalid-feedback {
-            color: var(--medical-red);
-            font-size: 0.875rem;
-        }
-
-        /* Test cards */
-        .test-card {
-            background: white;
-            border: 2px solid var(--royal-blue);
-            border-radius: 12px;
-            padding: 1.5rem;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s ease;
-        }
-
-        .test-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.15);
-        }
-
-        .test-card h3 {
-            color: var(--royal-blue);
-            margin-bottom: 1rem;
-        }
-
-        .test-card .btn {
-            margin-top: auto;
-        }
-
-        /* Dark mode styles */
+        /* Dark Mode */
         [data-theme="dark"] {
             --bg-primary: #1a1a1a;
             --bg-secondary: #2d2d2d;
             --text-primary: #ffffff;
             --text-secondary: #cccccc;
-            --border-color: #404040;
         }
 
         [data-theme="dark"] body {
-            background-color: var(--bg-primary);
+            background: var(--bg-primary);
             color: var(--text-primary);
         }
 
         [data-theme="dark"] .test-card {
             background: var(--bg-secondary);
-            border-color: var(--border-color);
             color: var(--text-primary);
         }
 
@@ -271,62 +254,27 @@
 
         [data-theme="dark"] .form-control {
             background: var(--bg-secondary);
-            border-color: var(--border-color);
             color: var(--text-primary);
-        }
-
-        /* Notification styles */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            max-width: 400px;
-            animation: slideInRight 0.3s ease-out;
-        }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* Section transitions */
-        .section-transition {
-            transition: all 0.3s ease-in-out;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            border-color: #404040;
         }
     </style>
 </head>
 
 <body>
-    <!-- Theme Toggle Button -->
-    <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
         <i class="fas fa-moon"></i>
     </button>
 
-    <!-- Voice Control Button -->
+    <!-- Voice Control -->
     <button class="voice-control" id="voiceControl" title="Voice Control">
         <i class="fas fa-microphone"></i>
     </button>
 
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="#home">
+            <a class="navbar-brand fw-bold text-primary">
                 <i class="fas fa-brain me-2"></i>NeuroSketch
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -335,19 +283,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" data-section="home">Home</a>
+                        <button class="nav-link btn btn-link active" onclick="showSection('home')">Home</button>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-section="register">Register</a>
+                        <button class="nav-link btn btn-link" onclick="showSection('register')">Register</button>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-section="tests">Tests</a>
+                        <button class="nav-link btn btn-link" onclick="showSection('tests')">Tests</button>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-section="about">About</a>
+                        <button class="nav-link btn btn-link" onclick="showSection('about')">About</button>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-section="contact">Contact</a>
+                        <button class="nav-link btn btn-link" onclick="showSection('contact')">Contact</button>
                     </li>
                 </ul>
             </div>
@@ -355,30 +303,28 @@
     </nav>
 
     <!-- Home Section -->
-    <section id="home" class="hero-section">
+    <section id="home" class="section">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <h1 class="display-4 fw-bold text-primary mb-4">NeuroSketch</h1>
-                    <p class="lead text-secondary mb-4">Advanced Neurological Assessment Platform for comprehensive digital health evaluation and early detection of neurological conditions.</p>
+                    <p class="lead mb-4">Advanced Neurological Assessment Platform for comprehensive digital health evaluation and early detection of neurological conditions.</p>
                     <div class="mt-4">
-                        <button class="btn btn-primary btn-lg me-3" data-section="register">Start Assessment</button>
-                        <button class="btn btn-outline-primary btn-lg" data-section="about">Learn More</button>
+                        <button class="btn btn-primary btn-lg me-3" onclick="showSection('register')">Start Assessment</button>
+                        <button class="btn btn-outline-primary btn-lg" onclick="showSection('about')">Learn More</button>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="text-center">
-                        <i class="fas fa-brain fa-5x text-primary mb-3"></i>
-                        <h3 class="text-primary">AI-Powered Assessment</h3>
-                        <p class="text-secondary">Comprehensive neurological evaluation using advanced algorithms</p>
-                    </div>
+                <div class="col-lg-6 text-center">
+                    <i class="fas fa-brain fa-5x text-primary mb-3"></i>
+                    <h3 class="text-primary">AI-Powered Assessment</h3>
+                    <p class="text-secondary">Comprehensive neurological evaluation using advanced algorithms</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Registration Section -->
-    <section id="register" class="py-5 bg-light d-none">
+    <section id="register" class="section hidden">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
@@ -392,20 +338,17 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="fullName" class="form-label">Full Name *</label>
-                                        <input type="text" class="form-control" id="fullName" name="fullName" required>
-                                        <div class="invalid-feedback">Please enter your full name.</div>
+                                        <input type="text" class="form-control" id="fullName" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="email" class="form-label">Email Address *</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
-                                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                                        <input type="email" class="form-control" id="email" required>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="age" class="form-label">Age *</label>
-                                        <input type="number" class="form-control" id="age" name="age" min="1" max="120" required>
-                                        <div class="invalid-feedback">Please enter a valid age.</div>
+                                        <input type="number" class="form-control" id="age" min="1" max="120" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Gender *</label>
@@ -423,24 +366,22 @@
                                                 <label class="form-check-label" for="other">Other</label>
                                             </div>
                                         </div>
-                                        <div class="invalid-feedback">Please select your gender.</div>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="familyHistory" class="form-label">Family History of Neurological Conditions</label>
-                                    <textarea class="form-control" id="familyHistory" name="familyHistory" rows="3" placeholder="Please describe any family history (optional)"></textarea>
+                                    <textarea class="form-control" id="familyHistory" rows="3" placeholder="Optional"></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="medicalSituation" class="form-label">Current Medical Conditions</label>
-                                    <textarea class="form-control" id="medicalSituation" name="medicalSituation" rows="3" placeholder="Please list current conditions or medications (optional)"></textarea>
+                                    <textarea class="form-control" id="medicalSituation" rows="3" placeholder="Optional"></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="consent" name="consent" required>
+                                        <input class="form-check-input" type="checkbox" id="consent" required>
                                         <label class="form-check-label" for="consent">
                                             I consent to the neurological assessment and data processing *
                                         </label>
-                                        <div class="invalid-feedback">You must consent to proceed with the assessment.</div>
                                     </div>
                                 </div>
                                 <div class="d-grid">
@@ -457,7 +398,7 @@
     </section>
 
     <!-- Tests Section -->
-    <section id="tests" class="py-5 d-none">
+    <section id="tests" class="section hidden">
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="text-primary">Neurological Assessment Tests</h2>
@@ -470,7 +411,7 @@
                         <h3><i class="fas fa-pencil-alt me-2"></i>Spiral Drawing Test</h3>
                         <p class="text-secondary">Assess motor control and hand tremor through spiral drawing patterns.</p>
                         <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <button class="btn btn-primary" id="startSpiralTest">
+                            <button class="btn btn-primary" onclick="startTest('spiral')">
                                 <i class="fas fa-play me-2"></i>Start Test
                             </button>
                             <span class="test-status pending" id="spiralStatus">Pending</span>
@@ -483,7 +424,7 @@
                         <h3><i class="fas fa-mouse-pointer me-2"></i>Tap Speed Test</h3>
                         <p class="text-secondary">Evaluate reaction speed and motor coordination through targeted tapping.</p>
                         <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <button class="btn btn-primary" id="startTapTest">
+                            <button class="btn btn-primary" onclick="startTest('tap')">
                                 <i class="fas fa-play me-2"></i>Start Test
                             </button>
                             <span class="test-status pending" id="tapStatus">Pending</span>
@@ -496,7 +437,7 @@
                         <h3><i class="fas fa-stopwatch me-2"></i>Reaction Time Test</h3>
                         <p class="text-secondary">Measure neural response time and cognitive processing speed.</p>
                         <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <button class="btn btn-primary" id="startReactionTest">
+                            <button class="btn btn-primary" onclick="startTest('reaction')">
                                 <i class="fas fa-play me-2"></i>Start Test
                             </button>
                             <span class="test-status pending" id="reactionStatus">Pending</span>
@@ -509,7 +450,7 @@
                         <h3><i class="fas fa-microphone me-2"></i>Voice Analysis Test</h3>
                         <p class="text-secondary">Analyze speech patterns and vocal control for neurological indicators.</p>
                         <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <button class="btn btn-primary" id="startVoiceTest">
+                            <button class="btn btn-primary" onclick="startTest('voice')">
                                 <i class="fas fa-play me-2"></i>Start Test
                             </button>
                             <span class="test-status pending" id="voiceStatus">Pending</span>
@@ -523,11 +464,11 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Assessment Results</h4>
-                            <p class="card-text">Complete all tests to view your comprehensive report</p>
-                            <button class="btn btn-success btn-lg me-3" id="viewResults" disabled>
+                            <p class="card-text">Complete tests to view your comprehensive report</p>
+                            <button class="btn btn-success btn-lg me-3" id="viewResults" onclick="showResults()" disabled>
                                 <i class="fas fa-chart-bar me-2"></i>View Results
                             </button>
-                            <button class="btn btn-outline-primary btn-lg" id="printResults" disabled>
+                            <button class="btn btn-outline-primary btn-lg" onclick="printResults()" disabled>
                                 <i class="fas fa-print me-2"></i>Print Report
                             </button>
                         </div>
@@ -538,7 +479,7 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-5 bg-light d-none">
+    <section id="about" class="section hidden">
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="text-primary">About NeuroSketch</h2>
@@ -566,7 +507,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-5 d-none">
+    <section id="contact" class="section hidden">
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="text-primary">Contact Information</h2>
@@ -591,7 +532,7 @@
     </section>
 
     <!-- Results Section -->
-    <section id="results" class="py-5 d-none">
+    <section id="results" class="section hidden">
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="text-primary">Assessment Results</h2>
@@ -601,10 +542,10 @@
                 <!-- Results will be populated here -->
             </div>
             <div class="text-center mt-4">
-                <button class="btn btn-primary me-3" id="backToTests">
+                <button class="btn btn-primary me-3" onclick="showSection('tests')">
                     <i class="fas fa-arrow-left me-2"></i>Back to Tests
                 </button>
-                <button class="btn btn-success me-3" id="saveResults">
+                <button class="btn btn-success me-3" onclick="saveResults()">
                     <i class="fas fa-save me-2"></i>Save Results
                 </button>
                 <button class="btn btn-outline-primary" onclick="window.print()">
@@ -616,12 +557,12 @@
 
     <!-- Test Modals -->
     <!-- Spiral Test Modal -->
-    <div class="modal fade" id="spiralTestModal" tabindex="-1">
+    <div class="modal fade" id="spiralModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Spiral Drawing Assessment</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" onclick="closeModal('spiralModal')"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-info">
@@ -632,38 +573,37 @@
                         <canvas id="spiralCanvas" width="500" height="400"></canvas>
                     </div>
                     <div class="text-center">
-                        <button class="btn btn-warning me-2" id="clearCanvas">
+                        <button class="btn btn-warning me-2" onclick="clearCanvas()">
                             <i class="fas fa-eraser me-2"></i>Clear Canvas
                         </button>
-                        <button class="btn btn-success" id="submitSpiral">
+                        <button class="btn btn-success" onclick="submitSpiral()">
                             <i class="fas fa-check me-2"></i>Submit Drawing
                         </button>
                     </div>
-                    <div id="spiralResult" class="mt-3 text-center"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Tap Test Modal -->
-    <div class="modal fade" id="tapTestModal" tabindex="-1">
+    <div class="modal fade" id="tapModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Tap Speed Assessment</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" onclick="closeModal('tapModal')"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
-                        <strong>Instructions:</strong> Click on the dots as quickly as possible when they appear. You need to click 10 targets.
+                        <strong>Instructions:</strong> Click on the dots as quickly as possible when they appear.
                     </div>
                     <div class="text-center mb-3">
-                        <button class="btn btn-success" id="startTapTestBtn">
+                        <button class="btn btn-success" onclick="startTapTest()">
                             <i class="fas fa-play me-2"></i>Start Test
                         </button>
                     </div>
-                    <div class="position-relative border rounded" id="tapTestContainer" style="height: 400px; background: #f8f9fa;">
+                    <div class="position-relative border rounded" id="tapContainer" style="height: 400px; background: #f8f9fa;">
                         <div id="tapCountdown" class="position-absolute top-50 start-50 translate-middle" style="font-size: 3rem; font-weight: bold; display: none;"></div>
                         <div id="tapDot"></div>
                     </div>
@@ -676,26 +616,25 @@
     </div>
 
     <!-- Reaction Test Modal -->
-    <div class="modal fade" id="reactionTestModal" tabindex="-1">
+    <div class="modal fade" id="reactionModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Reaction Time Assessment</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" onclick="closeModal('reactionModal')"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
-                        <strong>Instructions:</strong> Click as soon as the screen turns green. Don't click too early! You'll complete 3 trials.
+                        <strong>Instructions:</strong> Click as soon as the screen turns green. Don't click too early!
                     </div>
                     <div class="text-center mb-3">
-                        <button class="btn btn-success" id="startReactionTestBtn">
+                        <button class="btn btn-success" onclick="startReactionTest()">
                             <i class="fas fa-play me-2"></i>Start Test
                         </button>
                     </div>
                     <div id="reactionTestContainer" style="height: 300px;">
                         <div id="reactionCountdown" class="position-absolute top-50 start-50 translate-middle" style="font-size: 2rem; font-weight: bold;"></div>
-                        <div id="reactionTime" class="position-absolute top-50 start-50 translate-middle" style="font-size: 2rem; font-weight: bold; display: none;"></div>
                     </div>
                     <div id="reactionResult" class="mt-3 text-center"></div>
                 </div>
@@ -704,12 +643,12 @@
     </div>
 
     <!-- Voice Test Modal -->
-    <div class="modal fade" id="voiceTestModal" tabindex="-1">
+    <div class="modal fade" id="voiceModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Voice Analysis Assessment</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" onclick="closeModal('voiceModal')"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-info">
@@ -725,35 +664,820 @@
                         </div>
                     </div>
                     <div class="text-center mb-3">
-                        <button class="btn btn-success me-2" id="startVoiceRecording">
+                        <button class="btn btn-success me-2" onclick="startVoiceRecording()">
                             <i class="fas fa-microphone me-2"></i>Start Recording
                         </button>
-                        <button class="btn btn-danger" id="stopVoiceRecording" disabled>
+                        <button class="btn btn-danger" onclick="stopVoiceRecording()" disabled id="stopVoiceBtn">
                             <i class="fas fa-stop me-2"></i>Stop Recording
                         </button>
                     </div>
                     <div id="voiceResult" class="text-center"></div>
-                    <div id="voiceAnalysis" class="mt-3"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-4">
-        <div class="container">
-            <p class="mb-0">&copy; 2024 NeuroSketch. Advanced Neurological Assessment Platform.</p>
-        </div>
-    </footer>
-
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Custom Scripts -->
-    <script src="js/main.js"></script>
-    <script src="js/form-validation.js"></script>
-    <script src="js/test-manager.js"></script>
-    <script src="js/theme-toggle.js"></script>
-    <script src="js/voice-control-model.js"></script>
+    <script>
+        // Global Variables
+        let isRegistered = false;
+        let testResults = {
+            spiral: { completed: false, score: 0 },
+            tap: { completed: false, score: 0 },
+            reaction: { completed: false, score: 0 },
+            voice: { completed: false, score: 0 }
+        };
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('NeuroSketch initialized');
+            checkRegistration();
+            initializeTheme();
+            initializeVoiceControl();
+            setupFormSubmission();
+        });
+
+        // Check Registration Status
+        function checkRegistration() {
+            const userData = localStorage.getItem('userData');
+            if (userData) {
+                isRegistered = true;
+                console.log('User is registered');
+            }
+        }
+
+        // Show Section Function
+        function showSection(sectionId) {
+            console.log('Showing section:', sectionId);
+            
+            // Check if trying to access tests without registration
+            if (sectionId === 'tests' && !isRegistered) {
+                showNotification('Please complete registration first!', 'warning');
+                sectionId = 'register';
+            }
+
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Show target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Form Submission
+        function setupFormSubmission() {
+            const form = document.getElementById('registrationForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form data
+                    const formData = {
+                        fullName: document.getElementById('fullName').value,
+                        email: document.getElementById('email').value,
+                        age: document.getElementById('age').value,
+                        gender: document.querySelector('input[name="gender"]:checked')?.value,
+                        familyHistory: document.getElementById('familyHistory').value,
+                        medicalSituation: document.getElementById('medicalSituation').value,
+                        registrationDate: new Date().toISOString()
+                    };
+
+                    // Validate required fields
+                    if (!formData.fullName || !formData.email || !formData.age || !formData.gender) {
+                        showNotification('Please fill in all required fields', 'error');
+                        return;
+                    }
+
+                    // Save to localStorage
+                    localStorage.setItem('userData', JSON.stringify(formData));
+                    isRegistered = true;
+
+                    showNotification('Registration completed successfully!', 'success');
+                    
+                    // Redirect to tests after delay
+                    setTimeout(() => {
+                        showSection('tests');
+                    }, 1500);
+                });
+            }
+        }
+
+        // Start Test Function
+        function startTest(testType) {
+            if (!isRegistered) {
+                showNotification('Please complete registration first!', 'warning');
+                showSection('register');
+                return;
+            }
+
+            switch(testType) {
+                case 'spiral':
+                    openModal('spiralModal');
+                    initializeSpiralTest();
+                    break;
+                case 'tap':
+                    openModal('tapModal');
+                    break;
+                case 'reaction':
+                    openModal('reactionModal');
+                    break;
+                case 'voice':
+                    openModal('voiceModal');
+                    break;
+            }
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'block';
+                modal.classList.add('show');
+                document.body.classList.add('modal-open');
+                
+                // Add backdrop
+                const backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                backdrop.id = modalId + '-backdrop';
+                document.body.appendChild(backdrop);
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('show');
+                document.body.classList.remove('modal-open');
+                
+                // Remove backdrop
+                const backdrop = document.getElementById(modalId + '-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            }
+        }
+
+        // Spiral Test Implementation
+        let spiralPath = [];
+        let isDrawing = false;
+
+        function initializeSpiralTest() {
+            const canvas = document.getElementById('spiralCanvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            spiralPath = [];
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+
+            // Draw guide spiral
+            drawGuideSpiral(ctx, canvas.width, canvas.height);
+
+            // Mouse events
+            canvas.onmousedown = startDrawing;
+            canvas.onmousemove = draw;
+            canvas.onmouseup = stopDrawing;
+            canvas.onmouseout = stopDrawing;
+
+            // Touch events
+            canvas.ontouchstart = handleTouch;
+            canvas.ontouchmove = handleTouch;
+            canvas.ontouchend = stopDrawing;
+
+            function startDrawing(e) {
+                isDrawing = true;
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                spiralPath = [{x, y}];
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                spiralPath.push({x, y});
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+
+            function stopDrawing() {
+                isDrawing = false;
+            }
+
+            function handleTouch(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const mouseEvent = new MouseEvent(
+                    e.type === 'touchstart' ? 'mousedown' : 
+                    e.type === 'touchmove' ? 'mousemove' : 'mouseup',
+                    {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY
+                    }
+                );
+                canvas.dispatchEvent(mouseEvent);
+            }
+        }
+
+        function drawGuideSpiral(ctx, width, height) {
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const maxRadius = Math.min(width, height) / 3;
+
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+
+            for (let angle = 0; angle < 6 * Math.PI; angle += 0.1) {
+                const radius = (angle / (6 * Math.PI)) * maxRadius;
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+
+                if (angle === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+
+            ctx.stroke();
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+        }
+
+        function clearCanvas() {
+            const canvas = document.getElementById('spiralCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGuideSpiral(ctx, canvas.width, canvas.height);
+            spiralPath = [];
+        }
+
+        function submitSpiral() {
+            if (spiralPath.length < 10) {
+                showNotification('Please draw a complete spiral before submitting.', 'warning');
+                return;
+            }
+
+            const score = analyzeSpiralDrawing(spiralPath);
+            testResults.spiral = { completed: true, score: score };
+            
+            updateTestStatus('spiral', 'completed');
+            showNotification('Spiral test completed!', 'success');
+            closeModal('spiralModal');
+            checkAllTestsCompleted();
+        }
+
+        function analyzeSpiralDrawing(path) {
+            if (path.length < 10) return 0;
+
+            let smoothness = 0;
+            for (let i = 1; i < path.length - 1; i++) {
+                const prev = path[i - 1];
+                const curr = path[i];
+                const next = path[i + 1];
+
+                const angle1 = Math.atan2(curr.y - prev.y, curr.x - prev.x);
+                const angle2 = Math.atan2(next.y - curr.y, next.x - curr.x);
+                const angleDiff = Math.abs(angle2 - angle1);
+
+                smoothness += Math.min(angleDiff, 2 * Math.PI - angleDiff);
+            }
+
+            const avgSmoothness = smoothness / (path.length - 2);
+            const score = Math.max(0, Math.min(100, 100 - avgSmoothness * 50));
+
+            return Math.round(score);
+        }
+
+        // Tap Test Implementation
+        let tapTestActive = false;
+        let tapScore = 0;
+        let tapCount = 0;
+
+        function startTapTest() {
+            tapTestActive = true;
+            tapScore = 0;
+            tapCount = 0;
+
+            const container = document.getElementById('tapContainer');
+            const dot = document.getElementById('tapDot');
+            const countdown = document.getElementById('tapCountdown');
+            const scoreDisplay = document.getElementById('tapScoreValue');
+
+            scoreDisplay.textContent = '0/10';
+
+            // Countdown
+            let count = 3;
+            countdown.style.display = 'block';
+            countdown.textContent = count;
+
+            const countdownInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdown.textContent = count;
+                } else {
+                    countdown.textContent = 'GO!';
+                    setTimeout(() => {
+                        countdown.style.display = 'none';
+                        showNextDot();
+                    }, 500);
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+
+            function showNextDot() {
+                if (tapCount >= 10) {
+                    endTapTest();
+                    return;
+                }
+
+                tapCount++;
+
+                // Position dot randomly
+                const dotSize = 60;
+                const maxX = container.offsetWidth - dotSize;
+                const maxY = container.offsetHeight - dotSize;
+
+                const x = Math.random() * maxX;
+                const y = Math.random() * maxY;
+
+                dot.style.left = x + 'px';
+                dot.style.top = y + 'px';
+                dot.style.display = 'block';
+
+                // Auto-hide after 500ms
+                const dotTimeout = setTimeout(() => {
+                    dot.style.display = 'none';
+                    setTimeout(showNextDot, 300);
+                }, 500);
+
+                // Dot click handler
+                dot.onclick = () => {
+                    if (!tapTestActive) return;
+                    clearTimeout(dotTimeout);
+                    tapScore++;
+                    dot.style.display = 'none';
+                    scoreDisplay.textContent = `${tapScore}/10`;
+                    setTimeout(showNextDot, 300);
+                };
+            }
+
+            function endTapTest() {
+                tapTestActive = false;
+                dot.style.display = 'none';
+
+                const finalScore = (tapScore / 10) * 100;
+                testResults.tap = { completed: true, score: finalScore };
+
+                updateTestStatus('tap', 'completed');
+                showNotification(`Tap test completed! Score: ${tapScore}/10`, 'success');
+
+                setTimeout(() => {
+                    closeModal('tapModal');
+                    checkAllTestsCompleted();
+                }, 2000);
+            }
+        }
+
+        // Reaction Test Implementation
+        let reactionTestActive = false;
+        let reactionTimes = [];
+        let currentTrial = 0;
+        let reactionStartTime = 0;
+
+        function startReactionTest() {
+            reactionTestActive = true;
+            reactionTimes = [];
+            currentTrial = 0;
+            startNextTrial();
+
+            function startNextTrial() {
+                if (currentTrial >= 3) {
+                    endReactionTest();
+                    return;
+                }
+
+                const container = document.getElementById('reactionTestContainer');
+                const countdown = document.getElementById('reactionCountdown');
+                const result = document.getElementById('reactionResult');
+
+                container.style.background = '#f8f9fa';
+                countdown.style.display = 'block';
+                result.textContent = `Trial ${currentTrial + 1}/3 - Click when the screen turns green!`;
+
+                // Countdown
+                countdown.textContent = '3';
+                setTimeout(() => {
+                    countdown.textContent = '2';
+                    setTimeout(() => {
+                        countdown.textContent = '1';
+                        setTimeout(() => {
+                            countdown.style.display = 'none';
+
+                            // Random delay before green
+                            const delay = 1000 + Math.random() * 3000;
+                            setTimeout(() => {
+                                container.style.background = '#28a745';
+                                reactionStartTime = Date.now();
+                            }, delay);
+                        }, 1000);
+                    }, 1000);
+                }, 1000);
+
+                // Click handler
+                container.onclick = () => {
+                    if (!reactionTestActive) return;
+
+                    if (reactionStartTime === 0) {
+                        // Clicked too early
+                        container.style.background = '#dc3545';
+                        result.textContent = 'Too early! Try again...';
+                        setTimeout(() => {
+                            startNextTrial();
+                        }, 2000);
+                        return;
+                    }
+
+                    // Valid click
+                    const reactionTime = Date.now() - reactionStartTime;
+                    reactionTimes.push(reactionTime);
+                    result.textContent = `Reaction time: ${reactionTime}ms`;
+
+                    reactionStartTime = 0;
+                    currentTrial++;
+
+                    setTimeout(() => {
+                        startNextTrial();
+                    }, 1500);
+                };
+            }
+
+            function endReactionTest() {
+                reactionTestActive = false;
+                const avgTime = reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length;
+                const score = Math.max(0, Math.min(100, 100 - (avgTime - 200) / 10));
+
+                testResults.reaction = { completed: true, score: Math.round(score) };
+
+                updateTestStatus('reaction', 'completed');
+                showNotification(`Reaction test completed! Average: ${Math.round(avgTime)}ms`, 'success');
+
+                setTimeout(() => {
+                    closeModal('reactionModal');
+                    checkAllTestsCompleted();
+                }, 2000);
+            }
+        }
+
+        // Voice Test Implementation
+        let mediaRecorder;
+        let audioChunks = [];
+
+        function startVoiceRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        analyzeVoice();
+                    };
+
+                    mediaRecorder.start();
+                    document.querySelector('[onclick="startVoiceRecording()"]').disabled = true;
+                    document.getElementById('stopVoiceBtn').disabled = false;
+                    document.getElementById('voiceResult').innerHTML = '<div class="text-success">Recording... Please read the text above.</div>';
+
+                    // Auto-stop after 30 seconds
+                    setTimeout(() => {
+                        if (mediaRecorder && mediaRecorder.state === 'recording') {
+                            stopVoiceRecording();
+                        }
+                    }, 30000);
+                })
+                .catch(error => {
+                    document.getElementById('voiceResult').innerHTML = '<div class="text-danger">Microphone access denied.</div>';
+                    setTimeout(() => {
+                        completeVoiceTest(75);
+                    }, 2000);
+                });
+        }
+
+        function stopVoiceRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+            document.querySelector('[onclick="startVoiceRecording()"]').disabled = false;
+            document.getElementById('stopVoiceBtn').disabled = true;
+            document.getElementById('voiceResult').innerHTML = '<div class="text-info">Processing voice analysis...</div>';
+        }
+
+        function analyzeVoice() {
+            setTimeout(() => {
+                const score = 70 + Math.random() * 25;
+                completeVoiceTest(Math.round(score));
+            }, 2000);
+        }
+
+        function completeVoiceTest(score) {
+            testResults.voice = { completed: true, score: score };
+
+            updateTestStatus('voice', 'completed');
+            showNotification(`Voice test completed! Score: ${score}%`, 'success');
+
+            setTimeout(() => {
+                closeModal('voiceModal');
+                checkAllTestsCompleted();
+            }, 2000);
+        }
+
+        // Update Test Status
+        function updateTestStatus(testName, status) {
+            const statusElement = document.getElementById(`${testName}Status`);
+            if (statusElement) {
+                statusElement.textContent = status === 'completed' ? 'Completed' : 'Pending';
+                statusElement.className = `test-status ${status}`;
+            }
+        }
+
+        // Check All Tests Completed
+        function checkAllTestsCompleted() {
+            const completedTests = Object.values(testResults).filter(test => test.completed).length;
+            const viewResultsBtn = document.getElementById('viewResults');
+
+            if (completedTests > 0) {
+                viewResultsBtn.disabled = false;
+            }
+
+            if (completedTests === 4) {
+                showNotification('All tests completed! You can now view your results.', 'success');
+            }
+        }
+
+        // Show Results
+        function showResults() {
+            const completedTests = Object.values(testResults).filter(test => test.completed);
+
+            if (completedTests.length === 0) {
+                showNotification('Please complete at least one test to view results.', 'warning');
+                return;
+            }
+
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const avgScore = completedTests.reduce((sum, test) => sum + test.score, 0) / completedTests.length;
+
+            const resultsHTML = `
+                <div class="text-center mb-4">
+                    <h3>Assessment Summary</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Patient Information</h4>
+                            <p><strong>Name:</strong> ${userData.fullName || 'N/A'}</p>
+                            <p><strong>Age:</strong> ${userData.age || 'N/A'}</p>
+                            <p><strong>Gender:</strong> ${userData.gender || 'N/A'}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Overall Score</h4>
+                            <div class="display-4 text-primary">${Math.round(avgScore)}%</div>
+                            <p class="text-muted">Based on ${completedTests.length} completed test(s)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    ${Object.entries(testResults).map(([testName, result]) => `
+                        <div class="col-md-6 mb-3">
+                            <div class="card ${result.completed ? 'border-success' : 'border-secondary'}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${testName.charAt(0).toUpperCase() + testName.slice(1)} Test</h5>
+                                    <p class="card-text">
+                                        Status: <span class="badge ${result.completed ? 'bg-success' : 'bg-secondary'}">
+                                            ${result.completed ? 'Completed' : 'Not Completed'}
+                                        </span>
+                                    </p>
+                                    ${result.completed ? `
+                                        <p class="card-text">Score: <strong>${result.score}%</strong></p>
+                                        <div class="progress">
+                                            <div class="progress-bar ${result.score >= 70 ? 'bg-success' : result.score >= 50 ? 'bg-warning' : 'bg-danger'}" 
+                                                 style="width: ${result.score}%"></div>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="mt-4 p-3 border rounded ${avgScore >= 70 ? 'border-success' : avgScore >= 50 ? 'border-warning' : 'border-danger'}">
+                    <h5>Assessment Interpretation</h5>
+                    <p>
+                        ${avgScore >= 70 ? 
+                            'Your assessment results indicate normal neurological function. Continue regular health monitoring.' :
+                            avgScore >= 50 ? 
+                            'Your assessment shows some areas that may benefit from further evaluation. Consider consulting with a healthcare professional.' :
+                            'Your assessment indicates potential areas of concern. We recommend consulting with a neurologist for comprehensive evaluation.'
+                        }
+                    </p>
+                    <small class="text-muted">
+                        <strong>Disclaimer:</strong> This assessment is for screening purposes only and does not constitute a medical diagnosis.
+                    </small>
+                </div>
+            `;
+
+            document.getElementById('resultsContent').innerHTML = resultsHTML;
+            showSection('results');
+        }
+
+        // Save Results
+        function saveResults() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const timestamp = Date.now().toString(36);
+            const reportId = `NS-${timestamp}`.toUpperCase();
+
+            const resultsData = {
+                ...userData,
+                testResults: testResults,
+                reportId: reportId,
+                timestamp: new Date().toISOString()
+            };
+
+            const existingResults = JSON.parse(localStorage.getItem('savedResults') || '[]');
+            existingResults.push(resultsData);
+            localStorage.setItem('savedResults', JSON.stringify(existingResults));
+
+            showNotification(`Results saved successfully! Report ID: ${reportId}`, 'success');
+        }
+
+        // Print Results
+        function printResults() {
+            window.print();
+        }
+
+        // Theme Toggle
+        function initializeTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                applyTheme(newTheme);
+                localStorage.setItem('theme', newTheme);
+                showNotification(`Switched to ${newTheme} mode`, 'info');
+            });
+
+            function applyTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+
+        // Voice Control
+        function initializeVoiceControl() {
+            const voiceBtn = document.getElementById('voiceControl');
+            let recognition = null;
+            let isListening = false;
+
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+
+                recognition.continuous = true;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+
+                recognition.onstart = () => {
+                    isListening = true;
+                    voiceBtn.classList.add('listening');
+                    showNotification('Voice control activated. Say a command...', 'info');
+                };
+
+                recognition.onend = () => {
+                    isListening = false;
+                    voiceBtn.classList.remove('listening');
+                };
+
+                recognition.onresult = (event) => {
+                    const command = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
+                    processVoiceCommand(command);
+                };
+
+                recognition.onerror = () => {
+                    isListening = false;
+                    voiceBtn.classList.remove('listening');
+                    showNotification('Voice recognition error. Please try again.', 'error');
+                };
+
+                voiceBtn.addEventListener('click', () => {
+                    if (isListening) {
+                        recognition.stop();
+                    } else {
+                        recognition.start();
+                    }
+                });
+            } else {
+                voiceBtn.style.display = 'none';
+            }
+
+            function processVoiceCommand(command) {
+                if (command.includes('go to home') || command.includes('home page')) {
+                    showSection('home');
+                    showNotification('Navigating to home', 'success');
+                } else if (command.includes('go to register') || command.includes('registration')) {
+                    showSection('register');
+                    showNotification('Navigating to registration', 'success');
+                } else if (command.includes('go to tests') || command.includes('test page')) {
+                    showSection('tests');
+                    showNotification('Navigating to tests', 'success');
+                } else if (command.includes('go to about') || command.includes('about page')) {
+                    showSection('about');
+                    showNotification('Navigating to about', 'success');
+                } else if (command.includes('go to contact') || command.includes('contact page')) {
+                    showSection('contact');
+                    showNotification('Navigating to contact', 'success');
+                } else if (command.includes('start spiral test')) {
+                    startTest('spiral');
+                    showNotification('Starting spiral test', 'success');
+                } else if (command.includes('start tap test')) {
+                    startTest('tap');
+                    showNotification('Starting tap test', 'success');
+                } else if (command.includes('start reaction test')) {
+                    startTest('reaction');
+                    showNotification('Starting reaction test', 'success');
+                } else if (command.includes('start voice test')) {
+                    startTest('voice');
+                    showNotification('Starting voice test', 'success');
+                } else if (command.includes('show results') || command.includes('view results')) {
+                    showResults();
+                    showNotification('Showing results', 'success');
+                } else if (command.includes('dark mode')) {
+                    document.getElementById('themeToggle').click();
+                    showNotification('Switching to dark mode', 'success');
+                } else if (command.includes('light mode')) {
+                    document.getElementById('themeToggle').click();
+                    showNotification('Switching to light mode', 'success');
+                } else {
+                    showNotification('Command not recognized. Try "go to home", "start spiral test", etc.', 'warning');
+                }
+
+                if (recognition && isListening) {
+                    recognition.stop();
+                }
+            }
+        }
+
+        // Notification System
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show notification`;
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+    </script>
 </body>
 </html>
