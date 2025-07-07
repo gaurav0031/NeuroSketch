@@ -44,69 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupRegistrationForm()
 })
 
-// Calculate test results based on raw score
-function calculateTestResults(testName, rawScore, details = {}) {
-  // Different calculation methods for each test
-  let healthy, parkinsons, status
-
-  switch (testName) {
-    case "spiral":
-      // Spiral test: Higher score = better (smoother drawing)
-      // Score range: 0-100
-      healthy = Math.round(rawScore)
-      parkinsons = 100 - healthy
-      status = healthy >= 60 ? "Healthy" : "Not Healthy"
-      break
-
-    case "tap":
-      // Tap test: Higher score = better (more accurate taps)
-      // Score range: 0-100
-      healthy = Math.round(rawScore)
-      parkinsons = 100 - healthy
-      status = healthy >= 60 ? "Healthy" : "Not Healthy"
-      break
-
-    case "reaction":
-      // Reaction test: Lower time = better
-      // Convert reaction time (ms) to a 0-100 score
-      // Typical reaction times: 200ms (excellent) to 800ms (poor)
-      const normalizedScore = Math.max(0, Math.min(100, 100 - (rawScore - 200) / 6))
-      healthy = Math.round(normalizedScore)
-      parkinsons = 100 - healthy
-      status = healthy >= 60 ? "Healthy" : "Not Healthy"
-      break
-
-    case "voice":
-      // Voice test: Higher score = better
-      // Score range: 0-100
-      healthy = Math.round(rawScore)
-      parkinsons = 100 - healthy
-      status = healthy >= 60 ? "Healthy" : "Not Healthy"
-      break
-
-    default:
-      healthy = 0
-      parkinsons = 0
-      status = "Not Tested"
-  }
-
-  // Update test results
-  window.testResults[testName] = {
-    status: status,
-    healthy: healthy,
-    parkinsons: parkinsons,
-    rawScore: rawScore,
-    details: details,
-  }
-
-  // Update UI
-  updateTestStatusDisplay()
-
-  console.log(`Test results for ${testName}:`, window.testResults[testName])
-
-  return { status, healthy, parkinsons, rawScore, details }
-}
-
 // Setup registration form
 function setupRegistrationForm() {
   const registrationForm = document.getElementById("registrationForm")
@@ -209,40 +146,51 @@ function setupTestButtons() {
 
 // Show modal function
 function showModal(modalId) {
+  console.log("Showing modal:", modalId)
   const modal = document.getElementById(modalId)
-  if (!modal) return
+  if (!modal) {
+    console.error("Modal not found:", modalId)
+    return
+  }
 
+  // Remove any existing backdrops
+  const existingBackdrops = document.querySelectorAll(".modal-backdrop")
+  existingBackdrops.forEach((backdrop) => {
+    backdrop.remove()
+  })
+
+  // Add backdrop
+  const backdrop = document.createElement("div")
+  backdrop.className = "modal-backdrop fade show"
+  document.body.appendChild(backdrop)
+
+  // Show modal
   modal.classList.add("show")
   modal.style.display = "block"
   document.body.classList.add("modal-open")
 
-  // Focus the first focusable element
-  const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
-  if (focusableElements.length > 0) {
-    focusableElements[0].focus()
-  }
-
-  // Add keyboard event listener for accessibility
-  modal.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      hideModal(modalId)
-    }
-  })
+  // Prevent Bootstrap from handling this modal
+  modal.setAttribute("data-handled", "true")
 }
 
 // Hide modal function
 function hideModal(modalId) {
+  console.log("Hiding modal:", modalId)
   const modal = document.getElementById(modalId)
-  if (!modal) return
+  if (!modal) {
+    console.error("Modal not found:", modalId)
+    return
+  }
 
+  // Hide modal
   modal.classList.remove("show")
   modal.style.display = "none"
   document.body.classList.remove("modal-open")
 
-  // Return focus to the button that opened the modal
-  const triggerButton = document.querySelector(`[data-target="#${modalId}"]`)
-  if (triggerButton) {
-    triggerButton.focus()
+  // Remove backdrop
+  const backdrop = document.querySelector(".modal-backdrop")
+  if (backdrop) {
+    backdrop.remove()
   }
 }
 
@@ -277,59 +225,200 @@ function hideSection(sectionId) {
   }
 }
 
+// Calculate test results based on raw score
+function calculateTestResults(testName, rawScore, details = {}) {
+  // Different calculation methods for each test
+  let healthy, parkinsons, status
+
+  switch (testName) {
+    case "spiral":
+      // Spiral test: Higher score = better (smoother drawing)
+      // Score range: 0-100
+      healthy = Math.round(rawScore)
+      parkinsons = 100 - healthy
+      status = healthy >= 60 ? "Healthy" : "Not Healthy"
+      break
+
+    case "tap":
+      // Tap test: Higher score = better (more accurate taps)
+      // Score range: 0-100
+      healthy = Math.round(rawScore)
+      parkinsons = 100 - healthy
+      status = healthy >= 60 ? "Healthy" : "Not Healthy"
+      break
+
+    case "reaction":
+      // Reaction test: Lower time = better
+      // Convert reaction time (ms) to a 0-100 score
+      // Typical reaction times: 200ms (excellent) to 800ms (poor)
+      const normalizedScore = Math.max(0, Math.min(100, 100 - (rawScore - 200) / 6))
+      healthy = Math.round(normalizedScore)
+      parkinsons = 100 - healthy
+      status = healthy >= 60 ? "Healthy" : "Not Healthy"
+      break
+
+    case "voice":
+      // Voice test: Higher score = better
+      // Score range: 0-100
+      healthy = Math.round(rawScore)
+      parkinsons = 100 - healthy
+      status = healthy >= 60 ? "Healthy" : "Not Healthy"
+      break
+
+    default:
+      healthy = 0
+      parkinsons = 0
+      status = "Not Tested"
+  }
+
+  // Update test results
+  window.testResults[testName] = {
+    status: status,
+    healthy: healthy,
+    parkinsons: parkinsons,
+    rawScore: rawScore,
+    details: details,
+  }
+
+  // Update UI
+  updateTestStatusDisplay()
+
+  console.log(`Test results for ${testName}:`, window.testResults[testName])
+
+  return { status, healthy, parkinsons, rawScore, details }
+}
+
 // Update test status display
 function updateTestStatusDisplay() {
-  Object.entries(window.testResults).forEach(([test, result]) => {
-    const statusEl = document.getElementById(`${test}TestStatus`)
-    const healthyEl = document.getElementById(`${test}HealthyBar`)
-    const parkinsonsEl = document.getElementById(`${test}ParkinsonBar`)
-    const healthyPercentEl = document.getElementById(`${test}HealthyPercent`)
-    const parkinsonsPercentEl = document.getElementById(`${test}ParkinsonPercent`)
-    
-    if (statusEl) {
-      statusEl.textContent = result.status
-      statusEl.className = `status-value ${result.status.toLowerCase().replace(' ', '-')}`
+  // Update Spiral Test
+  updateTestStatus(
+    "spiral",
+    "spiralTestStatus",
+    "spiralTestResult",
+    "spiralHealthyBar",
+    "spiralParkinsonBar",
+    "spiralHealthyPercent",
+    "spiralParkinsonPercent",
+    1,
+  )
+
+  // Update Tap Test
+  updateTestStatus(
+    "tap",
+    "tapTestStatus",
+    "tapTestResult",
+    "tapHealthyBar",
+    "tapParkinsonBar",
+    "tapHealthyPercent",
+    "tapParkinsonPercent",
+    2,
+  )
+
+  // Update Reaction Test
+  updateTestStatus(
+    "reaction",
+    "reactionTestStatus",
+    "reactionTestResult",
+    "reactionHealthyBar",
+    "reactionParkinsonBar",
+    "reactionHealthyPercent",
+    "reactionParkinsonPercent",
+    3,
+  )
+
+  // Update Voice Test
+  updateTestStatus(
+    "voice",
+    "voiceTestStatus",
+    "voiceTestResult",
+    "voiceHealthyBar",
+    "voiceParkinsonBar",
+    "voiceHealthyPercent",
+    "voiceParkinsonPercent",
+    4,
+  )
+
+  // Enable view results button if at least one test is completed
+  const viewResults = document.getElementById("viewResults")
+  if (viewResults) {
+    const completedTests = Object.values(window.testResults).filter((test) => test.status !== "Not Tested").length
+    if (completedTests > 0) {
+      viewResults.disabled = false
+      viewResults.classList.add("pulse")
+    } else {
+      viewResults.disabled = true
+      viewResults.classList.remove("pulse")
     }
-    
-    if (healthyEl) {
-      healthyEl.style.width = `${result.healthy}%`
-      healthyEl.setAttribute('aria-valuenow', result.healthy)
-    }
-    
-    if (parkinsonsEl) {
-      parkinsonsEl.style.width = `${result.parkinsons}%`
-      parkinsonsEl.setAttribute('aria-valuenow', result.parkinsons)
+  }
+}
+
+// Update individual test status
+function updateTestStatus(
+  testName,
+  statusId,
+  resultId,
+  healthyBarId,
+  parkinsonBarId,
+  healthyPercentId,
+  parkinsonPercentId,
+  cardIndex,
+) {
+  const statusElement = document.getElementById(statusId)
+  if (statusElement) {
+    statusElement.textContent = window.testResults[testName].status
+    statusElement.className = getStatusClass(window.testResults[testName].status)
+  }
+
+  if (window.testResults[testName].status !== "Not Tested") {
+    const resultElement = document.getElementById(resultId)
+    if (resultElement && resultElement.classList.contains("d-none")) {
+      resultElement.classList.remove("d-none")
+      resultElement.classList.add("fade-in")
     }
 
-    if (healthyPercentEl) {
-      healthyPercentEl.textContent = `${result.healthy}%`
-    }
+    const healthyBar = document.getElementById(healthyBarId)
+    const parkinsonBar = document.getElementById(parkinsonBarId)
 
-    if (parkinsonsPercentEl) {
-      parkinsonsPercentEl.textContent = `${result.parkinsons}%`
-    }
-  })
+    if (healthyBar && parkinsonBar) {
+      // Set initial width to 0 and then animate
+      healthyBar.style.width = "0%"
+      parkinsonBar.style.width = "0%"
 
-  // Update overall results
-  const overallResults = calculateOverallResults()
-  const overallStatusEl = document.getElementById('overallStatus')
-  const overallHealthyEl = document.getElementById('overallHealthyBar')
-  const overallParkinsonsEl = document.getElementById('overallParkinsonBar')
-  
-  if (overallStatusEl) {
-    overallStatusEl.textContent = overallResults.status
-    overallStatusEl.className = `status-value ${overallResults.status.toLowerCase().replace(' ', '-')}`
+      // Update aria-valuenow for accessibility and printing
+      healthyBar.setAttribute("aria-valuenow", window.testResults[testName].healthy)
+      parkinsonBar.setAttribute("aria-valuenow", window.testResults[testName].parkinsons)
+
+      const healthyPercent = document.getElementById(healthyPercentId)
+      const parkinsonPercent = document.getElementById(parkinsonPercentId)
+
+      if (healthyPercent) {
+        healthyPercent.textContent = window.testResults[testName].healthy
+      }
+
+      if (parkinsonPercent) {
+        parkinsonPercent.textContent = window.testResults[testName].parkinsons
+      }
+
+      // Trigger animation by forcing reflow and then setting the proper width
+      setTimeout(() => {
+        healthyBar.style.width = `${window.testResults[testName].healthy}%`
+        parkinsonBar.style.width = `${window.testResults[testName].parkinsons}%`
+      }, 50)
+
+      // Add completed animation to card
+      const testCard = document.querySelector(`.test-card:nth-child(${cardIndex})`)
+      if (testCard) {
+        testCard.classList.add("test-completed")
+      }
+    }
   }
-  
-  if (overallHealthyEl) {
-    overallHealthyEl.style.width = `${overallResults.healthy}%`
-    overallHealthyEl.setAttribute('aria-valuenow', overallResults.healthy)
-  }
-  
-  if (overallParkinsonsEl) {
-    overallParkinsonsEl.style.width = `${overallResults.parkinsons}%`
-    overallParkinsonsEl.setAttribute('aria-valuenow', overallResults.parkinsons)
-  }
+}
+
+// Get CSS class for status display
+function getStatusClass(status) {
+  if (status === "Healthy") return "status-value healthy"
+  if (status === "Not Healthy") return "status-value not-healthy"
+  return "status-value"
 }
 
 // Show results section with test data
@@ -523,42 +612,51 @@ function initializeSpiralTest() {
   let lastY = 0
   let spiralPath = []
   let spiralGuidePoints = []
-  let currentDotIndex = 1
-  let startTime = 0
+  let currentDotIndex = 1 // Track which dot the user should be drawing to
 
+  // Draw spiral guide with animation and connecting lines
   function drawSpiralGuide() {
     ctx.clearRect(0, 0, spiralCanvas.width, spiralCanvas.height)
     spiralGuidePoints = []
-    spiralPath = []
-    currentDotIndex = 1
+
     const centerX = spiralCanvas.width / 2
     const centerY = spiralCanvas.height / 2
     const maxRadius = Math.min(centerX, centerY) - 20
 
+    // Draw a faint spiral path to guide the user
     ctx.beginPath()
     ctx.strokeStyle = "rgba(200, 200, 200, 0.5)"
     ctx.lineWidth = 1
 
+    // Draw a spiral guide path
     for (let i = 0; i <= 15; i += 0.1) {
       const angle = i * 0.5 * Math.PI
       const radius = (i / 15) * maxRadius
       const x = centerX + radius * Math.cos(angle)
       const y = centerY + radius * Math.sin(angle)
-      if (i === 0) ctx.moveTo(x, y)
-      else ctx.lineTo(x, y)
+
+      if (i === 0) {
+        ctx.moveTo(x, y)
+      } else {
+        ctx.lineTo(x, y)
+      }
     }
     ctx.stroke()
 
+    // Animate spiral guide points
     let i = 1
     const animatePoints = () => {
       if (i <= 15) {
+        // Keep 15 dots
         const angle = i * 0.5 * Math.PI
         const radius = (i / 15) * maxRadius
         const x = centerX + radius * Math.cos(angle)
         const y = centerY + radius * Math.sin(angle)
 
+        // Store guide points for later comparison
         spiralGuidePoints.push({ x, y, radius, angle })
 
+        // Draw numbered dots
         ctx.beginPath()
         ctx.arc(x, y, 5, 0, 2 * Math.PI)
         ctx.fillStyle = "#4e73df"
@@ -567,80 +665,337 @@ function initializeSpiralTest() {
         ctx.lineWidth = 1
         ctx.stroke()
 
+        // Draw number
         ctx.font = "12px Arial"
         ctx.fillStyle = "#000"
         ctx.fillText(i.toString(), x + 10, y)
+
+        // Do NOT connect dots with lines as requested
+        // if (i > 1) {
+        //   const prevPoint = spiralGuidePoints[i - 2]
+        //   ctx.beginPath()
+        //   ctx.moveTo(prevPoint.x, prevPoint.y)
+        //   ctx.lineTo(x, y)
+        //   ctx.strokeStyle = "rgba(78, 115, 223, 0.5)"
+        //   ctx.lineWidth = 1
+        //   ctx.stroke()
+        // }
 
         i++
         setTimeout(animatePoints, 100)
       }
     }
+
+    // Start the animation
     animatePoints()
   }
 
-  function getSmoothPoint(points, t) {
-    const p0 = points[t - 1] || points[t]
-    const p1 = points[t]
-    const p2 = points[t + 1] || points[t]
-    return {
-      x: (p0.x + p1.x + p2.x) / 3,
-      y: (p0.y + p1.y + p2.y) / 3,
-    }
-  }
+  // Initialize canvas with animated guide
+  drawSpiralGuide()
 
+  // Helper function to find the closest dot to the current position
   function findClosestDot(x, y) {
-    let closest = null
-    let minDist = Infinity
-    spiralGuidePoints.forEach((dot, idx) => {
-      const dist = Math.hypot(x - dot.x, y - dot.y)
-      if (dist < minDist) {
-        minDist = dist
-        closest = { dot, index: idx }
+    if (spiralGuidePoints.length === 0) return null
+
+    let closestDot = null
+    let minDistance = Number.POSITIVE_INFINITY
+
+    spiralGuidePoints.forEach((dot, index) => {
+      const distance = Math.sqrt(Math.pow(x - dot.x, 2) + Math.pow(y - dot.y, 2))
+      if (distance < minDistance) {
+        minDistance = distance
+        closestDot = { dot, index }
       }
     })
-    return closest
+
+    return closestDot
   }
 
-  function evaluateDrawing() {
-    let totalDeviation = 0
-    let matchedPoints = 0
+  // Event listeners for drawing
+  spiralCanvas.addEventListener("mousedown", (e) => {
+    isDrawing = true
+    const rect = spiralCanvas.getBoundingClientRect()
+    lastX = e.clientX - rect.left
+    lastY = e.clientY - rect.top
+    spiralPath = [{ x: lastX, y: lastY }]
 
-    spiralPath.forEach(p => {
-      const { dot } = findClosestDot(p.x, p.y)
-      totalDeviation += Math.hypot(p.x - dot.x, p.y - dot.y)
-      if (Math.hypot(p.x - dot.x, p.y - dot.y) < 15) matchedPoints++
+    // Check if starting near the first dot
+    const closestDot = findClosestDot(lastX, lastY)
+    if (
+      closestDot &&
+      closestDot.index === 0 &&
+      Math.sqrt(Math.pow(lastX - closestDot.dot.x, 2) + Math.pow(lastY - closestDot.dot.y, 2)) < 20
+    ) {
+      currentDotIndex = 1
+    }
+  })
+
+  spiralCanvas.addEventListener("mousemove", (e) => {
+    if (!isDrawing) return
+
+    const rect = spiralCanvas.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+
+    ctx.beginPath()
+    ctx.moveTo(lastX, lastY)
+    ctx.lineTo(x, y)
+    ctx.strokeStyle = "#000"
+    ctx.lineWidth = 2
+    ctx.stroke()
+
+    lastX = x
+    lastY = y
+    spiralPath.push({ x, y })
+
+    // Check if we're near the next dot in sequence
+    if (currentDotIndex < spiralGuidePoints.length) {
+      const nextDot = spiralGuidePoints[currentDotIndex]
+      const distance = Math.sqrt(Math.pow(x - nextDot.x, 2) + Math.pow(y - nextDot.y, 2))
+
+      if (distance < 15) {
+        // If within 15px of the dot
+        // Highlight that we've reached this dot
+        ctx.beginPath()
+        ctx.arc(nextDot.x, nextDot.y, 7, 0, 2 * Math.PI)
+        ctx.fillStyle = "rgba(28, 200, 138, 0.5)" // Green highlight
+        ctx.fill()
+
+        currentDotIndex++
+      }
+    }
+  })
+
+  spiralCanvas.addEventListener("mouseup", () => {
+    isDrawing = false
+  })
+
+  spiralCanvas.addEventListener("mouseleave", () => {
+    isDrawing = false
+  })
+
+  // Touch support for mobile devices
+  spiralCanvas.addEventListener("touchstart", (e) => {
+    e.preventDefault()
+    isDrawing = true
+    const rect = spiralCanvas.getBoundingClientRect()
+    lastX = e.touches[0].clientX - rect.left
+    lastY = e.touches[0].clientY - rect.top
+    spiralPath = [{ x: lastX, y: lastY }]
+
+    // Check if starting near the first dot
+    const closestDot = findClosestDot(lastX, lastY)
+    if (
+      closestDot &&
+      closestDot.index === 0 &&
+      Math.sqrt(Math.pow(lastX - closestDot.dot.x, 2) + Math.pow(lastY - closestDot.dot.y, 2)) < 20
+    ) {
+      currentDotIndex = 1
+    }
+  })
+
+  spiralCanvas.addEventListener("touchmove", (e) => {
+    e.preventDefault()
+    if (!isDrawing) return
+
+    const rect = spiralCanvas.getBoundingClientRect()
+    const x = e.touches[0].clientX - rect.left
+    const y = e.touches[0].clientY - rect.top
+
+    ctx.beginPath()
+    ctx.moveTo(lastX, lastY)
+    ctx.lineTo(x, y)
+    ctx.strokeStyle = "#000"
+    ctx.lineWidth = 2
+    ctx.stroke()
+
+    lastX = x
+    lastY = y
+    spiralPath.push({ x, y })
+
+    // Check if we're near the next dot in sequence
+    if (currentDotIndex < spiralGuidePoints.length) {
+      const nextDot = spiralGuidePoints[currentDotIndex]
+      const distance = Math.sqrt(Math.pow(x - nextDot.x, 2) + Math.pow(y - nextDot.y, 2))
+
+      if (distance < 15) {
+        // If within 15px of the dot
+        // Highlight that we've reached this dot
+        ctx.beginPath()
+        ctx.arc(nextDot.x, nextDot.y, 7, 0, 2 * Math.PI)
+        ctx.fillStyle = "rgba(28, 200, 138, 0.5)" // Green highlight
+        ctx.fill()
+
+        currentDotIndex++
+      }
+    }
+  })
+
+  spiralCanvas.addEventListener("touchend", () => {
+    isDrawing = false
+  })
+
+  // Clear canvas button
+  if (clearSpiralCanvas) {
+    clearSpiralCanvas.addEventListener("click", () => {
+      drawSpiralGuide()
+      spiralPath = []
+      currentDotIndex = 1
     })
-
-    const avgDeviation = totalDeviation / spiralPath.length
-    const timeTaken = (Date.now() - startTime) / 1000
-    const percentCompleted = (matchedPoints / spiralGuidePoints.length) * 100
-
-    // Calculate final score based on multiple factors
-    const smoothnessScore = 100 - Math.min(100, avgDeviation * 2)
-    const accuracyScore = percentCompleted
-    const timeScore = Math.max(0, 100 - (timeTaken * 5)) // Penalize for taking too long
-
-    // Weighted average of scores
-    const finalScore = (smoothnessScore * 0.4 + accuracyScore * 0.4 + timeScore * 0.2)
-
-    // Update test results
-    calculateTestResults("spiral", finalScore, {
-      smoothness: smoothnessScore,
-      accuracy: accuracyScore,
-      time: timeScore,
-      dotsHit: matchedPoints,
-      totalDots: spiralGuidePoints.length,
-      avgDeviation: avgDeviation,
-      timeTaken: timeTaken
-    })
-
-    // Close modal after a delay
-    setTimeout(() => {
-      hideModal("spiralTestModal")
-    }, 2000)
   }
 
-  // ... rest of the original spiral test implementation ...
+  // Submit test button
+  if (submitSpiralTest) {
+    submitSpiralTest.addEventListener("click", () => {
+      if (spiralPath.length < 50) {
+        alert("Please draw a complete spiral before submitting.")
+        return
+      }
+
+      // Show loading animation
+      submitSpiralTest.disabled = true
+      submitSpiralTest.innerHTML = '<div class="loading"></div> Analyzing...'
+
+      // Analyze spiral drawing with a slight delay to show the loading animation
+      setTimeout(() => {
+        // Calculate an actual score based on the drawing
+        const spiralAnalysis = analyzeSpiralDrawing(spiralPath, spiralGuidePoints)
+
+        // Update test results using the calculated score
+        calculateTestResults("spiral", spiralAnalysis.finalScore, {
+          smoothness: spiralAnalysis.smoothnessScore,
+          accuracy: spiralAnalysis.accuracyScore,
+          consistency: spiralAnalysis.consistencyScore,
+          dotsHit: currentDotIndex - 1,
+          totalDots: spiralGuidePoints.length,
+        })
+
+        // Close modal with animation
+        submitSpiralTest.innerHTML = "Analysis Complete!"
+        submitSpiralTest.classList.add("btn-success")
+
+        setTimeout(() => {
+          hideModal("spiralTestModal")
+
+          // Reset button state after modal is closed
+          setTimeout(() => {
+            submitSpiralTest.disabled = false
+            submitSpiralTest.innerHTML = "Submit"
+            submitSpiralTest.classList.remove("btn-success")
+          }, 500)
+        }, 1000)
+      }, 1500)
+    })
+  }
+}
+
+// Analyze spiral drawing with improved metrics
+function analyzeSpiralDrawing(path, guidePoints) {
+  if (path.length < 3) return { finalScore: 0 }
+
+  // Multiple metrics for a more comprehensive analysis
+  let smoothnessScore = 0
+  let accuracyScore = 0
+  let consistencyScore = 0
+
+  // 1. Smoothness: Analyze angle changes (tremor detection)
+  let totalAngleChange = 0
+  for (let i = 2; i < path.length; i++) {
+    const prev = path[i - 2]
+    const current = path[i - 1]
+    const next = path[i]
+
+    const angle1 = Math.atan2(current.y - prev.y, current.x - prev.x)
+    const angle2 = Math.atan2(next.y - current.y, next.x - current.x)
+
+    let angleDiff = Math.abs(angle2 - angle1)
+    if (angleDiff > Math.PI) {
+      angleDiff = 2 * Math.PI - angleDiff
+    }
+
+    totalAngleChange += angleDiff
+  }
+
+  // Normalize and invert (smoother = higher score)
+  const avgAngleChange = totalAngleChange / (path.length - 2)
+  smoothnessScore = 100 - (avgAngleChange * 100) / Math.PI
+
+  // 2. Accuracy: How well the drawing follows the guide points
+  if (guidePoints.length > 0) {
+    let totalDistance = 0
+
+    // Sample points along the drawn path
+    const samplePoints = []
+    const sampleCount = guidePoints.length
+
+    for (let i = 0; i < sampleCount; i++) {
+      const index = Math.floor((i / sampleCount) * path.length)
+      if (path[index]) {
+        samplePoints.push(path[index])
+      }
+    }
+
+    // Calculate distances between sample points and guide points
+    for (let i = 0; i < Math.min(samplePoints.length, guidePoints.length); i++) {
+      const sample = samplePoints[i]
+      const guide = guidePoints[i]
+
+      const distance = Math.sqrt(Math.pow(sample.x - guide.x, 2) + Math.pow(sample.y - guide.y, 2))
+
+      // Normalize by the radius of the guide point
+      const normalizedDistance = distance / guide.radius
+      totalDistance += normalizedDistance
+    }
+
+    // Convert to a 0-100 score (lower distance = higher score)
+    const avgDistance = totalDistance / Math.min(samplePoints.length, guidePoints.length)
+    accuracyScore = 100 - Math.min(100, avgDistance * 50)
+  }
+
+  // 3. Consistency: Evaluate speed and pressure consistency
+  // (In a real app, we would measure drawing speed and pressure)
+  // For this demo, we'll use a simplified metric based on point spacing
+  let totalSpacingVariation = 0
+  const spacings = []
+
+  for (let i = 1; i < path.length; i++) {
+    const prev = path[i - 1]
+    const current = path[i]
+
+    const spacing = Math.sqrt(Math.pow(current.x - prev.x, 2) + Math.pow(current.y - prev.y, 2))
+
+    spacings.push(spacing)
+  }
+
+  if (spacings.length > 1) {
+    const avgSpacing = spacings.reduce((sum, val) => sum + val, 0) / spacings.length
+
+    for (const spacing of spacings) {
+      totalSpacingVariation += Math.abs(spacing - avgSpacing)
+    }
+
+    const avgVariation = totalSpacingVariation / spacings.length
+    // Normalize to 0-100 (lower variation = higher score)
+    consistencyScore = 100 - Math.min(100, avgVariation * 10)
+  }
+
+  // Combine scores with different weights
+  const finalScore = smoothnessScore * 0.5 + accuracyScore * 0.3 + consistencyScore * 0.2
+
+  console.log("Spiral analysis:", {
+    smoothnessScore,
+    accuracyScore,
+    consistencyScore,
+    finalScore,
+  })
+
+  // Ensure score is in 0-100 range
+  return {
+    smoothnessScore: Math.round(smoothnessScore),
+    accuracyScore: Math.round(accuracyScore),
+    consistencyScore: Math.round(consistencyScore),
+    finalScore: Math.min(100, Math.max(0, finalScore)),
+  }
 }
 
 // TAP TEST IMPLEMENTATION
@@ -706,7 +1061,7 @@ function initializeTapTest() {
 
   // Show next dot with animation
   function showNextDot() {
-    if (dotsShown >= 20) {
+    if (dotsShown >= 10) {
       endTapTest()
       return
     }
@@ -748,13 +1103,13 @@ function initializeTapTest() {
       // Record when the dot appeared
       dotAppearTimes[dotsShown - 1] = Date.now()
 
-      // Auto-hide dot after 1500ms (half a second) as requested
+      // Auto-hide dot after 500ms (half a second) as requested
       dotTimeout = setTimeout(() => {
         tapDot.style.display = "none"
         // Record a miss
         tapTimes[dotsShown - 1] = -1
-        setTimeout(showNextDot, 1500) // Small delay before showing next dot
-      }, 1500) // Changed from 1500ms to 500ms
+        setTimeout(showNextDot, 300) // Small delay before showing next dot
+      }, 500) // Changed from 1500ms to 500ms
     }
   }
 
@@ -808,38 +1163,65 @@ function initializeTapTest() {
     }
   }
 
-  // ... rest of the original tap test implementation ...
+  // Dot click handler with animation
+  if (tapDot) {
+    tapDot.addEventListener("click", () => {
+      if (!tapTestActive) return
+
+      dotsClicked++
+      // Record reaction time
+      const reactionTime = Date.now() - dotAppearTimes[dotsShown - 1]
+      tapTimes[dotsShown - 1] = reactionTime
+
+      if (tapScore) tapScore.textContent = `Score: ${dotsClicked}/10`
+
+      // Add click effect
+      tapDot.classList.add("pulse")
+      setTimeout(() => {
+        tapDot.classList.remove("pulse")
+        tapDot.style.display = "none"
+        clearTimeout(dotTimeout)
+        setTimeout(showNextDot, 300) // Small delay before showing next dot
+      }, 150)
+    })
+
+    // Touch support for mobile
+    tapDot.addEventListener("touchstart", (e) => {
+      e.preventDefault()
+      if (!tapTestActive) return
+
+      // Trigger the same animation as click
+      tapDot.click()
+    })
+  }
 }
 
 // REACTION TEST IMPLEMENTATION
 function initializeReactionTest() {
-  const btn = document.getElementById("reactionStartBtn")
-  const box = document.getElementById("reactionBox")
-  if (!btn || !box) {
-    console.error("Reaction test elements not found")
+  const reactionTestContainer = document.getElementById("reactionTestContainer")
+  const reactionCountdown = document.getElementById("reactionCountdown")
+  const reactionTime = document.getElementById("reactionTime")
+  const reactionResult = document.getElementById("reactionResult")
+
+  if (!reactionTestContainer) {
+    console.error("Reaction test container not found")
     return
-  }
-
-  const results = []
-  let timeoutID, startTime
-
-  // Cleanup function
-  function cleanup() {
-    results.length = 0
-    if (timeoutID) clearTimeout(timeoutID)
-    box.style.background = "gray"
   }
 
   console.log("Initializing reaction test")
 
   let waitingForClick = false
+  let startTime = 0
+  let reactionTestTimeout = null
+  let reactionTimes = [] // Store multiple reaction times
+  const numTrials = 3 // Number of reaction time trials
   let currentTrial = 0
   let falseStarts = 0 // Track false starts (clicking too early)
 
   // Define the startReactionTestFunction globally
   window.startReactionTestFunction = () => {
     // Reset for new test
-    results.length = 0
+    reactionTimes = []
     currentTrial = 0
     falseStarts = 0
 
@@ -847,7 +1229,7 @@ function initializeReactionTest() {
   }
 
   function startNextTrial() {
-    box.style.backgroundColor = "#f8f9fa"
+    reactionTestContainer.style.backgroundColor = "#f8f9fa"
     if (reactionCountdown) {
       reactionCountdown.style.display = "block"
     }
@@ -871,8 +1253,8 @@ function initializeReactionTest() {
 
             // Random delay before turning green
             const delay = 1000 + Math.random() * 3000
-            timeoutID = setTimeout(() => {
-              box.style.backgroundColor = "#28a745"
+            reactionTestTimeout = setTimeout(() => {
+              reactionTestContainer.style.backgroundColor = "#28a745"
               startTime = Date.now()
               waitingForClick = true
             }, delay)
@@ -883,12 +1265,12 @@ function initializeReactionTest() {
   }
 
   // Handle click on reaction test container
-  box.addEventListener("click", () => {
+  reactionTestContainer.addEventListener("click", () => {
     // Fix for clicking early showing more time
     if (!waitingForClick && startTime === 0) {
       // Clicked too early - clear any pending timeout
-      clearTimeout(timeoutID)
-      box.style.backgroundColor = "#dc3545" // Red background
+      clearTimeout(reactionTestTimeout)
+      reactionTestContainer.style.backgroundColor = "#dc3545" // Red background
       falseStarts++
 
       if (reactionResult) {
@@ -906,10 +1288,10 @@ function initializeReactionTest() {
       // Valid click - only record time if we're waiting for a click
       const endTime = Date.now()
       const reactionTimeMs = endTime - startTime
-      results.push(reactionTimeMs)
+      reactionTimes.push(reactionTimeMs)
 
       // Reset the background color
-      box.style.backgroundColor = "#f8f9fa"
+      reactionTestContainer.style.backgroundColor = "#f8f9fa"
 
       if (reactionTime) {
         reactionTime.textContent = `${reactionTimeMs} ms`
@@ -934,14 +1316,14 @@ function initializeReactionTest() {
         }, 2000)
       } else {
         // All trials complete, calculate average
-        const avgReactionTime = results.reduce((sum, time) => sum + time, 0) / results.length
+        const avgReactionTime = reactionTimes.reduce((sum, time) => sum + time, 0) / reactionTimes.length
 
         if (reactionResult) {
           reactionResult.textContent = `Average reaction time: ${Math.round(avgReactionTime)} ms`
         }
 
         console.log("Reaction test results:", {
-          results,
+          reactionTimes,
           avgReactionTime,
           falseStarts,
         })
@@ -949,10 +1331,10 @@ function initializeReactionTest() {
         // Calculate score based on reaction time
         // Use the average reaction time to calculate the score
         calculateTestResults("reaction", avgReactionTime, {
-          trials: results.length,
+          trials: reactionTimes.length,
           falseStarts: falseStarts,
-          fastest: Math.min(...results),
-          slowest: Math.max(...results),
+          fastest: Math.min(...reactionTimes),
+          slowest: Math.max(...reactionTimes),
           average: avgReactionTime,
         })
 
@@ -968,40 +1350,35 @@ function initializeReactionTest() {
   })
 
   // Touch support for mobile
-  box.addEventListener("touchstart", (e) => {
+  reactionTestContainer.addEventListener("touchstart", (e) => {
     e.preventDefault()
     // Trigger the same logic as click
-    box.click()
+    reactionTestContainer.click()
   })
-
-  // Add cleanup on modal close
-  document.getElementById("reactionTestModal").addEventListener("hidden.bs.modal", cleanup)
 }
 
 // VOICE TEST IMPLEMENTATION
 function initializeVoiceTest() {
-  const startBtn = document.getElementById("startVoiceTest")
-  const scoreDisplay = document.getElementById("voiceScoreDisplay")
-  if (!startBtn) {
+  const startRecording = document.getElementById("startRecording")
+  const stopRecording = document.getElementById("stopRecording")
+  const recordingStatus = document.getElementById("recordingStatus")
+  const audioVisualization = document.getElementById("audioVisualization")
+
+  if (!startRecording) {
     console.error("Voice test elements not found")
     return
   }
 
-  let audioContext = null
-  let mediaStream = null
-
-  // Cleanup function
-  function cleanup() {
-    if (mediaStream) {
-      mediaStream.getTracks().forEach(track => track.stop())
-    }
-    if (audioContext) {
-      audioContext.close()
-    }
-  }
-
   console.log("Initializing voice test")
 
+  let mediaRecorder = null
+  let audioContext = null
+  let analyser = null
+  let microphone = null
+  let canvasContext = null
+  let animationFrame = null
+  let audioData = [] // Store audio data for analysis
+  let recordingTimeout = null
   let recognition = null // Speech recognition object
 
   // Expected phrase
@@ -1068,7 +1445,7 @@ function initializeVoiceTest() {
   }
 
   // Start recording
-  startBtn.addEventListener("click", async () => {
+  startRecording.addEventListener("click", async () => {
     try {
       if (recordingStatus) {
         recordingStatus.textContent = "Requesting microphone permission..."
@@ -1082,23 +1459,23 @@ function initializeVoiceTest() {
 
       // Set up audio context for visualization
       audioContext = new (window.AudioContext || window.webkitAudioContext)()
-      let analyser = audioContext.createAnalyser()
-      mediaStream = stream
-      let microphone = audioContext.createMediaStreamSource(stream)
+      analyser = audioContext.createAnalyser()
+      microphone = audioContext.createMediaStreamSource(stream)
       microphone.connect(analyser)
       analyser.fftSize = 256
 
       // Reset audio data
+      audioData = []
       window.finalVoiceTranscript = ""
 
       // Set up canvas for visualization
       if (audioVisualization) {
-        let canvasContext = audioVisualization.getContext("2d")
+        canvasContext = audioVisualization.getContext("2d")
         visualize()
       }
 
       // Set up media recorder
-      let mediaRecorder = new MediaRecorder(stream)
+      mediaRecorder = new MediaRecorder(stream)
       mediaRecorder.start()
 
       // Start speech recognition if available
@@ -1109,12 +1486,12 @@ function initializeVoiceTest() {
       // Collect audio data
       mediaRecorder.ondataavailable = (e) => {
         if (e.data.size > 0) {
-          // Process audio data
+          audioData.push(e.data)
         }
       }
 
       // Update UI
-      startBtn.disabled = true
+      startRecording.disabled = true
       if (stopRecording) stopRecording.disabled = false
       if (recordingStatus) {
         recordingStatus.innerHTML = `
@@ -1125,7 +1502,7 @@ function initializeVoiceTest() {
       }
 
       // Start countdown timer
-      let timeLeft = 5 // 5 seconds
+      let timeLeft = 10 // 10 seconds
       const timerElement = document.getElementById("recordingTimer")
 
       const countdownInterval = setInterval(() => {
@@ -1139,13 +1516,13 @@ function initializeVoiceTest() {
         }
       }, 1000)
 
-      // Auto-stop after 5 seconds
-      let recordingTimeout = setTimeout(() => {
+      // Auto-stop after 10 seconds
+      recordingTimeout = setTimeout(() => {
         clearInterval(countdownInterval)
         if (mediaRecorder && mediaRecorder.state === "recording") {
           if (stopRecording) stopRecording.click()
         }
-      }, 5000) // 5 seconds
+      }, 10000) // 10 seconds
     } catch (error) {
       console.error("Error accessing microphone:", error)
 
@@ -1271,7 +1648,7 @@ function initializeVoiceTest() {
               calculateTestResults("voice", voiceScore, {
                 transcript: transcript,
                 wordsMatched: wordMatchScore,
-                recordingDuration: 5, // seconds
+                recordingDuration: 10, // seconds
               })
 
               // Show results for 3 seconds before closing
@@ -1285,7 +1662,7 @@ function initializeVoiceTest() {
               calculateTestResults("voice", 50, {
                 transcript: "Error processing audio",
                 wordsMatched: 0,
-                recordingDuration: 5,
+                recordingDuration: 10,
               })
 
               if (recordingStatus) {
@@ -1309,13 +1686,13 @@ function initializeVoiceTest() {
           }
 
           // Update UI
-          startBtn.disabled = false
+          startRecording.disabled = false
           stopRecording.disabled = true
           if (recordingStatus) recordingStatus.textContent = "Recording stopped. Processing..."
         } catch (error) {
           console.error("Error stopping recording:", error)
           // Reset UI
-          startBtn.disabled = false
+          startRecording.disabled = false
           stopRecording.disabled = true
           if (recordingStatus) recordingStatus.textContent = "Error stopping recording. Please try again."
         }
@@ -1355,9 +1732,6 @@ function initializeVoiceTest() {
 
     draw()
   }
-
-  // Add cleanup on modal close
-  document.getElementById("voiceTestModal").addEventListener("hidden.bs.modal", cleanup)
 }
 
 // Save results to Firebase function
@@ -1423,7 +1797,7 @@ async function saveResults() {
     // Fallback to localStorage
     saveToLocalStorage(userData, window.testResults)
 
-    // Reset button 
+    // Reset button
     const saveResultsBtn = document.getElementById("saveResults")
     if (saveResultsBtn) {
       saveResultsBtn.innerHTML = "Save Results"
@@ -1493,45 +1867,3 @@ function calculateOverallScore(testResults, scoreType) {
   // Return average or 0 if no tests completed
   return testsCompleted > 0 ? Math.round(totalScore / testsCompleted) : 0
 }
-
-// Add utility functions
-function showError(message) {
-  const errorDiv = document.createElement("div")
-  errorDiv.className = "alert alert-danger"
-  errorDiv.textContent = message
-  document.body.insertBefore(errorDiv, document.body.firstChild)
-  setTimeout(() => errorDiv.remove(), 5000)
-}
-
-function setupResultsView() {
-  const viewResultsBtn = document.getElementById("viewResults")
-  if (viewResultsBtn) {
-    viewResultsBtn.addEventListener("click", () => {
-      try {
-        showResults()
-      } catch (error) {
-        console.error("Failed to show results:", error)
-        showError("Failed to display results. Please try again.")
-      }
-    })
-  }
-}
-
-// Add loading states to buttons
-function setButtonLoading(button, isLoading) {
-  if (!button) return
-  
-  if (isLoading) {
-    button.disabled = true
-    const originalText = button.innerHTML
-    button.setAttribute('data-original-text', originalText)
-    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
-  } else {
-    button.disabled = false
-    const originalText = button.getAttribute('data-original-text')
-    if (originalText) {
-      button.innerHTML = originalText
-    }
-  }
-}
-

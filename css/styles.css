@@ -598,9 +598,3 @@ footer::before {
     padding: 15px;
   }
 }
-
-.card-img-top {
-  width: 60%;
-  height: 500px;
-  justify-content: center;
-}
