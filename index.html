@@ -274,6 +274,41 @@
             border-color: var(--border-color);
             color: var(--text-primary);
         }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Section transitions */
+        .section-transition {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 
@@ -300,19 +335,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#home">Home</a>
+                        <a class="nav-link" href="#home" data-section="home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#register">Register</a>
+                        <a class="nav-link" href="#register" data-section="register">Register</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#tests">Tests</a>
+                        <a class="nav-link" href="#tests" data-section="tests">Tests</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#about">About</a>
+                        <a class="nav-link" href="#about" data-section="about">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#contact">Contact</a>
+                        <a class="nav-link" href="#contact" data-section="contact">Contact</a>
                     </li>
                 </ul>
             </div>
@@ -327,8 +362,8 @@
                     <h1 class="display-4 fw-bold text-primary mb-4">NeuroSketch</h1>
                     <p class="lead text-secondary mb-4">Advanced Neurological Assessment Platform for comprehensive digital health evaluation and early detection of neurological conditions.</p>
                     <div class="mt-4">
-                        <a href="#register" class="btn btn-primary btn-lg me-3">Start Assessment</a>
-                        <a href="#about" class="btn btn-outline-primary btn-lg">Learn More</a>
+                        <a href="#register" class="btn btn-primary btn-lg me-3" data-section="register">Start Assessment</a>
+                        <a href="#about" class="btn btn-outline-primary btn-lg" data-section="about">Learn More</a>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -343,7 +378,7 @@
     </section>
 
     <!-- Registration Section -->
-    <section id="register" class="py-5 bg-light">
+    <section id="register" class="py-5 bg-light d-none">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
@@ -555,6 +590,30 @@
         </div>
     </section>
 
+    <!-- Results Section -->
+    <section id="results" class="py-5 d-none">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="text-primary">Assessment Results</h2>
+                <p class="text-secondary">Your comprehensive neurological assessment report</p>
+            </div>
+            <div id="resultsContent">
+                <!-- Results will be populated here -->
+            </div>
+            <div class="text-center mt-4">
+                <button class="btn btn-primary me-3" id="backToTests">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Tests
+                </button>
+                <button class="btn btn-success me-3" id="saveResults">
+                    <i class="fas fa-save me-2"></i>Save Results
+                </button>
+                <button class="btn btn-outline-primary" onclick="window.print()">
+                    <i class="fas fa-print me-2"></i>Print Report
+                </button>
+            </div>
+        </div>
+    </section>
+
     <!-- Test Modals -->
     <!-- Spiral Test Modal -->
     <div class="modal fade" id="spiralTestModal" tabindex="-1">
@@ -675,27 +734,6 @@
                     </div>
                     <div id="voiceResult" class="text-center"></div>
                     <div id="voiceAnalysis" class="mt-3"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Results Modal -->
-    <div class="modal fade" id="resultsModal" tabindex="-1">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Neurological Assessment Report</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body" id="resultsContent">
-                    <!-- Results will be populated here -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-primary" onclick="window.print()">
-                        <i class="fas fa-print me-2"></i>Print Report
-                    </button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

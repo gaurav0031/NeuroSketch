@@ -20,6 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
         feedbackElement.remove()
       }
     })
+
+    // Real-time validation for email
+    if (input.type === "email") {
+      input.addEventListener("input", function () {
+        if (this.value.length > 0) {
+          validateInput(this)
+        }
+      })
+    }
   })
 
   // Handle form submission
@@ -120,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let errorMessage = ""
 
     // Clear previous validation
-    clearFieldValidation(input)
+    clearValidation(input)
 
     // Check if field is required
     if (input.hasAttribute("required")) {
@@ -162,9 +171,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Clear field validation
-  function clearFieldValidation(field) {
-    field.classList.remove("is-invalid", "is-valid")
-    clearFieldError(field.closest(".mb-3") || field.closest(".col-md-6"))
+  function clearValidation(input) {
+    input.classList.remove("is-invalid", "is-valid")
+    clearFieldError(input.closest(".mb-3") || input.closest(".col-md-6"))
   }
 
   // Show field error
@@ -194,36 +203,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Enhanced form validation with real-time feedback
-  const formFields = registrationForm.querySelectorAll("input, textarea, select")
-
-  formFields.forEach((field) => {
-    // Validate on blur (when user leaves the field)
-    field.addEventListener("blur", function () {
-      validateInput(this)
-    })
-
-    // Clear validation on focus (when user enters the field)
-    field.addEventListener("focus", function () {
-      clearFieldValidation(this)
-    })
-
-    // Real-time validation for certain fields
-    if (field.type === "email") {
-      field.addEventListener("input", function () {
-        if (this.value.length > 0) {
-          validateInput(this)
-        }
+  // Handle radio button validation
+  const genderRadios = registrationForm.querySelectorAll('input[name="gender"]')
+  genderRadios.forEach((radio) => {
+    radio.addEventListener("change", function () {
+      genderRadios.forEach((r) => {
+        r.classList.remove("is-invalid")
+        r.classList.add("is-valid")
       })
-    }
+      clearFieldError(this)
+    })
   })
 
-  // Declare showNotification and showSection functions
-  function showNotification(message, type) {
-    alert(`${type.toUpperCase()}: ${message}`)
-  }
-
-  function showSection(sectionId) {
-    window.location.href = `${sectionId}.html`
+  // Handle checkbox validation
+  const consentCheckbox = registrationForm.querySelector("#consent")
+  if (consentCheckbox) {
+    consentCheckbox.addEventListener("change", function () {
+      if (this.checked) {
+        this.classList.remove("is-invalid")
+        this.classList.add("is-valid")
+        clearFieldError(this)
+      } else {
+        this.classList.remove("is-valid")
+        this.classList.add("is-invalid")
+        showFieldError(this, "You must consent to proceed with the assessment.")
+      }
+    })
   }
 })

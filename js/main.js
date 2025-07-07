@@ -7,7 +7,8 @@ const testResults = {
 }
 
 let isRegistered = false
-let bootstrap // Declare the bootstrap variable
+let currentSection = "home"
+const bootstrap = window.bootstrap // Declare bootstrap variable
 
 // Initialize application
 document.addEventListener("DOMContentLoaded", () => {
@@ -24,22 +25,52 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Check if user is already registered
   checkRegistrationStatus()
+
+  // Set initial section
+  showSection("home")
 })
 
 // Navigation functionality
 function initializeNavigation() {
   // Handle navigation links
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+  document.querySelectorAll("a[data-section]").forEach((anchor) => {
     anchor.addEventListener("click", function (e) {
       e.preventDefault()
-      const targetId = this.getAttribute("href").substring(1)
-      showSection(targetId)
+      const targetSection = this.getAttribute("data-section")
+
+      // Check if trying to access tests without registration
+      if (targetSection === "tests" && !isRegistered) {
+        showNotification("Please complete registration first!", "warning")
+        showSection("register")
+        return
+      }
+
+      showSection(targetSection)
+    })
+  })
+
+  // Handle navbar links
+  document.querySelectorAll(".nav-link").forEach((link) => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault()
+      const targetSection = this.getAttribute("data-section")
+
+      // Check if trying to access tests without registration
+      if (targetSection === "tests" && !isRegistered) {
+        showNotification("Please complete registration first!", "warning")
+        showSection("register")
+        return
+      }
+
+      showSection(targetSection)
     })
   })
 }
 
 // Show section
 function showSection(sectionId) {
+  console.log(`Switching to section: ${sectionId}`)
+
   // Hide all sections
   document.querySelectorAll("section").forEach((section) => {
     section.classList.add("d-none")
@@ -49,13 +80,22 @@ function showSection(sectionId) {
   const targetSection = document.getElementById(sectionId)
   if (targetSection) {
     targetSection.classList.remove("d-none")
+    targetSection.classList.add("fade-in")
+
+    // Remove fade-in class after animation
+    setTimeout(() => {
+      targetSection.classList.remove("fade-in")
+    }, 500)
+
+    // Update current section
+    currentSection = sectionId
 
     // Update active nav link
     document.querySelectorAll(".nav-link").forEach((link) => {
       link.classList.remove("active")
     })
 
-    const activeLink = document.querySelector(`a[href="#${sectionId}"]`)
+    const activeLink = document.querySelector(`a[data-section="${sectionId}"]`)
     if (activeLink) {
       activeLink.classList.add("active")
     }
@@ -74,6 +114,12 @@ function initializeFormValidation() {
     e.preventDefault()
 
     if (validateForm(form)) {
+      // Show loading state
+      const submitBtn = form.querySelector('button[type="submit"]')
+      const originalText = submitBtn.innerHTML
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...'
+      submitBtn.disabled = true
+
       // Store registration data
       const formData = new FormData(form)
       const userData = {
@@ -86,16 +132,23 @@ function initializeFormValidation() {
         registrationDate: new Date().toISOString(),
       }
 
-      localStorage.setItem("userData", JSON.stringify(userData))
-      isRegistered = true
-
-      // Show success message
-      showNotification("Registration completed successfully!", "success")
-
-      // Enable tests and redirect
+      // Simulate processing time
       setTimeout(() => {
-        showSection("tests")
-      }, 1500)
+        localStorage.setItem("userData", JSON.stringify(userData))
+        isRegistered = true
+
+        // Reset button
+        submitBtn.innerHTML = originalText
+        submitBtn.disabled = false
+
+        // Show success message
+        showNotification("Registration completed successfully! Redirecting to tests...", "success")
+
+        // Redirect to tests after a delay
+        setTimeout(() => {
+          showSection("tests")
+        }, 2000)
+      }, 1000)
     }
   })
 }
@@ -148,6 +201,10 @@ function validateForm(form) {
     }
   }
 
+  if (!isValid) {
+    showNotification("Please correct the errors in the form.", "error")
+  }
+
   return isValid
 }
 
@@ -156,6 +213,7 @@ function checkRegistrationStatus() {
   const userData = localStorage.getItem("userData")
   if (userData) {
     isRegistered = true
+    console.log("User is already registered")
   }
 }
 
@@ -163,50 +221,50 @@ function checkRegistrationStatus() {
 function initializeTests() {
   // Test buttons
   document.getElementById("startSpiralTest")?.addEventListener("click", () => {
-    if (!isRegistered) {
-      showNotification("Please complete registration first!", "warning")
-      showSection("register")
-      return
-    }
+    if (!checkRegistration()) return
     showModal("spiralTestModal")
-    initializeSpiralTest()
+    setTimeout(() => initializeSpiralTest(), 500)
   })
 
   document.getElementById("startTapTest")?.addEventListener("click", () => {
-    if (!isRegistered) {
-      showNotification("Please complete registration first!", "warning")
-      showSection("register")
-      return
-    }
+    if (!checkRegistration()) return
     showModal("tapTestModal")
   })
 
   document.getElementById("startReactionTest")?.addEventListener("click", () => {
-    if (!isRegistered) {
-      showNotification("Please complete registration first!", "warning")
-      showSection("register")
-      return
-    }
+    if (!checkRegistration()) return
     showModal("reactionTestModal")
   })
 
   document.getElementById("startVoiceTest")?.addEventListener("click", () => {
-    if (!isRegistered) {
-      showNotification("Please complete registration first!", "warning")
-      showSection("register")
-      return
-    }
+    if (!checkRegistration()) return
     showModal("voiceTestModal")
-    initializeVoiceTest()
+    setTimeout(() => initializeVoiceTest(), 500)
   })
 
-  // Results button
+  // Results buttons
   document.getElementById("viewResults")?.addEventListener("click", showResults)
+  document.getElementById("backToTests")?.addEventListener("click", () => {
+    showSection("tests")
+  })
+  document.getElementById("saveResults")?.addEventListener("click", saveResults)
+}
+
+// Check registration
+function checkRegistration() {
+  if (!isRegistered) {
+    showNotification("Please complete registration first!", "warning")
+    showSection("register")
+    return false
+  }
+  return true
 }
 
 // Spiral Test
 function initializeSpiralTest() {
   const canvas = document.getElementById("spiralCanvas")
+  if (!canvas) return
+
   const ctx = canvas.getContext("2d")
   let isDrawing = false
   let path = []
@@ -733,7 +791,28 @@ function showResults() {
     `
 
   document.getElementById("resultsContent").innerHTML = resultsHTML
-  showModal("resultsModal")
+  showSection("results")
+}
+
+// Save results
+function saveResults() {
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}")
+  const timestamp = Date.now().toString(36)
+  const reportId = `NS-${timestamp}`.toUpperCase()
+
+  const resultsData = {
+    ...userData,
+    testResults: testResults,
+    reportId: reportId,
+    timestamp: new Date().toISOString(),
+  }
+
+  // Save to localStorage
+  const existingResults = JSON.parse(localStorage.getItem("savedResults") || "[]")
+  existingResults.push(resultsData)
+  localStorage.setItem("savedResults", JSON.stringify(existingResults))
+
+  showNotification(`Results saved successfully! Report ID: ${reportId}`, "success")
 }
 
 // Utility functions
@@ -750,10 +829,12 @@ function hideModal(modalId) {
 }
 
 function showNotification(message, type = "info") {
+  // Remove existing notifications
+  document.querySelectorAll(".notification").forEach((n) => n.remove())
+
   // Create notification element
   const notification = document.createElement("div")
-  notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`
-  notification.style.cssText = "top: 20px; right: 20px; z-index: 9999; max-width: 300px;"
+  notification.className = `alert alert-${type} alert-dismissible fade show notification`
   notification.innerHTML = `
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -773,3 +854,4 @@ function showNotification(message, type = "info") {
 window.showSection = showSection
 window.showNotification = showNotification
 window.testResults = testResults
+window.isRegistered = isRegistered
