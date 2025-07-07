@@ -1,128 +1,118 @@
-// Dark/Light Mode Toggle Implementation
+// Theme Toggle Functionality
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("Theme Toggle loaded")
+  const themeToggle = document.getElementById("themeToggle")
+  const body = document.body
+  const icon = themeToggle.querySelector("i")
 
-  // Initialize theme
-  function initializeTheme() {
-    // Check for saved theme preference or default to light mode
-    const savedTheme = localStorage.getItem("theme") || "light"
-    document.documentElement.setAttribute("data-theme", savedTheme)
+  // Check for saved theme preference or default to light mode
+  const currentTheme = localStorage.getItem("theme") || "light"
 
-    console.log("Theme initialized:", savedTheme)
+  // Apply the current theme
+  if (currentTheme === "dark") {
+    body.setAttribute("data-theme", "dark")
+    icon.className = "fas fa-sun"
+  } else {
+    body.setAttribute("data-theme", "light")
+    icon.className = "fas fa-moon"
   }
 
-  // Create theme toggle button
-  function createThemeToggle() {
-    const navbar = document.querySelector(".navbar-nav")
-    if (navbar) {
-      const themeToggleItem = document.createElement("li")
-      themeToggleItem.className = "nav-item"
-      themeToggleItem.innerHTML = `
-        <button class="theme-toggle ms-2" id="themeToggle" title="Toggle Dark/Light Mode">
-          <i class="fas fa-sun"></i>
-          <i class="fas fa-moon"></i>
-        </button>
-      `
+  // Theme toggle event listener
+  themeToggle.addEventListener("click", () => {
+    const currentTheme = body.getAttribute("data-theme")
 
-      // Insert before the last item (voice control button if it exists)
-      const lastItem = navbar.lastElementChild
-      navbar.insertBefore(themeToggleItem, lastItem)
-
-      // Add click handler
-      const toggleButton = document.getElementById("themeToggle")
-      toggleButton.addEventListener("click", toggleTheme)
-
-      console.log("Theme toggle button created")
+    if (currentTheme === "dark") {
+      // Switch to light mode
+      body.setAttribute("data-theme", "light")
+      icon.className = "fas fa-moon"
+      localStorage.setItem("theme", "light")
+    } else {
+      // Switch to dark mode
+      body.setAttribute("data-theme", "dark")
+      icon.className = "fas fa-sun"
+      localStorage.setItem("theme", "dark")
     }
-  }
-
-  // Toggle theme function
-  function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute("data-theme")
-    const newTheme = currentTheme === "dark" ? "light" : "dark"
-
-    // Apply new theme
-    document.documentElement.setAttribute("data-theme", newTheme)
-
-    // Save preference
-    localStorage.setItem("theme", newTheme)
-
-    // Add transition effect
-    document.body.style.transition = "background-color 0.3s ease, color 0.3s ease"
-
-    // Remove transition after animation
-    setTimeout(() => {
-      document.body.style.transition = ""
-    }, 300)
-
-    console.log("Theme toggled to:", newTheme)
-
-    // Show notification
-    showThemeNotification(newTheme)
-  }
-
-  // Show theme change notification
-  function showThemeNotification(theme) {
-    const notification = document.createElement("div")
-    notification.className = "theme-notification"
-    notification.innerHTML = `
-      <i class="fas fa-${theme === "dark" ? "moon" : "sun"} me-2"></i>
-      ${theme === "dark" ? "Dark" : "Light"} mode activated
-    `
-
-    // Style the notification
-    notification.style.cssText = `
-      position: fixed;
-      top: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 9999;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      padding: 12px 24px;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-heavy);
-      border: 1px solid var(--border-color);
-      animation: themeNotificationSlide 0.3s ease;
-      font-weight: 600;
-    `
-
-    // Add to document
-    document.body.appendChild(notification)
-
-    // Auto-dismiss after 2 seconds
-    setTimeout(() => {
-      notification.style.animation = "themeNotificationSlide 0.3s ease reverse"
-      setTimeout(() => {
-        notification.remove()
-      }, 300)
-    }, 2000)
-  }
-
-  // Add CSS for theme notification animation
-  const style = document.createElement("style")
-  style.textContent = `
-    @keyframes themeNotificationSlide {
-      from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-      }
-    }
-  `
-  document.head.appendChild(style)
-
-  // Initialize theme on load
-  initializeTheme()
-
-  // Create toggle button after a short delay
-  setTimeout(createThemeToggle, 100)
-
-  // Make toggle function available globally
-  window.toggleTheme = toggleTheme
-
-  console.log("Theme toggle system initialized")
+  })
 })
+
+// CSS variables for theme switching
+const themeStyles = `
+    :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8f9fa;
+        --text-primary: #212529;
+        --text-secondary: #6c757d;
+        --border-color: #dee2e6;
+        --royal-blue: #1e3a8a;
+        --royal-purple: #7c3aed;
+        --royal-gold: #f59e0b;
+        --medical-green: #10b981;
+        --medical-red: #ef4444;
+    }
+    
+    [data-theme="dark"] {
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2d2d2d;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --border-color: #404040;
+        --royal-blue: #3b82f6;
+        --royal-purple: #8b5cf6;
+        --royal-gold: #fbbf24;
+        --medical-green: #34d399;
+        --medical-red: #f87171;
+    }
+    
+    [data-theme="dark"] body {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+    }
+    
+    [data-theme="dark"] .navbar {
+        background-color: var(--bg-secondary) !important;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    [data-theme="dark"] .navbar-brand,
+    [data-theme="dark"] .nav-link {
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .card,
+    [data-theme="dark"] .test-card {
+        background-color: var(--bg-secondary);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+    
+    [data-theme="dark"] .modal-content {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+    }
+    
+    [data-theme="dark"] .form-control {
+        background-color: var(--bg-primary);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+    
+    [data-theme="dark"] .form-control:focus {
+        background-color: var(--bg-primary);
+        border-color: var(--royal-blue);
+        color: var(--text-primary);
+    }
+    
+    [data-theme="dark"] .bg-light {
+        background-color: var(--bg-secondary) !important;
+    }
+`
+
+// Inject theme styles
+const styleSheet = document.createElement("style")
+styleSheet.textContent = themeStyles
+document.head.appendChild(styleSheet)
+
+// Function to show notification
+function showNotification(message, type) {
+  // Implementation of showNotification function
+  console.log(`Notification: ${message} (Type: ${type})`)
+}

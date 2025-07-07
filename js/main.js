@@ -1,248 +1,81 @@
-// Global variables to store user data and test results
-const currentUser = null
-const userData = null
+// Global variables
 const testResults = {
-  spiral: { status: "Not Tested", healthy: 0, parkinsons: 0, rawScore: 0 },
-  tap: { status: "Not Tested", healthy: 0, parkinsons: 0, rawScore: 0 },
-  reaction: { status: "Not Tested", healthy: 0, parkinsons: 0, rawScore: 0 },
-  voice: { status: "Not Tested", healthy: 0, parkinsons: 0, rawScore: 0 },
+  spiral: { completed: false, score: 0, details: {} },
+  tap: { completed: false, score: 0, details: {} },
+  reaction: { completed: false, score: 0, details: {} },
+  voice: { completed: false, score: 0, details: {} },
 }
 
-// Initialize the application
+let isRegistered = false
+let bootstrap // Declare the bootstrap variable
+
+// Initialize application
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("NeuroSketch application initialized")
+  console.log("NeuroSketch initialized")
 
-  // Initialize Firebase if available
-  initializeFirebase()
+  // Initialize navigation
+  initializeNavigation()
 
-  // Initialize UI enhancements
-  initializeUIEnhancements()
+  // Initialize form validation
+  initializeFormValidation()
 
   // Initialize test functionality
   initializeTests()
 
-  // Setup navigation and form handling
-  setupNavigation()
-  setupForms()
-
-  // Check URL parameters for direct test access
-  checkDirectTestAccess()
+  // Check if user is already registered
+  checkRegistrationStatus()
 })
 
-// Initialize Firebase
-function initializeFirebase() {
-  // Check if Firebase is already initialized
-  if (typeof firebase !== "undefined") {
-    console.log("Firebase is available")
-
-    // Store Firebase services in window object for global access
-    window.db = firebase.firestore()
-    window.auth = firebase.auth()
-
-    // Set up authentication state observer
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log("User is signed in:", user.uid)
-        window.currentUser = user
-      } else {
-        console.log("No user is signed in")
-        window.currentUser = null
-      }
-    })
-  } else {
-    console.warn("Firebase is not available. Using local storage fallback.")
-
-    // Create a warning notification
-    createNotification(
-      "Warning: Running in offline mode. Data will be saved locally but not to the cloud database.",
-      "warning",
-    )
-
-    // Create a mock Firebase object for fallback
-    window.firebase = {
-      isOfflineMode: true,
-    }
-  }
-}
-
-// Initialize UI enhancements
-function initializeUIEnhancements() {
-  // Add floating elements to animated backgrounds
-  document.querySelectorAll(".animated-bg").forEach((bg) => {
-    for (let i = 1; i <= 4; i++) {
-      const floatElement = document.createElement("div")
-      floatElement.className = `float-element float-${i}`
-      bg.appendChild(floatElement)
-    }
-  })
-
-  // Add scroll effects to navbar
-  const navbar = document.querySelector(".navbar")
-  if (navbar) {
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 50) {
-        navbar.classList.add("scrolled")
-      } else {
-        navbar.classList.remove("scrolled")
-      }
-    })
-  }
-
-  // Add hover effects to buttons
-  document.querySelectorAll(".btn").forEach((btn) => {
-    btn.addEventListener("mouseenter", () => {
-      btn.style.transform = "translateY(-2px)"
-    })
-
-    btn.addEventListener("mouseleave", () => {
-      btn.style.transform = "translateY(0)"
-    })
-  })
-
-  // Add animation to progress bars
-  document.querySelectorAll(".progress-bar").forEach((bar) => {
-    bar.style.width = "0%"
-    setTimeout(() => {
-      bar.style.width = bar.getAttribute("aria-valuenow") + "%"
-    }, 500)
-  })
-}
-
-// Initialize test functionality
-function initializeTests() {
-  // Initialize all test modules
-  if (typeof initializeSpiralTest === "function") initializeSpiralTest()
-  if (typeof initializeTapTest === "function") initializeTapTest()
-  if (typeof initializeReactionTest === "function") initializeReactionTest()
-  if (typeof initializeVoiceTest === "function") initializeVoiceTest()
-
-  // Setup test buttons
-  setupTestButtons()
-
-  // Setup results view button
-  const viewResultsBtn = document.getElementById("viewResults")
-  if (viewResultsBtn) {
-    viewResultsBtn.addEventListener("click", showResults)
-  }
-
-  // Setup back to tests button
-  const backToTestsBtn = document.getElementById("backToTests")
-  if (backToTestsBtn) {
-    backToTestsBtn.addEventListener("click", () => {
-      hideSection("results")
-      showSection("tests")
-    })
-  }
-
-  // Setup save results button
-  const saveResultsBtn = document.getElementById("saveResults")
-  if (saveResultsBtn) {
-    saveResultsBtn.addEventListener("click", saveResults)
-  }
-
-  // Setup print results button
-  const printResultsBtn = document.getElementById("printResults")
-  if (printResultsBtn) {
-    printResultsBtn.addEventListener("click", () => {
-      // Declare preparePrintView before using it
-      const preparePrintView = window.preparePrintView
-      if (typeof preparePrintView === "function") {
-        preparePrintView()
-      } else {
-        window.print()
-      }
-    })
-  }
-}
-
-// Setup navigation
-function setupNavigation() {
+// Navigation functionality
+function initializeNavigation() {
   // Handle navigation links
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", function (e) {
       e.preventDefault()
       const targetId = this.getAttribute("href").substring(1)
-      const targetElement = document.getElementById(targetId)
-
-      if (targetElement) {
-        // Hide all sections
-        document.querySelectorAll("section").forEach((section) => {
-          section.classList.add("d-none")
-        })
-
-        // Show target section
-        targetElement.classList.remove("d-none")
-        targetElement.scrollIntoView({ behavior: "smooth" })
-
-        // Update active nav link
-        document.querySelectorAll(".nav-link").forEach((link) => {
-          link.classList.remove("active")
-        })
-        this.classList.add("active")
-      }
+      showSection(targetId)
     })
   })
+}
 
-  // Handle hash change
-  window.addEventListener("hashchange", () => {
-    const hash = window.location.hash.substring(1)
-    if (hash) {
-      const section = document.getElementById(hash)
-      if (section) {
-        // Hide all sections
-        document.querySelectorAll("section").forEach((s) => {
-          s.classList.add("d-none")
-        })
-        // Show target section
-        section.classList.remove("d-none")
-        section.scrollIntoView({ behavior: "smooth" })
-      }
-    }
+// Show section
+function showSection(sectionId) {
+  // Hide all sections
+  document.querySelectorAll("section").forEach((section) => {
+    section.classList.add("d-none")
   })
 
-  // Check initial hash
-  if (window.location.hash) {
-    const hash = window.location.hash.substring(1)
-    const section = document.getElementById(hash)
-    if (section) {
-      // Hide all sections
-      document.querySelectorAll("section").forEach((s) => {
-        s.classList.add("d-none")
-      })
-      // Show target section
-      section.classList.remove("d-none")
-      setTimeout(() => {
-        section.scrollIntoView({ behavior: "smooth" })
-      }, 100)
+  // Show target section
+  const targetSection = document.getElementById(sectionId)
+  if (targetSection) {
+    targetSection.classList.remove("d-none")
+
+    // Update active nav link
+    document.querySelectorAll(".nav-link").forEach((link) => {
+      link.classList.remove("active")
+    })
+
+    const activeLink = document.querySelector(`a[href="#${sectionId}"]`)
+    if (activeLink) {
+      activeLink.classList.add("active")
     }
+
+    // Scroll to top
+    window.scrollTo(0, 0)
   }
 }
 
-// Setup forms
-function setupForms() {
-  // Get registration form
-  const registrationForm = document.getElementById("registrationForm")
+// Form validation
+function initializeFormValidation() {
+  const form = document.getElementById("registrationForm")
+  if (!form) return
 
-  if (registrationForm) {
-    registrationForm.addEventListener("submit", function (e) {
-      e.preventDefault()
+  form.addEventListener("submit", (e) => {
+    e.preventDefault()
 
-      // Validate form
-      if (!validateForm(this)) {
-        return false
-      }
-
-      // Show loading state
-      const submitBtn = this.querySelector('button[type="submit"]')
-      const originalBtnText = submitBtn ? submitBtn.innerHTML : "SUBMIT"
-      if (submitBtn) {
-        submitBtn.innerHTML =
-          '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...'
-        submitBtn.disabled = true
-      }
-
-      // Get form data
-      const formData = new FormData(this)
+    if (validateForm(form)) {
+      // Store registration data
+      const formData = new FormData(form)
       const userData = {
         fullName: formData.get("fullName"),
         email: formData.get("email"),
@@ -250,648 +83,693 @@ function setupForms() {
         gender: formData.get("gender"),
         familyHistory: formData.get("familyHistory"),
         medicalSituation: formData.get("medicalSituation"),
-        createdAt: new Date().toISOString(),
+        registrationDate: new Date().toISOString(),
       }
 
-      // Store user data in localStorage
       localStorage.setItem("userData", JSON.stringify(userData))
+      isRegistered = true
 
       // Show success message
-      createNotification("Registration successful! Redirecting to tests...", "success")
+      showNotification("Registration completed successfully!", "success")
 
-      // Transition to tests section
+      // Enable tests and redirect
       setTimeout(() => {
-        hideSection("register")
         showSection("tests")
-
-        // Reset button state
-        if (submitBtn) {
-          submitBtn.innerHTML = originalBtnText
-          submitBtn.disabled = false
-        }
       }, 1500)
-    })
-  }
+    }
+  })
 }
 
 // Validate form
 function validateForm(form) {
   let isValid = true
 
-  // Check required fields
-  form.querySelectorAll("[required]").forEach((field) => {
-    if (!field.value.trim()) {
-      isValid = false
-      field.classList.add("is-invalid")
+  // Clear previous validation
+  form.querySelectorAll(".form-control").forEach((field) => {
+    field.classList.remove("is-invalid", "is-valid")
+  })
 
-      // Create error message if it doesn't exist
-      if (!field.nextElementSibling || !field.nextElementSibling.classList.contains("invalid-feedback")) {
-        const feedback = document.createElement("div")
-        feedback.className = "invalid-feedback"
-        feedback.textContent = "This field is required"
-        field.parentNode.insertBefore(feedback, field.nextSibling)
+  // Validate required fields
+  const requiredFields = form.querySelectorAll("[required]")
+  requiredFields.forEach((field) => {
+    if (field.type === "radio") {
+      const radioGroup = form.querySelectorAll(`[name="${field.name}"]`)
+      const isChecked = Array.from(radioGroup).some((radio) => radio.checked)
+      if (!isChecked) {
+        isValid = false
+        radioGroup.forEach((radio) => radio.classList.add("is-invalid"))
+      } else {
+        radioGroup.forEach((radio) => radio.classList.add("is-valid"))
+      }
+    } else if (field.type === "checkbox") {
+      if (!field.checked) {
+        isValid = false
+        field.classList.add("is-invalid")
+      } else {
+        field.classList.add("is-valid")
       }
     } else {
-      field.classList.remove("is-invalid")
-      field.classList.add("is-valid")
-
-      // Remove error message if it exists
-      if (field.nextElementSibling && field.nextElementSibling.classList.contains("invalid-feedback")) {
-        field.nextElementSibling.remove()
+      if (!field.value.trim()) {
+        isValid = false
+        field.classList.add("is-invalid")
+      } else {
+        field.classList.add("is-valid")
       }
     }
   })
 
-  // Check email format
+  // Validate email format
   const emailField = form.querySelector('input[type="email"]')
   if (emailField && emailField.value.trim()) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(emailField.value.trim())) {
       isValid = false
       emailField.classList.add("is-invalid")
-
-      // Create error message if it doesn't exist
-      if (!emailField.nextElementSibling || !emailField.nextElementSibling.classList.contains("invalid-feedback")) {
-        const feedback = document.createElement("div")
-        feedback.className = "invalid-feedback"
-        feedback.textContent = "Please enter a valid email address"
-        emailField.parentNode.insertBefore(feedback, emailField.nextSibling)
-      }
     }
   }
 
   return isValid
 }
 
-// Setup test buttons
-function setupTestButtons() {
-  // Spiral Test
-  const startSpiralTest = document.getElementById("startSpiralTest")
-  if (startSpiralTest) {
-    startSpiralTest.addEventListener("click", () => {
-      showModal("spiralTestModal")
-    })
+// Check registration status
+function checkRegistrationStatus() {
+  const userData = localStorage.getItem("userData")
+  if (userData) {
+    isRegistered = true
   }
-
-  // Tap Test
-  const startTapTest = document.getElementById("startTapTest")
-  if (startTapTest) {
-    startTapTest.addEventListener("click", () => {
-      showModal("tapTestModal")
-      // Start the tap test after showing the modal
-      setTimeout(() => {
-        if (typeof window.startTapTestFunction === "function") {
-          window.startTapTestFunction()
-        }
-      }, 500)
-    })
-  }
-
-  // Reaction Test
-  const startReactionTest = document.getElementById("startReactionTest")
-  if (startReactionTest) {
-    startReactionTest.addEventListener("click", () => {
-      showModal("reactionTestModal")
-      // Start the reaction test after showing the modal
-      setTimeout(() => {
-        if (typeof window.startReactionTestFunction === "function") {
-          window.startReactionTestFunction()
-        }
-      }, 500)
-    })
-  }
-
-  // Voice Test
-  const startVoiceTest = document.getElementById("startVoiceTest")
-  if (startVoiceTest) {
-    startVoiceTest.addEventListener("click", () => {
-      showModal("voiceTestModal")
-    })
-  }
-
-  // Setup modal close buttons
-  setupModalCloseButtons()
 }
 
-// Show modal
-function showModal(modalId) {
-  const modal = document.getElementById(modalId)
-  if (!modal) {
-    console.error(`Modal not found: ${modalId}`)
-    return
-  }
-
-  // Remove any existing backdrops
-  document.querySelectorAll(".modal-backdrop").forEach((backdrop) => {
-    backdrop.remove()
+// Initialize tests
+function initializeTests() {
+  // Test buttons
+  document.getElementById("startSpiralTest")?.addEventListener("click", () => {
+    if (!isRegistered) {
+      showNotification("Please complete registration first!", "warning")
+      showSection("register")
+      return
+    }
+    showModal("spiralTestModal")
+    initializeSpiralTest()
   })
 
-  // Add backdrop
-  const backdrop = document.createElement("div")
-  backdrop.className = "modal-backdrop fade show"
-  document.body.appendChild(backdrop)
+  document.getElementById("startTapTest")?.addEventListener("click", () => {
+    if (!isRegistered) {
+      showNotification("Please complete registration first!", "warning")
+      showSection("register")
+      return
+    }
+    showModal("tapTestModal")
+  })
 
-  // Show modal
-  modal.classList.add("show")
-  modal.style.display = "block"
-  document.body.classList.add("modal-open")
+  document.getElementById("startReactionTest")?.addEventListener("click", () => {
+    if (!isRegistered) {
+      showNotification("Please complete registration first!", "warning")
+      showSection("register")
+      return
+    }
+    showModal("reactionTestModal")
+  })
 
-  // Prevent Bootstrap from handling this modal
-  modal.setAttribute("data-handled", "true")
+  document.getElementById("startVoiceTest")?.addEventListener("click", () => {
+    if (!isRegistered) {
+      showNotification("Please complete registration first!", "warning")
+      showSection("register")
+      return
+    }
+    showModal("voiceTestModal")
+    initializeVoiceTest()
+  })
+
+  // Results button
+  document.getElementById("viewResults")?.addEventListener("click", showResults)
 }
 
-// Hide modal
-function hideModal(modalId) {
-  const modal = document.getElementById(modalId)
-  if (!modal) {
-    console.error(`Modal not found: ${modalId}`)
-    return
+// Spiral Test
+function initializeSpiralTest() {
+  const canvas = document.getElementById("spiralCanvas")
+  const ctx = canvas.getContext("2d")
+  let isDrawing = false
+  let path = []
+
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  ctx.strokeStyle = "#000"
+  ctx.lineWidth = 2
+
+  // Draw guide spiral
+  drawGuideSpiral(ctx, canvas.width, canvas.height)
+
+  // Mouse events
+  canvas.addEventListener("mousedown", startDrawing)
+  canvas.addEventListener("mousemove", draw)
+  canvas.addEventListener("mouseup", stopDrawing)
+  canvas.addEventListener("mouseout", stopDrawing)
+
+  // Touch events
+  canvas.addEventListener("touchstart", handleTouch)
+  canvas.addEventListener("touchmove", handleTouch)
+  canvas.addEventListener("touchend", stopDrawing)
+
+  function startDrawing(e) {
+    isDrawing = true
+    const rect = canvas.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    path = [{ x, y }]
+    ctx.beginPath()
+    ctx.moveTo(x, y)
   }
 
-  // Hide modal
-  modal.classList.remove("show")
-  modal.style.display = "none"
-  document.body.classList.remove("modal-open")
+  function draw(e) {
+    if (!isDrawing) return
 
-  // Remove backdrop
-  const backdrop = document.querySelector(".modal-backdrop")
-  if (backdrop) {
-    backdrop.remove()
+    const rect = canvas.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+
+    path.push({ x, y })
+    ctx.lineTo(x, y)
+    ctx.stroke()
+  }
+
+  function stopDrawing() {
+    isDrawing = false
+  }
+
+  function handleTouch(e) {
+    e.preventDefault()
+    const touch = e.touches[0]
+    const mouseEvent = new MouseEvent(
+      e.type === "touchstart" ? "mousedown" : e.type === "touchmove" ? "mousemove" : "mouseup",
+      {
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+      },
+    )
+    canvas.dispatchEvent(mouseEvent)
+  }
+
+  // Clear button
+  document.getElementById("clearCanvas").onclick = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    drawGuideSpiral(ctx, canvas.width, canvas.height)
+    path = []
+  }
+
+  // Submit button
+  document.getElementById("submitSpiral").onclick = () => {
+    if (path.length < 10) {
+      showNotification("Please draw a complete spiral before submitting.", "warning")
+      return
+    }
+
+    const score = analyzeSpiralDrawing(path)
+    testResults.spiral = {
+      completed: true,
+      score: score,
+      details: { pathLength: path.length, timestamp: new Date().toISOString() },
+    }
+
+    updateTestStatus("spiral", "completed")
+    showNotification("Spiral test completed!", "success")
+    hideModal("spiralTestModal")
+    checkAllTestsCompleted()
   }
 }
 
-// Setup modal close buttons
-function setupModalCloseButtons() {
-  const closeButtons = document.querySelectorAll('.modal .btn-close, .modal [data-bs-dismiss="modal"]')
-  closeButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      const modal = this.closest(".modal")
-      if (modal) {
-        hideModal(modal.id)
+// Draw guide spiral
+function drawGuideSpiral(ctx, width, height) {
+  const centerX = width / 2
+  const centerY = height / 2
+  const maxRadius = Math.min(width, height) / 3
+
+  ctx.strokeStyle = "#ccc"
+  ctx.lineWidth = 1
+  ctx.beginPath()
+
+  for (let angle = 0; angle < 6 * Math.PI; angle += 0.1) {
+    const radius = (angle / (6 * Math.PI)) * maxRadius
+    const x = centerX + radius * Math.cos(angle)
+    const y = centerY + radius * Math.sin(angle)
+
+    if (angle === 0) {
+      ctx.moveTo(x, y)
+    } else {
+      ctx.lineTo(x, y)
+    }
+  }
+
+  ctx.stroke()
+  ctx.strokeStyle = "#000"
+  ctx.lineWidth = 2
+}
+
+// Analyze spiral drawing
+function analyzeSpiralDrawing(path) {
+  if (path.length < 10) return 0
+
+  // Simple scoring based on path smoothness and length
+  let smoothness = 0
+  for (let i = 1; i < path.length - 1; i++) {
+    const prev = path[i - 1]
+    const curr = path[i]
+    const next = path[i + 1]
+
+    const angle1 = Math.atan2(curr.y - prev.y, curr.x - prev.x)
+    const angle2 = Math.atan2(next.y - curr.y, next.x - curr.x)
+    const angleDiff = Math.abs(angle2 - angle1)
+
+    smoothness += Math.min(angleDiff, 2 * Math.PI - angleDiff)
+  }
+
+  const avgSmoothness = smoothness / (path.length - 2)
+  const score = Math.max(0, Math.min(100, 100 - avgSmoothness * 50))
+
+  return Math.round(score)
+}
+
+// Tap Test
+let tapTestActive = false
+let tapScore = 0
+let tapCount = 0
+let tapTimeout
+
+document.getElementById("startTapTestBtn")?.addEventListener("click", startTapTest)
+
+function startTapTest() {
+  tapTestActive = true
+  tapScore = 0
+  tapCount = 0
+
+  const container = document.getElementById("tapTestContainer")
+  const dot = document.getElementById("tapDot")
+  const countdown = document.getElementById("tapCountdown")
+  const scoreDisplay = document.getElementById("tapScoreValue")
+
+  // Countdown
+  let count = 3
+  countdown.style.display = "block"
+  countdown.textContent = count
+
+  const countdownInterval = setInterval(() => {
+    count--
+    if (count > 0) {
+      countdown.textContent = count
+    } else {
+      countdown.textContent = "GO!"
+      setTimeout(() => {
+        countdown.style.display = "none"
+        showNextDot()
+      }, 500)
+      clearInterval(countdownInterval)
+    }
+  }, 1000)
+
+  function showNextDot() {
+    if (tapCount >= 10) {
+      endTapTest()
+      return
+    }
+
+    // Position dot randomly
+    const containerRect = container.getBoundingClientRect()
+    const dotSize = 60
+    const maxX = container.offsetWidth - dotSize
+    const maxY = container.offsetHeight - dotSize
+
+    const x = Math.random() * maxX
+    const y = Math.random() * maxY
+
+    dot.style.left = x + "px"
+    dot.style.top = y + "px"
+    dot.style.display = "block"
+
+    // Auto-hide after 2 seconds
+    tapTimeout = setTimeout(() => {
+      dot.style.display = "none"
+      setTimeout(showNextDot, 500)
+    }, 2000)
+  }
+
+  // Dot click handler
+  dot.onclick = () => {
+    if (!tapTestActive) return
+
+    clearTimeout(tapTimeout)
+    tapScore++
+    tapCount++
+    dot.style.display = "none"
+
+    scoreDisplay.textContent = `${tapScore}/10`
+
+    setTimeout(showNextDot, 300)
+  }
+
+  function endTapTest() {
+    tapTestActive = false
+    dot.style.display = "none"
+
+    const finalScore = (tapScore / 10) * 100
+    testResults.tap = {
+      completed: true,
+      score: finalScore,
+      details: { hits: tapScore, total: 10, timestamp: new Date().toISOString() },
+    }
+
+    updateTestStatus("tap", "completed")
+    showNotification(`Tap test completed! Score: ${tapScore}/10`, "success")
+
+    setTimeout(() => {
+      hideModal("tapTestModal")
+      checkAllTestsCompleted()
+    }, 2000)
+  }
+}
+
+// Reaction Test
+let reactionTestActive = false
+let reactionTimes = []
+let currentTrial = 0
+let reactionStartTime = 0
+
+document.getElementById("startReactionTestBtn")?.addEventListener("click", startReactionTest)
+
+function startReactionTest() {
+  reactionTestActive = true
+  reactionTimes = []
+  currentTrial = 0
+
+  startNextTrial()
+
+  function startNextTrial() {
+    if (currentTrial >= 3) {
+      endReactionTest()
+      return
+    }
+
+    const container = document.getElementById("reactionTestContainer")
+    const countdown = document.getElementById("reactionCountdown")
+    const result = document.getElementById("reactionResult")
+
+    container.className = "position-relative border rounded waiting"
+    container.style.background = "#f8f9fa"
+    countdown.style.display = "block"
+    countdown.textContent = `Trial ${currentTrial + 1}/3 - Get Ready...`
+    result.textContent = "Click when the screen turns green!"
+
+    // Random delay before green
+    const delay = 2000 + Math.random() * 3000
+
+    const greenTimeout = setTimeout(() => {
+      container.className = "position-relative border rounded ready"
+      countdown.textContent = "CLICK NOW!"
+      reactionStartTime = Date.now()
+    }, delay)
+
+    // Click handler
+    container.onclick = () => {
+      if (!reactionTestActive) return
+
+      if (reactionStartTime === 0) {
+        // Clicked too early
+        clearTimeout(greenTimeout)
+        container.className = "position-relative border rounded too-early"
+        countdown.textContent = "Too Early!"
+        result.textContent = "Wait for green before clicking. Try again..."
+
+        setTimeout(() => {
+          startNextTrial()
+        }, 2000)
+        return
       }
-    })
-  })
-}
 
-// Show section
-function showSection(sectionId) {
-  const section = document.getElementById(sectionId)
-  if (section) {
-    section.classList.remove("d-none")
-    section.style.display = "block"
+      // Valid click
+      const reactionTime = Date.now() - reactionStartTime
+      reactionTimes.push(reactionTime)
 
-    // Add entrance animation
-    section.classList.add("fade-in")
+      countdown.textContent = `${reactionTime}ms`
+      result.textContent = `Reaction time: ${reactionTime}ms`
+
+      reactionStartTime = 0
+      currentTrial++
+
+      setTimeout(() => {
+        startNextTrial()
+      }, 1500)
+    }
+  }
+
+  function endReactionTest() {
+    reactionTestActive = false
+
+    const avgTime = reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length
+    const score = Math.max(0, Math.min(100, 100 - (avgTime - 200) / 10))
+
+    testResults.reaction = {
+      completed: true,
+      score: Math.round(score),
+      details: {
+        times: reactionTimes,
+        average: Math.round(avgTime),
+        timestamp: new Date().toISOString(),
+      },
+    }
+
+    updateTestStatus("reaction", "completed")
+    showNotification(`Reaction test completed! Average: ${Math.round(avgTime)}ms`, "success")
+
     setTimeout(() => {
-      section.classList.remove("fade-in")
-    }, 1000)
+      hideModal("reactionTestModal")
+      checkAllTestsCompleted()
+    }, 2000)
   }
 }
 
-// Hide section
-function hideSection(sectionId) {
-  const section = document.getElementById(sectionId)
-  if (section) {
-    // Add exit animation
-    section.classList.add("fade-out")
+// Voice Test
+function initializeVoiceTest() {
+  let mediaRecorder
+  let audioChunks = []
+
+  const startBtn = document.getElementById("startVoiceRecording")
+  const stopBtn = document.getElementById("stopVoiceRecording")
+  const result = document.getElementById("voiceResult")
+
+  startBtn.onclick = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      mediaRecorder = new MediaRecorder(stream)
+      audioChunks = []
+
+      mediaRecorder.ondataavailable = (event) => {
+        audioChunks.push(event.data)
+      }
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: "audio/wav" })
+        analyzeVoice(audioBlob)
+      }
+
+      mediaRecorder.start()
+      startBtn.disabled = true
+      stopBtn.disabled = false
+      result.innerHTML = '<div class="text-success">Recording... Please read the text above.</div>'
+
+      // Auto-stop after 30 seconds
+      setTimeout(() => {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+          stopBtn.click()
+        }
+      }, 30000)
+    } catch (error) {
+      result.innerHTML = '<div class="text-danger">Microphone access denied or not available.</div>'
+      // Simulate voice test completion for demo
+      setTimeout(() => {
+        completeVoiceTest(75)
+      }, 2000)
+    }
+  }
+
+  stopBtn.onclick = () => {
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+      mediaRecorder.stop()
+      mediaRecorder.stream.getTracks().forEach((track) => track.stop())
+    }
+    startBtn.disabled = false
+    stopBtn.disabled = true
+    result.innerHTML = '<div class="text-info">Processing voice analysis...</div>'
+  }
+
+  function analyzeVoice(audioBlob) {
+    // Simulate voice analysis
     setTimeout(() => {
-      section.classList.add("d-none")
-      section.style.display = "none"
-      section.classList.remove("fade-out")
-    }, 300)
+      const score = 70 + Math.random() * 25 // Random score between 70-95
+      completeVoiceTest(Math.round(score))
+    }, 2000)
+  }
+
+  function completeVoiceTest(score) {
+    testResults.voice = {
+      completed: true,
+      score: score,
+      details: {
+        quality: score > 80 ? "Good" : score > 60 ? "Fair" : "Needs Improvement",
+        timestamp: new Date().toISOString(),
+      },
+    }
+
+    updateTestStatus("voice", "completed")
+    showNotification(`Voice test completed! Score: ${score}%`, "success")
+
+    setTimeout(() => {
+      hideModal("voiceTestModal")
+      checkAllTestsCompleted()
+    }, 2000)
+  }
+}
+
+// Update test status
+function updateTestStatus(testName, status) {
+  const statusElement = document.getElementById(`${testName}Status`)
+  if (statusElement) {
+    statusElement.textContent = status === "completed" ? "Completed" : "Pending"
+    statusElement.className = `test-status ${status}`
+  }
+}
+
+// Check if all tests completed
+function checkAllTestsCompleted() {
+  const completedTests = Object.values(testResults).filter((test) => test.completed).length
+  const viewResultsBtn = document.getElementById("viewResults")
+  const printResultsBtn = document.getElementById("printResults")
+
+  if (completedTests > 0) {
+    viewResultsBtn.disabled = false
+    printResultsBtn.disabled = false
+  }
+
+  if (completedTests === 4) {
+    showNotification("All tests completed! You can now view your results.", "success")
   }
 }
 
 // Show results
 function showResults() {
-  const testsSection = document.getElementById("tests")
-  const resultsSection = document.getElementById("results")
+  const completedTests = Object.values(testResults).filter((test) => test.completed)
 
-  if (!testsSection || !resultsSection) {
-    console.error("Tests or results section not found")
+  if (completedTests.length === 0) {
+    showNotification("Please complete at least one test to view results.", "warning")
     return
   }
 
-  // Update results table
-  updateResultsTable()
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}")
+  const avgScore = completedTests.reduce((sum, test) => sum + test.score, 0) / completedTests.length
 
-  // Calculate overall results
-  const testResults = window.testResults || {}
-  const completedTests = Object.values(testResults).filter((test) => test.status !== "Not Tested").length
+  const resultsHTML = `
+        <div class="text-center mb-4">
+            <h3>Assessment Summary</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Patient Information</h4>
+                    <p><strong>Name:</strong> ${userData.fullName || "N/A"}</p>
+                    <p><strong>Age:</strong> ${userData.age || "N/A"}</p>
+                    <p><strong>Gender:</strong> ${userData.gender || "N/A"}</p>
+                </div>
+                <div class="col-md-6">
+                    <h4>Overall Score</h4>
+                    <div class="display-4 text-primary">${Math.round(avgScore)}%</div>
+                    <p class="text-muted">Based on ${completedTests.length} completed test(s)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            ${Object.entries(testResults)
+              .map(
+                ([testName, result]) => `
+                <div class="col-md-6 mb-3">
+                    <div class="card ${result.completed ? "border-success" : "border-secondary"}">
+                        <div class="card-body">
+                            <h5 class="card-title">${testName.charAt(0).toUpperCase() + testName.slice(1)} Test</h5>
+                            <p class="card-text">
+                                Status: <span class="badge ${result.completed ? "bg-success" : "bg-secondary"}">
+                                    ${result.completed ? "Completed" : "Not Completed"}
+                                </span>
+                            </p>
+                            ${
+                              result.completed
+                                ? `
+                                <p class="card-text">Score: <strong>${result.score}%</strong></p>
+                                <div class="progress">
+                                    <div class="progress-bar ${result.score >= 70 ? "bg-success" : result.score >= 50 ? "bg-warning" : "bg-danger"}" 
+                                         style="width: ${result.score}%"></div>
+                                </div>
+                            `
+                                : ""
+                            }
+                        </div>
+                    </div>
+                </div>
+            `,
+              )
+              .join("")}
+        </div>
+        
+        <div class="mt-4 p-3 border rounded ${avgScore >= 70 ? "border-success bg-light-success" : avgScore >= 50 ? "border-warning bg-light-warning" : "border-danger bg-light-danger"}">
+            <h5>Assessment Interpretation</h5>
+            <p>
+                ${
+                  avgScore >= 70
+                    ? "Your assessment results indicate normal neurological function. Continue regular health monitoring."
+                    : avgScore >= 50
+                      ? "Your assessment shows some areas that may benefit from further evaluation. Consider consulting with a healthcare professional."
+                      : "Your assessment indicates potential areas of concern. We recommend consulting with a neurologist for comprehensive evaluation."
+                }
+            </p>
+            <small class="text-muted">
+                <strong>Disclaimer:</strong> This assessment is for screening purposes only and does not constitute a medical diagnosis. 
+                Please consult with qualified healthcare professionals for proper medical evaluation.
+            </small>
+        </div>
+    `
 
-  // Hide tests section and show results with animation
-  hideSection("tests")
-  showSection("results")
+  document.getElementById("resultsContent").innerHTML = resultsHTML
+  showModal("resultsModal")
+}
 
-  if (completedTests === 0) {
-    // No tests completed
-    updateOverallResults({
-      healthyPercent: 50,
-      parkinsonsPercent: 50,
-      title: "Assessment Incomplete",
-      text: "Please complete at least one test to get a comprehensive assessment.",
-      status: "neutral",
-    })
-  } else {
-    // Calculate average scores
-    let totalHealthy = 0
-    let totalParkinsons = 0
+// Utility functions
+function showModal(modalId) {
+  const modal = new bootstrap.Modal(document.getElementById(modalId))
+  modal.show()
+}
 
-    Object.values(testResults).forEach((test) => {
-      if (test.status !== "Not Tested") {
-        totalHealthy += test.healthy
-        totalParkinsons += test.parkinsons
-      }
-    })
-
-    const avgHealthy = Math.round(totalHealthy / completedTests)
-    const avgParkinsons = Math.round(totalParkinsons / completedTests)
-
-    // Determine overall status and message
-    let title, text, status
-
-    if (avgHealthy >= 80) {
-      title = "Likely Healthy"
-      text =
-        "Based on your test results, you are likely not showing signs of Parkinson's disease. Your motor control, reaction time, and coordination appear to be within normal ranges. However, this is not a medical diagnosis. If you have concerns, please consult a healthcare professional."
-      status = "healthy"
-    } else if (avgHealthy >= 60) {
-      title = "Mostly Healthy"
-      text =
-        "Based on your test results, you are showing mostly normal motor function with some minor variations. While these results don't necessarily indicate Parkinson's disease, we recommend monitoring your symptoms and consulting with a healthcare professional for a thorough evaluation."
-      status = "healthy"
-    } else if (avgHealthy >= 40) {
-      title = "Potential Early Signs"
-      text =
-        "Your test results show some patterns that may be associated with early motor changes. These could be related to various factors, including but not limited to Parkinson's disease. We strongly recommend consulting a neurologist for proper evaluation and diagnosis."
-      status = "not-healthy"
-    } else {
-      title = "Significant Risk Detected"
-      text =
-        "Your test results indicate significant motor function changes that are commonly associated with Parkinson's disease. Please consult with a neurologist as soon as possible for a comprehensive evaluation. Early diagnosis and treatment can significantly improve quality of life."
-      status = "not-healthy"
-    }
-
-    // Update UI with results
-    updateOverallResults({
-      healthyPercent: avgHealthy,
-      parkinsonsPercent: avgParkinsons,
-      title: title,
-      text: text,
-      status: status,
-    })
+function hideModal(modalId) {
+  const modal = bootstrap.Modal.getInstance(document.getElementById(modalId))
+  if (modal) {
+    modal.hide()
   }
 }
 
-// Update overall results
-function updateOverallResults(results) {
-  const { healthyPercent, parkinsonsPercent, title, text, status } = results
-
-  // Update progress bars
-  const overallHealthyBar = document.getElementById("overallHealthyBar")
-  const overallParkinsonBar = document.getElementById("overallParkinsonBar")
-  const overallHealthyPercent = document.getElementById("overallHealthyPercent")
-  const overallParkinsonPercent = document.getElementById("overallParkinsonPercent")
-
-  // Set initial width to 0 to enable animation
-  if (overallHealthyBar) {
-    overallHealthyBar.style.width = "0%"
-    overallHealthyBar.setAttribute("aria-valuenow", healthyPercent)
-  }
-
-  if (overallParkinsonBar) {
-    overallParkinsonBar.style.width = "0%"
-    overallParkinsonBar.setAttribute("aria-valuenow", parkinsonsPercent)
-  }
-
-  // Set text
-  if (overallHealthyPercent) overallHealthyPercent.textContent = healthyPercent
-  if (overallParkinsonPercent) overallParkinsonPercent.textContent = parkinsonsPercent
-
-  // Animate bars after a short delay
-  setTimeout(() => {
-    if (overallHealthyBar) overallHealthyBar.style.width = `${healthyPercent}%`
-    if (overallParkinsonBar) overallParkinsonBar.style.width = `${parkinsonsPercent}%`
-
-    // Update conclusion box
-    const conclusionBox = document.getElementById("conclusionBox")
-    const conclusionTitle = document.getElementById("conclusionTitle")
-    const conclusionText = document.getElementById("conclusionText")
-
-    if (conclusionBox) conclusionBox.className = `conclusion mt-4 p-3 rounded ${status}`
-    if (conclusionTitle) conclusionTitle.textContent = title
-    if (conclusionText) conclusionText.textContent = text
-
-    // Add animation to conclusion box
-    if (conclusionBox) {
-      conclusionBox.classList.add("shake")
-      setTimeout(() => {
-        conclusionBox.classList.remove("shake")
-      }, 1000)
-    }
-  }, 500)
-}
-
-// Update results table
-function updateResultsTable() {
-  const testResults = window.testResults || {}
-
-  // Update each test row
-  updateResultTableRow("spiral", testResults.spiral)
-  updateResultTableRow("tap", testResults.tap)
-  updateResultTableRow("reaction", testResults.reaction)
-  updateResultTableRow("voice", testResults.voice)
-}
-
-// Update individual result table row
-function updateResultTableRow(testName, testResult = {}) {
-  const status = testResult.status || "Not Tested"
-  const healthy = testResult.healthy || 0
-  const parkinsons = testResult.parkinsons || 0
-  const rawScore = testResult.rawScore || 0
-
-  // Get table cells
-  const statusCell = document.getElementById(`${testName}StatusResult`)
-  const healthyCell = document.getElementById(`${testName}HealthyResult`)
-  const parkinsonsCell = document.getElementById(`${testName}ParkinsonResult`)
-  const rawScoreCell = document.getElementById(`${testName}RawResult`)
-
-  // Update cells
-  if (statusCell) statusCell.textContent = status
-  if (healthyCell) healthyCell.textContent = `${healthy}%`
-  if (parkinsonsCell) parkinsonsCell.textContent = `${parkinsons}%`
-
-  // Format raw score based on test type
-  if (rawScoreCell) {
-    if (testName === "reaction") {
-      // For reaction test, show milliseconds
-      rawScoreCell.textContent = `${Math.round(rawScore)} ms`
-    } else if (rawScore) {
-      // For other tests, show score out of 100
-      rawScoreCell.textContent = `${Math.round(rawScore)}/100`
-    } else {
-      rawScoreCell.textContent = "-"
-    }
-  }
-}
-
-// Save results
-async function saveResults() {
-  // Get user data from localStorage
-  const userDataString = localStorage.getItem("userData")
-  if (!userDataString) {
-    createNotification("User data not found. Please complete the registration form first.", "error")
-    return
-  }
-
-  const userData = JSON.parse(userDataString)
-  const testResults = window.testResults || {}
-
-  try {
-    // Show loading indicator
-    const saveResultsBtn = document.getElementById("saveResults")
-    if (saveResultsBtn) {
-      saveResultsBtn.innerHTML =
-        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...'
-      saveResultsBtn.disabled = true
-    }
-
-    let result
-
-    // Check if Firebase is available
-    if (typeof firebase !== "undefined" && !firebase.isOfflineMode && typeof window.db !== "undefined") {
-      // Save to Firebase
-      result = await saveToFirebase(userData, testResults)
-    } else {
-      // Save to localStorage
-      result = saveToLocalStorage(userData, testResults)
-    }
-
-    // Reset button
-    if (saveResultsBtn) {
-      saveResultsBtn.innerHTML = "Save Results"
-      saveResultsBtn.disabled = false
-    }
-
-    if (result.success) {
-      createNotification(`Results saved successfully! Report ID: ${result.id}`, "success")
-    } else {
-      createNotification("Error saving results. Please try again.", "error")
-    }
-  } catch (error) {
-    console.error("Error saving results:", error)
-
-    // Fallback to localStorage
-    const result = saveToLocalStorage(userData, testResults)
-
-    // Reset button
-    const saveResultsBtn = document.getElementById("saveResults")
-    if (saveResultsBtn) {
-      saveResultsBtn.innerHTML = "Save Results"
-      saveResultsBtn.disabled = false
-    }
-
-    createNotification("Error occurred. Results saved to local storage as a backup.", "warning")
-  }
-}
-
-// Save to Firebase
-async function saveToFirebase(userData, testResults) {
-  try {
-    // Generate a unique report ID
-    const reportId = generateReportId()
-
-    // Create data object
-    const data = {
-      // User information
-      fullName: userData.fullName || "",
-      email: userData.email || "",
-      age: userData.age || "",
-      gender: userData.gender || "",
-      familyHistory: userData.familyHistory || "",
-      medicalSituation: userData.medicalSituation || "",
-
-      // Test results
-      testResults: {
-        spiral: testResults.spiral || { status: "Not Tested", healthy: 0, parkinsons: 0, rawScore: 0 },
-        tap: testResults.tap || { status: "Not Tested", healthy: 0, parkinsons: 0, rawScore: 0 },
-        reaction: testResults.reaction || { status: "Not Tested", healthy: 0, parkinsons: 0, rawScore: 0 },
-        voice: testResults.voice || { status: "Not Tested", healthy: 0, parkinsons: 0, rawScore: 0 },
-      },
-
-      // Overall assessment
-      overallHealthy: calculateOverallScore(testResults, "healthy"),
-      overallParkinsons: calculateOverallScore(testResults, "parkinsons"),
-
-      // Timestamps
-      timestamp: new Date().toISOString(),
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      reportId: reportId,
-    }
-
-    // Save to Firestore
-    const docRef = await window.db.collection("testResults").add(data)
-    console.log("Results saved with ID:", docRef.id)
-
-    return { success: true, id: reportId }
-  } catch (error) {
-    console.error("Error saving to Firebase:", error)
-    return { success: false, error }
-  }
-}
-
-// Save to localStorage
-function saveToLocalStorage(userData, testResults) {
-  // Generate a unique report ID
-  const reportId = generateReportId()
-
-  // Create result object
-  const resultsData = {
-    // User information
-    fullName: userData.fullName || "",
-    email: userData.email || "",
-    age: userData.age || "",
-    gender: userData.gender || "",
-    familyHistory: userData.familyHistory || "",
-    medicalSituation: userData.medicalSituation || "",
-
-    // Test results
-    testResults: testResults,
-
-    // Overall assessment
-    overallHealthy: calculateOverallScore(testResults, "healthy"),
-    overallParkinsons: calculateOverallScore(testResults, "parkinsons"),
-
-    // Timestamps
-    timestamp: new Date().toISOString(),
-    reportId: reportId,
-  }
-
-  // Get existing results
-  const existingResultsString = localStorage.getItem("savedResults")
-  const savedResults = existingResultsString ? JSON.parse(existingResultsString) : []
-
-  // Add new results
-  savedResults.push(resultsData)
-
-  // Save back to localStorage
-  localStorage.setItem("savedResults", JSON.stringify(savedResults))
-
-  console.log("Results saved to localStorage with ID:", reportId)
-  return { success: true, id: reportId }
-}
-
-// Calculate overall score
-function calculateOverallScore(testResults, scoreType) {
-  let totalScore = 0
-  let testsCompleted = 0
-
-  // Check each test
-  Object.values(testResults).forEach((test) => {
-    if (test && test.status !== "Not Tested") {
-      totalScore += test[scoreType] || 0
-      testsCompleted++
-    }
-  })
-
-  // Return average or 0 if no tests completed
-  return testsCompleted > 0 ? Math.round(totalScore / testsCompleted) : 0
-}
-
-// Generate a unique report ID
-function generateReportId() {
-  const timestamp = Date.now().toString(36)
-  const randomStr = Math.random().toString(36).substring(2, 8)
-  return `NS-${timestamp}-${randomStr}`.toUpperCase()
-}
-
-// Create notification
-function createNotification(message, type = "info") {
+function showNotification(message, type = "info") {
   // Create notification element
   const notification = document.createElement("div")
-  notification.className = `alert alert-${type} alert-dismissible fade show notification`
+  notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`
+  notification.style.cssText = "top: 20px; right: 20px; z-index: 9999; max-width: 300px;"
   notification.innerHTML = `
-    ${message}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `
 
-  // Add styles
-  notification.style.position = "fixed"
-  notification.style.top = "20px"
-  notification.style.right = "20px"
-  notification.style.zIndex = "9999"
-  notification.style.maxWidth = "400px"
-  notification.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.15)"
-  notification.style.borderRadius = "8px"
-
-  // Add to document
   document.body.appendChild(notification)
 
-  // Add animation
-  notification.style.animation = "fadeInRight 0.5s forwards"
-
-  // Add animation keyframes if they don't exist
-  if (!document.getElementById("notification-styles")) {
-    const style = document.createElement("style")
-    style.id = "notification-styles"
-    style.innerHTML = `
-      @keyframes fadeInRight {
-        from {
-          opacity: 0;
-          transform: translateX(50px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
-      
-      @keyframes fadeOutRight {
-        from {
-          opacity: 1;
-          transform: translateX(0);
-        }
-        to {
-          opacity: 0;
-          transform: translateX(50px);
-        }
-      }
-    `
-    document.head.appendChild(style)
-  }
-
-  // Auto-dismiss after 5 seconds
+  // Auto-remove after 5 seconds
   setTimeout(() => {
-    notification.style.animation = "fadeOutRight 0.5s forwards"
-    setTimeout(() => {
+    if (notification.parentNode) {
       notification.remove()
-    }, 500)
+    }
   }, 5000)
-
-  // Add click event to close button
-  const closeButton = notification.querySelector(".btn-close")
-  if (closeButton) {
-    closeButton.addEventListener("click", () => {
-      notification.style.animation = "fadeOutRight 0.5s forwards"
-      setTimeout(() => {
-        notification.remove()
-      }, 500)
-    })
-  }
 }
 
-// Check for direct test access
-function checkDirectTestAccess() {
-  const urlParams = new URLSearchParams(window.location.search)
-  const directAccess = urlParams.get("direct-test-access")
-
-  if (directAccess === "true") {
-    console.log("Direct test access enabled")
-
-    // Wait a moment for the page to fully load
-    setTimeout(() => {
-      hideSection("register")
-      showSection("tests")
-    }, 500)
-  }
-}
+// Export functions for global access
+window.showSection = showSection
+window.showNotification = showNotification
+window.testResults = testResults

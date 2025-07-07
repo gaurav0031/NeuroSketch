@@ -42,7 +42,92 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Setup registration form to show tests
   setupRegistrationForm()
+
+  // Initialize test event listeners
+  initializeTestButtons()
+
+  // Initialize modal event listeners
+  initializeModalHandlers()
 })
+
+function initializeTestButtons() {
+  // Spiral Test
+  const spiralBtn = document.getElementById("startSpiralTest")
+  if (spiralBtn) {
+    spiralBtn.addEventListener("click", () => {
+      if (!checkRegistration()) return
+      showModal("spiralTestModal")
+      setTimeout(() => initializeSpiralTest(), 500)
+    })
+  }
+
+  // Tap Test
+  const tapBtn = document.getElementById("startTapTest")
+  if (tapBtn) {
+    tapBtn.addEventListener("click", () => {
+      if (!checkRegistration()) return
+      showModal("tapTestModal")
+    })
+  }
+
+  // Reaction Test
+  const reactionBtn = document.getElementById("startReactionTest")
+  if (reactionBtn) {
+    reactionBtn.addEventListener("click", () => {
+      if (!checkRegistration()) return
+      showModal("reactionTestModal")
+    })
+  }
+
+  // Voice Test
+  const voiceBtn = document.getElementById("startVoiceTest")
+  if (voiceBtn) {
+    voiceBtn.addEventListener("click", () => {
+      if (!checkRegistration()) return
+      showModal("voiceTestModal")
+      setTimeout(() => initializeVoiceTest(), 500)
+    })
+  }
+}
+
+function initializeModalHandlers() {
+  // Handle modal close events
+  document.querySelectorAll(".modal").forEach((modal) => {
+    modal.addEventListener("hidden.bs.modal", () => {
+      // Reset any ongoing tests when modal is closed
+      resetTestStates()
+    })
+  })
+}
+
+function checkRegistration() {
+  const userData = localStorage.getItem("userData")
+  if (!userData) {
+    showNotification("Please complete registration first!", "warning")
+    showSection("register")
+    return false
+  }
+  return true
+}
+
+function resetTestStates() {
+  // Reset tap test
+  if (window.tapTestActive) {
+    window.tapTestActive = false
+    clearTimeout(window.tapTimeout)
+  }
+
+  // Reset reaction test
+  if (window.reactionTestActive) {
+    window.reactionTestActive = false
+  }
+
+  // Reset any other test states as needed
+}
+
+// Export functions for global access
+window.initializeTestButtons = initializeTestButtons
+window.checkRegistration = checkRegistration
 
 // Setup registration form
 function setupRegistrationForm() {
@@ -1866,4 +1951,22 @@ function calculateOverallScore(testResults, scoreType) {
 
   // Return average or 0 if no tests completed
   return testsCompleted > 0 ? Math.round(totalScore / testsCompleted) : 0
+}
+
+// Show notification function
+function showNotification(message, type = "info") {
+  const notificationDiv = document.createElement("div")
+  notificationDiv.className = `alert alert-${type} alert-dismissible fade show`
+  notificationDiv.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  `
+
+  const notificationContainer = document.getElementById("notificationContainer") || document.body
+  notificationContainer.appendChild(notificationDiv)
+
+  // Automatically remove the notification after a few seconds
+  setTimeout(() => {
+    notificationDiv.remove()
+  }, 5000)
 }

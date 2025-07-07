@@ -8,8 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
       this.isListening = false
       this.recognition = null
       this.commands = new Map()
+      this.confidence = 0.7 // Minimum confidence threshold
       this.initializeSpeechRecognition()
       this.setupCommands()
+      this.setupUI()
     }
 
     initializeSpeechRecognition() {
@@ -20,20 +22,23 @@ document.addEventListener("DOMContentLoaded", () => {
         this.recognition.continuous = true
         this.recognition.interimResults = false
         this.recognition.lang = "en-US"
+        this.recognition.maxAlternatives = 3
 
         this.recognition.onresult = (event) => {
-          const command = event.results[event.results.length - 1][0].transcript.toLowerCase().trim()
-          console.log("Voice command received:", command)
-          this.processCommand(command)
+          this.handleSpeechResult(event)
         }
 
         this.recognition.onerror = (event) => {
           console.error("Speech recognition error:", event.error)
+          this.stopListening()
+
           if (event.error === "not-allowed") {
             this.showNotification(
               "Microphone access denied. Please allow microphone access for voice control.",
-              "error",
+              "warning",
             )
+          } else if (event.error === "no-speech") {
+            this.showNotification("No speech detected. Try speaking closer to the microphone.", "info")
           }
         }
 
@@ -61,89 +66,239 @@ document.addEventListener("DOMContentLoaded", () => {
       this.commands.set("go to home", () => this.navigateTo("home"))
       this.commands.set("home page", () => this.navigateTo("home"))
 
+      this.commands.set("go to register", () => this.navigateTo("register"))
+      this.commands.set("registration", () => this.navigateTo("register"))
+      this.commands.set("register", () => this.navigateTo("register"))
+
       this.commands.set("go to tests", () => this.navigateTo("tests"))
       this.commands.set("show tests", () => this.navigateTo("tests"))
-      this.commands.set("assessment", () => this.navigateTo("tests"))
-      this.commands.set("start assessment", () => this.navigateTo("tests"))
+      this.commands.set("tests", () => this.navigateTo("tests"))
 
+      this.commands.set("go to about", () => this.navigateTo("about"))
       this.commands.set("about", () => this.navigateTo("about"))
-      this.commands.set("about us", () => this.navigateTo("about"))
-      this.commands.set("information", () => this.navigateTo("about"))
 
+      this.commands.set("go to contact", () => this.navigateTo("contact"))
       this.commands.set("contact", () => this.navigateTo("contact"))
-      this.commands.set("contact us", () => this.navigateTo("contact"))
 
       // Test commands
-      this.commands.set("start spiral test", () => this.startTest("spiral"))
-      this.commands.set("spiral test", () => this.startTest("spiral"))
-      this.commands.set("drawing test", () => this.startTest("spiral"))
+      this.commands.set("start spiral test", () => {
+        if (this.checkRegistration()) {
+          document.getElementById("startSpiralTest").click()
+        }
+      })
 
-      this.commands.set("start tap test", () => this.startTest("tap"))
-      this.commands.set("tap test", () => this.startTest("tap"))
-      this.commands.set("tap speed test", () => this.startTest("tap"))
+      this.commands.set("start tap test", () => {
+        if (this.checkRegistration()) {
+          document.getElementById("startTapTest").click()
+        }
+      })
 
-      this.commands.set("start reaction test", () => this.startTest("reaction"))
-      this.commands.set("reaction test", () => this.startTest("reaction"))
-      this.commands.set("reaction time test", () => this.startTest("reaction"))
+      this.commands.set("start reaction test", () => {
+        if (this.checkRegistration()) {
+          document.getElementById("startReactionTest").click()
+        }
+      })
 
-      this.commands.set("start voice test", () => this.startTest("voice"))
-      this.commands.set("voice test", () => this.startTest("voice"))
-      this.commands.set("voice analysis", () => this.startTest("voice"))
+      this.commands.set("start voice test", () => {
+        if (this.checkRegistration()) {
+          document.getElementById("startVoiceTest").click()
+        }
+      })
 
-      // Results commands
-      this.commands.set("show results", () => this.showResults())
-      this.commands.set("view results", () => this.showResults())
-      this.commands.set("results", () => this.showResults())
+      this.commands.set("show results", () => {
+        const resultsBtn = document.getElementById("viewResults")
+        if (resultsBtn && !resultsBtn.disabled) {
+          resultsBtn.click()
+        } else {
+          this.showNotification("Please complete at least one test first.", "info")
+        }
+      })
 
       // Theme commands
-      this.commands.set("dark mode", () => this.toggleTheme("dark"))
-      this.commands.set("light mode", () => this.toggleTheme("light"))
-      this.commands.set("toggle theme", () => this.toggleTheme())
+      this.commands.set("dark mode", () => {
+        const themeToggle = document.getElementById("themeToggle")
+        if (document.body.getAttribute("data-theme") !== "dark") {
+          themeToggle.click()
+        }
+      })
+
+      this.commands.set("light mode", () => {
+        const themeToggle = document.getElementById("themeToggle")
+        if (document.body.getAttribute("data-theme") !== "light") {
+          themeToggle.click()
+        }
+      })
+
+      this.commands.set("toggle theme", () => {
+        document.getElementById("themeToggle").click()
+      })
 
       // Control commands
-      this.commands.set("stop listening", () => this.stopListening())
-      this.commands.set("stop voice control", () => this.stopListening())
-      this.commands.set("disable voice", () => this.stopListening())
+      this.commands.set("stop listening", () => {
+        this.stopListening()
+        this.showNotification("Voice control stopped.", "info")
+      })
+
+      this.commands.set("help", () => {
+        this.showHelp()
+      })
+
+      this.commands.set("what can you do", () => {
+        this.showHelp()
+      })
 
       console.log("Voice commands setup complete")
     }
 
-    processCommand(command) {
-      // Find matching command
-      let matchedCommand = null
-      let bestMatch = 0
-
-      for (const [key, action] of this.commands) {
-        const similarity = this.calculateSimilarity(command, key)
-        if (similarity > bestMatch && similarity > 0.7) {
-          bestMatch = similarity
-          matchedCommand = action
-        }
-      }
-
-      if (matchedCommand) {
-        console.log("Executing voice command:", command)
-        this.showNotification(`Voice command: "${command}"`, "success")
-        matchedCommand()
-      } else {
-        console.log("Unknown voice command:", command)
-        this.showNotification(`Unknown command: "${command}"`, "warning")
+    setupUI() {
+      const voiceBtn = document.getElementById("voiceControl")
+      if (voiceBtn) {
+        voiceBtn.addEventListener("click", () => {
+          if (this.isListening) {
+            this.stopListening()
+          } else {
+            this.startListening()
+          }
+        })
       }
     }
 
-    calculateSimilarity(str1, str2) {
-      // Simple similarity calculation
-      const words1 = str1.split(" ")
-      const words2 = str2.split(" ")
-      let matches = 0
+    startListening() {
+      if (!this.recognition) {
+        this.showNotification("Voice recognition not available.", "error")
+        return
+      }
 
-      words1.forEach((word) => {
-        if (words2.includes(word)) {
-          matches++
+      try {
+        this.recognition.start()
+        this.isListening = true
+        this.updateUI()
+        this.showNotification("Voice control activated. Say a command...", "success")
+      } catch (error) {
+        console.error("Error starting voice recognition:", error)
+        this.showNotification("Failed to start voice control.", "error")
+      }
+    }
+
+    stopListening() {
+      if (this.recognition) {
+        this.recognition.stop()
+      }
+      this.isListening = false
+      this.updateUI()
+    }
+
+    updateUI() {
+      const voiceBtn = document.getElementById("voiceControl")
+      if (voiceBtn) {
+        if (this.isListening) {
+          voiceBtn.classList.add("listening")
+          voiceBtn.title = "Stop Voice Control"
+        } else {
+          voiceBtn.classList.remove("listening")
+          voiceBtn.title = "Start Voice Control"
         }
-      })
+      }
+    }
 
-      return matches / Math.max(words1.length, words2.length)
+    handleSpeechResult(event) {
+      const results = event.results
+      const lastResult = results[results.length - 1]
+
+      if (lastResult.isFinal) {
+        const transcript = lastResult[0].transcript.toLowerCase().trim()
+        const confidence = lastResult[0].confidence
+
+        console.log("Voice command:", transcript, "Confidence:", confidence)
+
+        if (confidence >= this.confidence) {
+          this.executeCommand(transcript)
+        } else {
+          this.showNotification("Command not recognized. Please speak clearly.", "warning")
+        }
+      }
+    }
+
+    executeCommand(transcript) {
+      let commandExecuted = false
+
+      // Check for exact matches first
+      if (this.commands.has(transcript)) {
+        this.commands.get(transcript)()
+        commandExecuted = true
+      } else {
+        // Check for partial matches
+        for (const [command, action] of this.commands) {
+          if (transcript.includes(command) || command.includes(transcript)) {
+            action()
+            commandExecuted = true
+            break
+          }
+        }
+      }
+
+      if (commandExecuted) {
+        this.showNotification(`Command executed: "${transcript}"`, "success")
+      } else {
+        this.showNotification(`Command not recognized: "${transcript}". Say "help" for available commands.`, "warning")
+      }
+    }
+
+    showHelp() {
+      const helpCommands = [
+        "Navigation: 'go home', 'go to tests', 'go to about'",
+        "Tests: 'start spiral test', 'start tap test', 'start reaction test'",
+        "Theme: 'dark mode', 'light mode', 'toggle theme'",
+        "Results: 'show results'",
+        "Control: 'stop listening', 'help'",
+      ]
+
+      const helpHTML = `
+        <div class="modal fade" id="voiceHelpModal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Voice Commands Help</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <h6>Available Voice Commands:</h6>
+                <ul class="list-unstyled">
+                  ${helpCommands
+                    .map((cmd) => `<li class="mb-2"><i class="fas fa-microphone me-2 text-primary"></i>${cmd}</li>`)
+                    .join("")}
+                </ul>
+                <div class="alert alert-info mt-3">
+                  <i class="fas fa-info-circle me-2"></i>
+                  Speak clearly and wait for the command to be processed. The voice control button will pulse when listening.
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it!</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+
+      // Add modal to DOM if it doesn't exist
+      if (!document.getElementById("voiceHelpModal")) {
+        document.body.insertAdjacentHTML("beforeend", helpHTML)
+      }
+
+      // Show the modal
+      const modal = document.querySelector("#voiceHelpModal")
+      if (modal) {
+        modal.classList.add("show")
+        modal.style.display = "block"
+        const closeButton = modal.querySelector(".btn-close")
+        if (closeButton) {
+          closeButton.addEventListener("click", () => {
+            modal.classList.remove("show")
+            modal.style.display = "none"
+          })
+        }
+      }
     }
 
     navigateTo(section) {
@@ -228,30 +383,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    startListening() {
-      if (this.recognition && !this.isListening) {
-        this.isListening = true
-        try {
-          this.recognition.start()
-          this.showNotification(
-            "Voice control activated. Say commands like 'go to tests' or 'start spiral test'",
-            "success",
-          )
-          console.log("Voice control started")
-        } catch (error) {
-          console.error("Error starting voice recognition:", error)
-          this.isListening = false
-        }
-      }
-    }
-
-    stopListening() {
-      if (this.recognition && this.isListening) {
-        this.isListening = false
-        this.recognition.stop()
-        this.showNotification("Voice control deactivated", "info")
-        console.log("Voice control stopped")
-      }
+    checkRegistration() {
+      // Placeholder for registration check logic
+      return true
     }
 
     showNotification(message, type = "info") {

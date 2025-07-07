@@ -52,31 +52,49 @@
     </script>
 
     <style>
-        /* Enhanced tap dot styling for better visibility and interaction */
+        /* Reduced gap between navbar and content */
+        body {
+            padding-top: 70px;
+        }
+
+        .navbar {
+            padding: 0.5rem 0;
+        }
+
+        .hero-section {
+            padding: 2rem 0;
+            min-height: 70vh;
+            background: linear-gradient(135deg, #dbeafe 0%, #fefce8 100%);
+            display: flex;
+            align-items: center;
+        }
+
+        /* Enhanced tap dot styling */
         #tapDot {
             position: absolute;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--royal-blue), var(--royal-purple));
-            border: 3px solid var(--royal-white);
+            border: 4px solid var(--royal-white);
             cursor: pointer;
             z-index: 1000;
             display: none;
-            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.4);
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.4);
             transition: all 0.2s ease;
+            user-select: none;
         }
 
         #tapDot:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.6);
+            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.6);
         }
 
         #tapDot:active {
-            transform: scale(0.95);
+            transform: scale(0.9);
         }
 
-        /* Reaction test container enhanced styling */
+        /* Reaction test container */
         #reactionTestContainer {
             min-height: 300px;
             display: flex;
@@ -84,53 +102,196 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 3px solid var(--border-color);
-            border-radius: var(--border-radius);
-            background: var(--bg-primary);
-        }
-
-        #reactionTestContainer.waiting {
-            background-color: var(--bg-primary);
-            border-color: var(--border-color);
+            border: 3px solid var(--royal-blue);
+            border-radius: 12px;
+            background: #f8f9fa;
+            font-size: 1.2rem;
+            font-weight: bold;
         }
 
         #reactionTestContainer.ready {
-            background-color: var(--medical-green) !important;
-            border-color: var(--medical-green) !important;
-            color: var(--royal-white);
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+            color: white;
         }
 
         #reactionTestContainer.too-early {
-            background-color: var(--medical-red) !important;
-            border-color: var(--medical-red) !important;
-            color: var(--royal-white);
+            background-color: #dc3545 !important;
+            border-color: #dc3545 !important;
+            color: white;
         }
 
-        /* Voice control button styling */
-        #voiceControlBtn {
+        /* Theme toggle button */
+        .theme-toggle {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1000;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background: var(--royal-blue);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
         }
 
-        #voiceControlBtn:hover {
-            transform: scale(1.05);
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: var(--royal-purple);
         }
 
-        #voiceControlBtn.btn-danger {
-            animation: pulse 2s infinite;
+        /* Voice control button */
+        .voice-control {
+            position: fixed;
+            top: 140px;
+            right: 20px;
+            z-index: 1000;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background: var(--medical-green);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .voice-control:hover {
+            transform: scale(1.1);
+        }
+
+        .voice-control.listening {
+            background: var(--medical-red);
+            animation: pulse 1s infinite;
         }
 
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
         }
+
+        /* Test status indicators */
+        .test-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .test-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .test-status.completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .test-status.in-progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Canvas styling */
+        #spiralCanvas {
+            border: 2px solid var(--royal-blue);
+            border-radius: 8px;
+            background: white;
+            cursor: crosshair;
+        }
+
+        /* Form validation */
+        .form-control.is-invalid {
+            border-color: var(--medical-red);
+        }
+
+        .form-control.is-valid {
+            border-color: var(--medical-green);
+        }
+
+        .invalid-feedback {
+            color: var(--medical-red);
+            font-size: 0.875rem;
+        }
+
+        /* Test cards */
+        .test-card {
+            background: white;
+            border: 2px solid var(--royal-blue);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.15);
+        }
+
+        .test-card h3 {
+            color: var(--royal-blue);
+            margin-bottom: 1rem;
+        }
+
+        .test-card .btn {
+            margin-top: auto;
+        }
+
+        /* Dark mode styles */
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --border-color: #404040;
+        }
+
+        [data-theme="dark"] body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .test-card {
+            background: var(--bg-secondary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .modal-content {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .form-control {
+            background: var(--bg-secondary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
     </style>
 </head>
 
 <body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Voice Control Button -->
+    <button class="voice-control" id="voiceControl" title="Voice Control">
+        <i class="fas fa-microphone"></i>
+    </button>
+
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand brand-text" href="#home">
+            <a class="navbar-brand fw-bold text-primary" href="#home">
                 <i class="fas fa-brain me-2"></i>NeuroSketch
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -142,7 +303,10 @@
                         <a class="nav-link active" href="#home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#tests">Assessment</a>
+                        <a class="nav-link" href="#register">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tests">Tests</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#about">About</a>
@@ -160,41 +324,96 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
-                    <h1 class="hero-title fade-in">Advanced Neurological Assessment</h1>
-                    <p class="hero-subtitle slide-in">Comprehensive digital platform for early detection and monitoring of neurological conditions through innovative assessment protocols.</p>
+                    <h1 class="display-4 fw-bold text-primary mb-4">NeuroSketch</h1>
+                    <p class="lead text-secondary mb-4">Advanced Neurological Assessment Platform for comprehensive digital health evaluation and early detection of neurological conditions.</p>
                     <div class="mt-4">
-                        <a href="#tests" class="btn btn-royal me-3">Start Assessment</a>
-                        <a href="#about" class="btn btn-royal-outline">Learn More</a>
+                        <a href="#register" class="btn btn-primary btn-lg me-3">Start Assessment</a>
+                        <a href="#about" class="btn btn-outline-primary btn-lg">Learn More</a>
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="royal-card text-center scale-in">
-                        <div class="royal-card-header">
-                            <h3 class="royal-card-title">
-                                <i class="fas fa-stethoscope text-royal-purple me-2"></i>
-                                Medical Excellence
-                            </h3>
+                    <div class="text-center">
+                        <i class="fas fa-brain fa-5x text-primary mb-3"></i>
+                        <h3 class="text-primary">AI-Powered Assessment</h3>
+                        <p class="text-secondary">Comprehensive neurological evaluation using advanced algorithms</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Section -->
+    <section id="register" class="py-5 bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h2 class="mb-0">Patient Registration</h2>
+                            <p class="mb-0">Please complete your information to begin assessment</p>
                         </div>
-                        <p class="mb-3">State-of-the-art neurological assessment tools designed by medical professionals for accurate and reliable results.</p>
-                        <div class="row text-center">
-                            <div class="col-4">
-                                <div class="text-royal-blue">
-                                    <i class="fas fa-chart-line fa-2x mb-2"></i>
-                                    <h6>Precision</h6>
+                        <div class="card-body">
+                            <form id="registrationForm">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="fullName" class="form-label">Full Name *</label>
+                                        <input type="text" class="form-control" id="fullName" name="fullName" required>
+                                        <div class="invalid-feedback">Please enter your full name.</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email Address *</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-royal-purple">
-                                    <i class="fas fa-shield-alt fa-2x mb-2"></i>
-                                    <h6>Security</h6>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="age" class="form-label">Age *</label>
+                                        <input type="number" class="form-control" id="age" name="age" min="1" max="120" required>
+                                        <div class="invalid-feedback">Please enter a valid age.</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Gender *</label>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="gender" id="male" value="Male" required>
+                                                <label class="form-check-label" for="male">Male</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="gender" id="female" value="Female">
+                                                <label class="form-check-label" for="female">Female</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="gender" id="other" value="Other">
+                                                <label class="form-check-label" for="other">Other</label>
+                                            </div>
+                                        </div>
+                                        <div class="invalid-feedback">Please select your gender.</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-royal-gold">
-                                    <i class="fas fa-award fa-2x mb-2"></i>
-                                    <h6>Quality</h6>
+                                <div class="mb-3">
+                                    <label for="familyHistory" class="form-label">Family History of Neurological Conditions</label>
+                                    <textarea class="form-control" id="familyHistory" name="familyHistory" rows="3" placeholder="Please describe any family history (optional)"></textarea>
                                 </div>
-                            </div>
+                                <div class="mb-3">
+                                    <label for="medicalSituation" class="form-label">Current Medical Conditions</label>
+                                    <textarea class="form-control" id="medicalSituation" name="medicalSituation" rows="3" placeholder="Please list current conditions or medications (optional)"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="consent" name="consent" required>
+                                        <label class="form-check-label" for="consent">
+                                            I consent to the neurological assessment and data processing *
+                                        </label>
+                                        <div class="invalid-feedback">You must consent to proceed with the assessment.</div>
+                                    </div>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="fas fa-user-check me-2"></i>Complete Registration
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -206,130 +425,77 @@
     <section id="tests" class="py-5 d-none">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="text-royal-blue">Neurological Assessment Protocol</h2>
-                <p class="text-muted">Complete the following assessments for comprehensive neurological evaluation</p>
+                <h2 class="text-primary">Neurological Assessment Tests</h2>
+                <p class="text-secondary">Complete all four tests for comprehensive evaluation</p>
             </div>
 
-            <!-- Patient Information Form -->
-            <div class="row mb-5">
-                <div class="col-lg-8 mx-auto">
-                    <div class="royal-card">
-                        <div class="royal-card-header">
-                            <h3 class="royal-card-title">
-                                <i class="fas fa-user-md me-2"></i>Patient Information
-                            </h3>
-                        </div>
-                        <form id="patientForm">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="patientName" class="form-label">Full Name *</label>
-                                    <input type="text" class="form-control" id="patientName" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="patientAge" class="form-label">Age *</label>
-                                    <input type="number" class="form-control" id="patientAge" min="1" max="120" required>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="patientGender" class="form-label">Gender *</label>
-                                    <select class="form-control" id="patientGender" required>
-                                        <option value="">Select Gender</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="patientEmail" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="patientEmail">
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="medicalHistory" class="form-label">Relevant Medical History</label>
-                                <textarea class="form-control" id="medicalHistory" rows="3" placeholder="Any relevant medical conditions, medications, or previous neurological assessments..."></textarea>
-                            </div>
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="consentCheck" required>
-                                <label class="form-check-label" for="consentCheck">
-                                    I consent to the neurological assessment and data processing *
-                                </label>
-                            </div>
-                            <button type="submit" class="btn btn-royal">
-                                <i class="fas fa-save me-2"></i>Save Information
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Assessment Tests -->
             <div class="row">
                 <div class="col-lg-6 mb-4">
-                    <div class="test-card h-100">
-                        <h3><i class="fas fa-pencil-alt"></i> Spiral Drawing Test</h3>
-                        <p>Assess motor control and coordination through precise spiral drawing patterns. This test evaluates fine motor skills and potential tremor indicators.</p>
-                        <div class="mt-auto">
-                            <button class="btn btn-royal" id="startSpiralTest">
+                    <div class="test-card">
+                        <h3><i class="fas fa-pencil-alt me-2"></i>Spiral Drawing Test</h3>
+                        <p class="text-secondary">Assess motor control and hand tremor through spiral drawing patterns.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <button class="btn btn-primary" id="startSpiralTest">
                                 <i class="fas fa-play me-2"></i>Start Test
                             </button>
-                            <span class="status-value ms-2" id="spiralStatus">Pending</span>
+                            <span class="test-status pending" id="spiralStatus">Pending</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-lg-6 mb-4">
-                    <div class="test-card h-100">
-                        <h3><i class="fas fa-mouse-pointer"></i> Tap Speed Test</h3>
-                        <p>Measure reaction time and motor speed through rapid target acquisition. Evaluates hand-eye coordination and processing speed.</p>
-                        <div class="mt-auto">
-                            <button class="btn btn-royal" id="startTapTest">
+                    <div class="test-card">
+                        <h3><i class="fas fa-mouse-pointer me-2"></i>Tap Speed Test</h3>
+                        <p class="text-secondary">Evaluate reaction speed and motor coordination through targeted tapping.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <button class="btn btn-primary" id="startTapTest">
                                 <i class="fas fa-play me-2"></i>Start Test
                             </button>
-                            <span class="status-value ms-2" id="tapStatus">Pending</span>
+                            <span class="test-status pending" id="tapStatus">Pending</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-lg-6 mb-4">
-                    <div class="test-card h-100">
-                        <h3><i class="fas fa-stopwatch"></i> Reaction Time Test</h3>
-                        <p>Evaluate cognitive processing speed and response time to visual stimuli. Measures neural pathway efficiency and alertness.</p>
-                        <div class="mt-auto">
-                            <button class="btn btn-royal" id="startReactionTest">
+                    <div class="test-card">
+                        <h3><i class="fas fa-stopwatch me-2"></i>Reaction Time Test</h3>
+                        <p class="text-secondary">Measure neural response time and cognitive processing speed.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <button class="btn btn-primary" id="startReactionTest">
                                 <i class="fas fa-play me-2"></i>Start Test
                             </button>
-                            <span class="status-value ms-2" id="reactionStatus">Pending</span>
+                            <span class="test-status pending" id="reactionStatus">Pending</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-lg-6 mb-4">
-                    <div class="test-card h-100">
-                        <h3><i class="fas fa-microphone"></i> Voice Analysis Test</h3>
-                        <p>Analyze speech patterns, articulation, and vocal characteristics. Detects potential speech-related neurological indicators.</p>
-                        <div class="mt-auto">
-                            <button class="btn btn-royal" id="startVoiceTest">
+                    <div class="test-card">
+                        <h3><i class="fas fa-microphone me-2"></i>Voice Analysis Test</h3>
+                        <p class="text-secondary">Analyze speech patterns and vocal control for neurological indicators.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <button class="btn btn-primary" id="startVoiceTest">
                                 <i class="fas fa-play me-2"></i>Start Test
                             </button>
-                            <span class="status-value ms-2" id="voiceStatus">Pending</span>
+                            <span class="test-status pending" id="voiceStatus">Pending</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Results Section -->
             <div class="row mt-5">
-                <div class="col-12">
-                    <div class="royal-card text-center">
-                        <h3 class="royal-card-title">Assessment Results</h3>
-                        <p class="mb-4">Complete all tests to view your comprehensive neurological assessment report</p>
-                        <button class="btn btn-medical-green" id="viewResults" disabled>
-                            <i class="fas fa-chart-bar me-2"></i>View Results
-                        </button>
-                        <button class="btn btn-royal-outline ms-2" id="printResults" disabled>
-                            <i class="fas fa-print me-2"></i>Print Report
-                        </button>
+                <div class="col-12 text-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Assessment Results</h4>
+                            <p class="card-text">Complete all tests to view your comprehensive report</p>
+                            <button class="btn btn-success btn-lg me-3" id="viewResults" disabled>
+                                <i class="fas fa-chart-bar me-2"></i>View Results
+                            </button>
+                            <button class="btn btn-outline-primary btn-lg" id="printResults" disabled>
+                                <i class="fas fa-print me-2"></i>Print Report
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -337,28 +503,27 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-5 d-none">
+    <section id="about" class="py-5 bg-light d-none">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="text-royal-blue">About NeuroSketch</h2>
-                <p class="text-muted">Advanced neurological assessment platform for medical professionals</p>
+                <h2 class="text-primary">About NeuroSketch</h2>
+                <p class="text-secondary">Advanced neurological assessment platform</p>
             </div>
             <div class="row">
                 <div class="col-lg-8 mx-auto">
-                    <div class="royal-card">
-                        <div class="royal-card-header">
-                            <h3 class="royal-card-title">Medical Innovation</h3>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title text-primary">Medical Innovation</h4>
+                            <p>NeuroSketch combines traditional clinical evaluation methods with modern AI technology to provide comprehensive, accurate, and accessible neurological screening.</p>
+                            <h5 class="text-primary mt-4">Key Features:</h5>
+                            <ul>
+                                <li>Comprehensive multi-modal assessment</li>
+                                <li>Real-time analysis and reporting</li>
+                                <li>Secure patient data management</li>
+                                <li>Professional-grade accuracy</li>
+                                <li>Voice-controlled interface</li>
+                            </ul>
                         </div>
-                        <p>NeuroSketch represents the cutting edge of digital neurological assessment, combining traditional clinical evaluation methods with modern technology to provide comprehensive, accurate, and accessible neurological screening.</p>
-                        
-                        <h5 class="text-royal-purple mt-4">Key Features:</h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-2"><i class="fas fa-check-circle text-medical-green me-2"></i>Comprehensive multi-modal assessment</li>
-                            <li class="mb-2"><i class="fas fa-check-circle text-medical-green me-2"></i>Real-time analysis and reporting</li>
-                            <li class="mb-2"><i class="fas fa-check-circle text-medical-green me-2"></i>Secure patient data management</li>
-                            <li class="mb-2"><i class="fas fa-check-circle text-medical-green me-2"></i>Professional-grade accuracy</li>
-                            <li class="mb-2"><i class="fas fa-check-circle text-medical-green me-2"></i>Voice-controlled interface</li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -369,31 +534,20 @@
     <section id="contact" class="py-5 d-none">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="text-royal-blue">Contact Information</h2>
-                <p class="text-muted">Get in touch with our medical technology team</p>
+                <h2 class="text-primary">Contact Information</h2>
+                <p class="text-secondary">Get in touch with our medical team</p>
             </div>
             <div class="row">
                 <div class="col-lg-8 mx-auto">
-                    <div class="royal-card">
-                        <div class="royal-card-header">
-                            <h3 class="royal-card-title">Professional Support</h3>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5 class="text-royal-purple">Medical Inquiries</h5>
-                                <p><i class="fas fa-envelope text-royal-blue me-2"></i>medical@neurosketch.com</p>
-                                <p><i class="fas fa-phone text-royal-blue me-2"></i>+1 (555) 123-4567</p>
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h4 class="card-title text-primary">Professional Support</h4>
+                            <p><i class="fas fa-envelope text-primary me-2"></i>medical@neurosketch.com</p>
+                            <p><i class="fas fa-phone text-primary me-2"></i>+1 (555) 123-4567</p>
+                            <div class="alert alert-warning mt-3">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                For medical emergencies, please contact your healthcare provider immediately.
                             </div>
-                            <div class="col-md-6">
-                                <h5 class="text-royal-purple">Technical Support</h5>
-                                <p><i class="fas fa-envelope text-royal-blue me-2"></i>support@neurosketch.com</p>
-                                <p><i class="fas fa-phone text-royal-blue me-2"></i>+1 (555) 987-6543</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="text-center">
-                            <h5 class="text-royal-purple">Emergency Medical Consultation</h5>
-                            <p class="text-medical-red"><i class="fas fa-exclamation-triangle me-2"></i>For medical emergencies, please contact your healthcare provider or emergency services immediately.</p>
                         </div>
                     </div>
                 </div>
@@ -411,20 +565,20 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="test-instructions mb-3">
+                    <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
-                        <strong>Instructions:</strong> Draw a spiral from the center outward. Try to maintain steady, smooth lines. Click "Start Drawing" when ready.
+                        <strong>Instructions:</strong> Draw a spiral from the center outward. Try to maintain steady, smooth lines.
                     </div>
                     <div class="text-center mb-3">
-                        <button class="btn btn-medical-green" id="startDrawing">
-                            <i class="fas fa-pencil-alt me-2"></i>Start Drawing
-                        </button>
-                        <button class="btn btn-royal-outline ms-2" id="clearCanvas">
-                            <i class="fas fa-eraser me-2"></i>Clear
-                        </button>
+                        <canvas id="spiralCanvas" width="500" height="400"></canvas>
                     </div>
                     <div class="text-center">
-                        <canvas id="spiralCanvas" width="500" height="400"></canvas>
+                        <button class="btn btn-warning me-2" id="clearCanvas">
+                            <i class="fas fa-eraser me-2"></i>Clear Canvas
+                        </button>
+                        <button class="btn btn-success" id="submitSpiral">
+                            <i class="fas fa-check me-2"></i>Submit Drawing
+                        </button>
                     </div>
                     <div id="spiralResult" class="mt-3 text-center"></div>
                 </div>
@@ -441,20 +595,22 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="test-instructions mb-3">
+                    <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
-                        <strong>Instructions:</strong> Click on the dots as quickly as possible when they appear. You have 10 dots to click. Be ready!
+                        <strong>Instructions:</strong> Click on the dots as quickly as possible when they appear. You need to click 10 targets.
                     </div>
                     <div class="text-center mb-3">
-                        <button class="btn btn-medical-green" onclick="startTapTestFunction()">
+                        <button class="btn btn-success" id="startTapTestBtn">
                             <i class="fas fa-play me-2"></i>Start Test
                         </button>
                     </div>
-                    <div class="position-relative" id="tapTestContainer" style="height: 400px; border: 2px solid var(--royal-blue); border-radius: 8px; background: var(--bg-primary);">
+                    <div class="position-relative border rounded" id="tapTestContainer" style="height: 400px; background: #f8f9fa;">
                         <div id="tapCountdown" class="position-absolute top-50 start-50 translate-middle" style="font-size: 3rem; font-weight: bold; display: none;"></div>
                         <div id="tapDot"></div>
                     </div>
-                    <div id="tapScore" class="mt-3 text-center"></div>
+                    <div id="tapScore" class="mt-3 text-center">
+                        <h5>Score: <span id="tapScoreValue">0/10</span></h5>
+                    </div>
                 </div>
             </div>
         </div>
@@ -469,16 +625,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="test-instructions mb-3">
+                    <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
                         <strong>Instructions:</strong> Click as soon as the screen turns green. Don't click too early! You'll complete 3 trials.
                     </div>
                     <div class="text-center mb-3">
-                        <button class="btn btn-medical-green" onclick="startReactionTestFunction()">
+                        <button class="btn btn-success" id="startReactionTestBtn">
                             <i class="fas fa-play me-2"></i>Start Test
                         </button>
                     </div>
-                    <div class="position-relative" id="reactionTestContainer" style="height: 300px; cursor: pointer;">
+                    <div id="reactionTestContainer" style="height: 300px;">
                         <div id="reactionCountdown" class="position-absolute top-50 start-50 translate-middle" style="font-size: 2rem; font-weight: bold;"></div>
                         <div id="reactionTime" class="position-absolute top-50 start-50 translate-middle" style="font-size: 2rem; font-weight: bold; display: none;"></div>
                     </div>
@@ -497,21 +653,23 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="test-instructions mb-3">
+                    <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
-                        <strong>Instructions:</strong> Read the provided text clearly and naturally. Click "Start Recording" when ready.
+                        <strong>Instructions:</strong> Read the provided text clearly and naturally.
                     </div>
-                    <div class="royal-card mb-3">
-                        <h6 class="text-royal-blue">Please read the following text:</h6>
-                        <p class="border p-3 rounded" style="background: var(--bg-accent);">
-                            "The quick brown fox jumps over the lazy dog. Peter Piper picked a peck of pickled peppers. She sells seashells by the seashore. How much wood would a woodchuck chuck if a woodchuck could chuck wood?"
-                        </p>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h6 class="text-primary">Please read the following text:</h6>
+                            <p class="border p-3 rounded bg-light">
+                                "The quick brown fox jumps over the lazy dog. Peter Piper picked a peck of pickled peppers. She sells seashells by the seashore."
+                            </p>
+                        </div>
                     </div>
                     <div class="text-center mb-3">
-                        <button class="btn btn-medical-green" id="startVoiceRecording">
+                        <button class="btn btn-success me-2" id="startVoiceRecording">
                             <i class="fas fa-microphone me-2"></i>Start Recording
                         </button>
-                        <button class="btn btn-medical-red ms-2" id="stopVoiceRecording" disabled>
+                        <button class="btn btn-danger" id="stopVoiceRecording" disabled>
                             <i class="fas fa-stop me-2"></i>Stop Recording
                         </button>
                     </div>
@@ -527,38 +685,26 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Comprehensive Neurological Assessment Report</h5>
+                    <h5 class="modal-title">Neurological Assessment Report</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="resultsContent">
                     <!-- Results will be populated here -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-royal-outline" onclick="window.print()">
+                    <button type="button" class="btn btn-outline-primary" onclick="window.print()">
                         <i class="fas fa-print me-2"></i>Print Report
                     </button>
-                    <button type="button" class="btn btn-royal" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="text-center py-4">
+    <footer class="bg-dark text-white text-center py-4">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5 class="text-royal-white">NeuroSketch Medical Platform</h5>
-                    <p class="mb-0">Advanced neurological assessment technology</p>
-                </div>
-                <div class="col-md-6">
-                    <p class="mb-0">
-                        <i class="fas fa-shield-alt me-2"></i>
-                        HIPAA Compliant | Medical Grade Security
-                    </p>
-                    <small>&copy; 2024 NeuroSketch. All rights reserved.</small>
-                </div>
-            </div>
+            <p class="mb-0">&copy; 2024 NeuroSketch. Advanced Neurological Assessment Platform.</p>
         </div>
     </footer>
 
@@ -569,40 +715,7 @@
     <script src="js/main.js"></script>
     <script src="js/form-validation.js"></script>
     <script src="js/test-manager.js"></script>
-    <script src="js/modal-helper.js"></script>
-    <script src="js/print-manager.js"></script>
-    <script src="js/tap-test-fix.js"></script>
-    <script src="js/reaction-test-fix.js"></script>
-    <script src="js/voice-control-model.js"></script>
     <script src="js/theme-toggle.js"></script>
-
-    <script>
-        // Initialize all components when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('NeuroSketch Medical Platform Initialized');
-            
-            // Initialize navigation
-            if (typeof initializeNavigation === 'function') {
-                initializeNavigation();
-            }
-            
-            // Initialize form validation
-            if (typeof initializeFormValidation === 'function') {
-                initializeFormValidation();
-            }
-            
-            // Initialize test manager
-            if (typeof initializeTestManager === 'function') {
-                initializeTestManager();
-            }
-            
-            // Initialize print functionality
-            if (typeof initializePrintManager === 'function') {
-                initializePrintManager();
-            }
-            
-            console.log('All medical platform components loaded successfully');
-        });
-    </script>
+    <script src="js/voice-control-model.js"></script>
 </body>
 </html>
