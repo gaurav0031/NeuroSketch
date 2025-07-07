@@ -1,749 +1,754 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEUROSKETCH - Neural Interface Diagnostic System</title>
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.ico">
-  
-  <!-- Cyberpunk Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  
-  <!-- Custom Cyberpunk CSS -->
-  <link rel="stylesheet" href="css/futuristic-theme.css">
-  <link rel="stylesheet" href="css/cyber-animations.css">
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/animations.css">
-  <link rel="stylesheet" href="css/modal-fixes.css">
-  <link rel="stylesheet" href="css/print-styles.css">
-  
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
-  
-  <!-- Initialize Firebase -->
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAuwZCQy9f5iS8WxtWjOfOOSAZU1eEtvOs",
-      authDomain: "neurosketch-b1011.firebaseapp.com",
-      projectId: "neurosketch-b1011",
-      storageBucket: "neurosketch-b1011.firebasestorage.app",
-      messagingSenderId: "460372908007",
-      appId: "1:460372908007:web:fd4dd388b2f5633a108f42",
-      measurementId: "G-TEX9628980"
-    };
-    
-    firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
-    
-    window.db = firebase.firestore();
-    window.auth = firebase.auth();
-    
-    console.log("🔥 Firebase Neural Network Online");
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroSketch - Advanced Neurological Assessment Platform</title>
 
-  <style>
-    /* Enhanced tap dot styling */
-    #tapDot {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--neon-cyan), var(--electric-blue));
-      border: 2px solid var(--neon-cyan);
-      cursor: pointer;
-      z-index: 100;
-      display: none;
-      box-shadow: 
-        0 0 20px var(--neon-cyan),
-        inset 0 0 20px rgba(255, 255, 255, 0.2);
-      animation: dotPulse 1s infinite;
-    }
-    
-    #tapDot:hover {
-      transform: scale(1.1);
-      box-shadow: 
-        0 0 30px var(--neon-cyan),
-        0 0 50px var(--neon-cyan),
-        inset 0 0 20px rgba(255, 255, 255, 0.3);
-    }
-    
-    /* Modal enhancements */
-    .modal {
-      z-index: 1055 !important;
-    }
-    
-    .modal-backdrop {
-      z-index: 1050 !important;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(5px);
-    }
-    
-    /* Test containers */
-    #tapTestContainer, #reactionTestContainer {
-      position: relative;
-      overflow: hidden;
-      background: radial-gradient(circle at center, rgba(0, 255, 255, 0.1), transparent);
-    }
-    
-    /* Holographic text effect */
-    .hero-title {
-      position: relative;
-    }
-    
-    .hero-title::before {
-      content: 'NEUROSKETCH';
-      position: absolute;
-      top: 0;
-      left: 0;
-      background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple), var(--neon-green), var(--neon-cyan));
-      background-size: 400% 400%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      animation: holographicShift 3s ease infinite;
-      z-index: -1;
-      filter: blur(1px);
-    }
-  </style>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.ico">
+
+    <!-- Professional Medical Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Custom Royal Medical Theme -->
+    <link rel="stylesheet" href="css/royal-medical-theme.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/modal-fixes.css">
+    <link rel="stylesheet" href="css/print-styles.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+
+    <!-- Initialize Firebase -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAuwZCQy9f5iS8WxtWjOfOOSAZU1eEtvOs",
+            authDomain: "neurosketch-b1011.firebaseapp.com",
+            projectId: "neurosketch-b1011",
+            storageBucket: "neurosketch-b1011.firebasestorage.app",
+            messagingSenderId: "460372908007",
+            appId: "1:460372908007:web:fd4dd388b2f5633a108f42",
+            measurementId: "G-TEX9628980"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+        
+        window.db = firebase.firestore();
+        window.auth = firebase.auth();
+        
+        console.log("Firebase Medical Platform Online");
+    </script>
+
+    <style>
+        /* Enhanced tap dot styling for better visibility and interaction */
+        #tapDot {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--royal-blue), var(--royal-purple));
+            border: 3px solid var(--royal-white);
+            cursor: pointer;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+            transition: all 0.2s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        #tapDot:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(30, 58, 138, 0.4);
+        }
+
+        #tapDot:active {
+            transform: scale(0.95);
+        }
+
+        /* Modal enhancements */
+        .modal {
+            z-index: 1055 !important;
+        }
+
+        .modal-backdrop {
+            z-index: 1050 !important;
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        /* Test containers */
+        #tapTestContainer, #reactionTestContainer {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border: 2px solid var(--royal-blue);
+            border-radius: 12px;
+        }
+
+        /* Ensure proper cursor */
+        body {
+            cursor: default;
+        }
+
+        /* Professional medical styling */
+        .hero-section {
+            background: linear-gradient(135deg, #dbeafe 0%, #fefce8 100%);
+        }
+
+        .section-title {
+            position: relative;
+            color: var(--royal-blue);
+            font-weight: 700;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--royal-blue), var(--royal-purple));
+            border-radius: 2px;
+        }
+    </style>
 </head>
-<body class="cyber-grid hologram-flicker">
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg fixed-top data-stream">
-      <div class="container">
-          <a class="navbar-brand" href="#home">
-              <span class="brand-text neon-glow" data-text="NEUROSKETCH">NEUROSKETCH</span>
-          </a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-              <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav ms-auto">
-                  <li class="nav-item">
-                      <a class="nav-link active" href="#home">INTERFACE</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="#tests">DIAGNOSTICS</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="#about">PROTOCOL</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="#contact">TRANSMISSION</a>
-                  </li>
-              </ul>
-          </div>
-      </div>
-  </nav>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#home">
+                <span class="brand-text">NeuroSketch</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tests" id="testsLink">Assessment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-  <!-- Hero Section -->
-  <header class="hero-section quantum-interference" id="home">
-      <div class="container">
-          <div class="row align-items-center min-vh-100">
-              <div class="col-lg-6">
-                  <h1 class="hero-title holographic" data-text="NEUROSKETCH">NEUROSKETCH</h1>
-                  <p class="hero-subtitle neon-glow">NEURAL INTERFACE DIAGNOSTIC SYSTEM</p>
-                  <p class="lead text-secondary mb-4">
-                      Advanced AI-powered neurological assessment protocol. 
-                      Diagnose with quantum precision, act with neural speed.
-                  </p>
-                  <div class="mt-4">
-                      <a href="#register" class="btn btn-cyber me-3 energy-pulse">INITIALIZE SCAN</a>
-                      <a href="#about" class="btn btn-cyber btn-cyber-pink">ACCESS PROTOCOL</a>
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="position-relative">
-                      <div class="cyber-card circuit-board p-4">
-                          <div class="text-center">
-                              <i class="fas fa-brain fa-5x text-cyan mb-3" style="color: var(--neon-cyan);"></i>
-                              <h3 class="holographic">NEURAL MATRIX</h3>
-                              <p class="text-secondary">Quantum-enhanced diagnostic algorithms</p>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </header>
+    <!-- Hero Section -->
+    <header class="hero-section" id="home">
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-6">
+                    <h1 class="hero-title">NeuroSketch</h1>
+                    <p class="hero-subtitle">Advanced Neurological Assessment Platform</p>
+                    <p class="lead text-secondary mb-4">
+                        Professional-grade AI-powered neurological assessment tools designed for healthcare professionals and researchers. 
+                        Diagnose with confidence, act with precision.
+                    </p>
+                    <div class="mt-4">
+                        <a href="#register" class="btn btn-royal me-3">Start Assessment</a>
+                        <a href="#about" class="btn btn-royal-outline">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="royal-card text-center">
+                        <i class="fas fa-brain fa-5x text-royal-blue mb-3"></i>
+                        <h3 class="royal-card-title">Neural Assessment Suite</h3>
+                        <p class="text-secondary">Comprehensive neurological evaluation tools powered by advanced AI algorithms</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-  <!-- Mission Section -->
-  <section class="py-5 digital-noise" id="mission">
-      <div class="container">
-          <div class="row">
-              <div class="col-md-6 mb-4">
-                  <div class="cyber-card h-100">
-                      <h3 class="cyber-card-title">MISSION PROTOCOL</h3>
-                      <p class="text-secondary">
-                          NeuroSketch deploys advanced AI-based neural detection systems through integrated 
-                          motor and cognitive assessment protocols. Our quantum-enhanced algorithms provide 
-                          accessible, cost-effective, non-invasive diagnostic capabilities for timely 
-                          neurological intervention.
-                      </p>
-                  </div>
-              </div>
-              <div class="col-md-6 mb-4">
-                  <div class="cyber-card h-100">
-                      <h3 class="cyber-card-title">VISION MATRIX</h3>
-                      <p class="text-secondary">
-                          To establish a comprehensive AI-driven neural health monitoring system that delivers 
-                          reliable neurological disorder detection across all populations, including remote 
-                          locations, without requiring expensive hardware. Focus: integrated AI diagnostics 
-                          for optimal health outcomes.
-                      </p>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section>
+    <!-- Mission Section -->
+    <section class="py-5" id="mission">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="royal-card">
+                        <div class="royal-card-header">
+                            <h3 class="royal-card-title">Our Mission</h3>
+                        </div>
+                        <p class="text-secondary">
+                            NeuroSketch revolutionizes neurological disorder detection through advanced AI-based systems 
+                            that utilize comprehensive motor and cognitive assessments. Our platform makes healthcare 
+                            more accessible, cost-effective, and non-invasive for timely diagnosis and intervention.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="royal-card">
+                        <div class="royal-card-header">
+                            <h3 class="royal-card-title">Our Vision</h3>
+                        </div>
+                        <p class="text-secondary">
+                            To develop a comprehensive AI-driven healthcare platform that provides reliable neurological 
+                            disorder detection for all populations, including remote areas, without requiring expensive 
+                            hardware. Focus on integrated AI assessments for optimal health outcomes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- About Section -->
-  <section class="py-5 quantum-interference" id="about">
-      <div class="container">
-          <div class="row justify-content-center">
-              <div class="col-lg-8 text-center">
-                  <h2 class="section-title holographic mb-4">SYSTEM PROTOCOL</h2>
-                  <h3 class="mb-4 neon-glow" style="color: var(--neon-cyan);">NEUROSKETCH NEURAL INTERFACE</h3>
-                  <p class="lead text-secondary">
-                      Welcome to the NeuroSketch Neural Interface - your gateway to advanced neurological 
-                      health monitoring. Our quantum-enhanced diagnostic system analyzes motor functions 
-                      and neural patterns to detect early signs of neurological disorders. With advanced 
-                      AI algorithms, get comprehensive neural analysis anytime, anywhere. 
-                      Accessible, reliable, and powered by quantum computing—your journey to enhanced 
-                      neurological care begins here.
-                  </p>
-              </div>
-          </div>
-      </div>
-  </section>
+    <!-- About Section -->
+    <section class="py-5 bg-light" id="about">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="section-title">About NeuroSketch</h2>
+                    <h3 class="mb-4 text-royal-purple">Professional Neurological Assessment Platform</h3>
+                    <p class="lead">
+                        Welcome to NeuroSketch, your comprehensive neurological health assessment platform. Our advanced 
+                        AI algorithms analyze motor functions and detect early signs of neurological disorders through 
+                        evidence-based testing protocols. With intuitive interfaces and professional-grade analysis, 
+                        get reliable neurological assessments anytime, anywhere. Accessible, accurate, and powered by 
+                        cutting-edge AI—your journey to better neurological care starts here.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Team Section -->
-  <section class="py-5 circuit-board" id="team">
-      <div class="container">
-          <h2 class="section-title text-center mb-5 holographic">NEURAL RESEARCH TEAM</h2>
-          <div class="row">
-              <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="cyber-card h-100 text-center">
-                      <div class="mb-3">
-                          <i class="fas fa-user-astronaut fa-3x" style="color: var(--neon-cyan);"></i>
-                      </div>
-                      <h5 class="cyber-card-title">GURSIMAR KAUR</h5>
-                      <p class="text-secondary">Lead Neural Researcher & System Architect</p>
-                  </div>
-              </div>
-              <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="cyber-card h-100 text-center">
-                      <div class="mb-3">
-                          <i class="fas fa-user-astronaut fa-3x" style="color: var(--neon-pink);"></i>
-                      </div>
-                      <h5 class="cyber-card-title">DHRITI AHUJA</h5>
-                      <p class="text-secondary">Quantum Algorithm Specialist</p>
-                  </div>
-              </div>
-              <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="cyber-card h-100 text-center">
-                      <div class="mb-3">
-                          <i class="fas fa-user-astronaut fa-3x" style="color: var(--neon-green);"></i>
-                      </div>
-                      <h5 class="cyber-card-title">PRAJESH STH NAIR</h5>
-                      <p class="text-secondary">Neural Network Engineer</p>
-                  </div>
-              </div>
-              <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="cyber-card h-100 text-center">
-                      <div class="mb-3">
-                          <i class="fas fa-user-md fa-3x" style="color: var(--neon-purple);"></i>
-                      </div>
-                      <h5 class="cyber-card-title">DR. SHWETA TOMAR</h5>
-                      <p class="text-secondary">Chief Neural Protocol Advisor</p>
-                  </div>
-              </div>
-              <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="cyber-card h-100 text-center">
-                      <div class="mb-3">
-                          <i class="fas fa-user-cog fa-3x" style="color: var(--neon-orange);"></i>
-                      </div>
-                      <h5 class="cyber-card-title">KARTIKEYA SINGH</h5>
-                      <p class="text-secondary">Technical Systems Coordinator</p>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section>
+    <!-- Team Section -->
+    <section class="py-5" id="team">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Our Research Team</h2>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="royal-card text-center">
+                        <i class="fas fa-user-md fa-3x text-royal-blue mb-3"></i>
+                        <h5 class="royal-card-title">Gursimar Kaur</h5>
+                        <p class="text-secondary">Lead Researcher & Project Originator</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="royal-card text-center">
+                        <i class="fas fa-user-graduate fa-3x text-royal-purple mb-3"></i>
+                        <h5 class="royal-card-title">Dhriti Ahuja</h5>
+                        <p class="text-secondary">Research Scientist</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="royal-card text-center">
+                        <i class="fas fa-user-cog fa-3x text-royal-gold mb-3"></i>
+                        <h5 class="royal-card-title">Prajesh Sth Nair</h5>
+                        <p class="text-secondary">Technical Research Specialist</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="royal-card text-center">
+                        <i class="fas fa-user-tie fa-3x text-medical-green mb-3"></i>
+                        <h5 class="royal-card-title">Dr. Shweta Tomar</h5>
+                        <p class="text-secondary">Principal Investigator & Medical Advisor</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="royal-card text-center">
+                        <i class="fas fa-user-check fa-3x text-medical-red mb-3"></i>
+                        <h5 class="royal-card-title">Kartikeya Singh</h5>
+                        <p class="text-secondary">Technical Coordinator & Mentor</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Registration Section -->
-  <section class="py-5 digital-noise d-none" id="register">
-      <div class="container">
-          <div class="row justify-content-center">
-              <div class="col-lg-8">
-                  <div class="cyber-card">
-                      <h2 class="cyber-card-title text-center mb-4">NEURAL INTERFACE INITIALIZATION</h2>
-                      <p class="text-center text-secondary mb-4">Initialize neural scan parameters</p>
-                      <form id="registrationForm">
-                          <div class="mb-3">
-                              <label for="fullName" class="form-label">SUBJECT IDENTIFIER *</label>
-                              <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Enter full designation" required>
-                          </div>
-                          
-                          <div class="mb-3">
-                              <label for="email" class="form-label">NEURAL LINK ADDRESS *</label>
-                              <input type="email" class="form-control" id="email" name="email" placeholder="neural.link@domain.net" required>
-                          </div>
-                          
-                          <div class="mb-3">
-                              <label for="age" class="form-label">TEMPORAL ORIGIN *</label>
-                              <input type="date" class="form-control" id="age" name="age" required>
-                          </div>
-                          
-                          <div class="mb-3">
-                              <label class="form-label">BIOLOGICAL CLASSIFICATION *</label>
-                              <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="gender" id="male" value="Male" required>
-                                  <label class="form-check-label text-secondary" for="male">MALE</label>
-                              </div>
-                              <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="gender" id="female" value="Female">
-                                  <label class="form-check-label text-secondary" for="female">FEMALE</label>
-                              </div>
-                          </div>
-                          
-                          <div class="mb-3">
-                              <label for="familyHistory" class="form-label">GENETIC NEURAL HISTORY</label>
-                              <textarea class="form-control" id="familyHistory" name="familyHistory" rows="3" placeholder="Document any known neural anomalies in genetic lineage"></textarea>
-                          </div>
-                          
-                          <div class="mb-3">
-                              <label for="medicalSituation" class="form-label">CURRENT BIOLOGICAL STATUS</label>
-                              <textarea class="form-control" id="medicalSituation" name="medicalSituation" rows="3" placeholder="Current medical conditions or treatments"></textarea>
-                          </div>
-                          
-                          <div class="d-grid">
-                              <button type="submit" class="btn btn-cyber btn-cyber-green">INITIALIZE NEURAL SCAN</button>
-                          </div>
-                      </form>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section>
+    <!-- Registration Section -->
+    <section class="py-5 bg-light" id="register">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="royal-card">
+                        <div class="royal-card-header text-center">
+                            <h2 class="royal-card-title">Patient Information</h2>
+                            <p class="text-secondary">Please provide your information to begin the assessment</p>
+                        </div>
+                        <form id="registrationForm">
+                            <div class="mb-3">
+                                <label for="fullName" class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Enter your full name" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="your.email@example.com" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="age" class="form-label">Date of Birth *</label>
+                                <input type="date" class="form-control" id="age" name="age" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Gender *</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gender" id="male" value="Male" required>
+                                    <label class="form-check-label" for="male">Male</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gender" id="female" value="Female">
+                                    <label class="form-check-label" for="female">Female</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gender" id="other" value="Other">
+                                    <label class="form-check-label" for="other">Other</label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="familyHistory" class="form-label">Family History of Neurological Conditions</label>
+                                <textarea class="form-control" id="familyHistory" name="familyHistory" rows="3" placeholder="Please describe any family history of neurological conditions (optional)"></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="medicalSituation" class="form-label">Current Medical Conditions</label>
+                                <textarea class="form-control" id="medicalSituation" name="medicalSituation" rows="3" placeholder="Please list any current medical conditions or medications (optional)"></textarea>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-medical-green">Begin Assessment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Tests Section -->
-  <section class="py-5 quantum-interference d-none" id="tests">
-      <div class="container">
-          <h2 class="section-title text-center mb-5 holographic">DIAGNOSTIC PROTOCOLS</h2>
-          <div class="row">
-              <div class="col-lg-6 mb-4">
-                  <div class="test-card h-100">
-                      <h3><i class="fas fa-draw-polygon me-2"></i>SPIRAL MATRIX TEST</h3>
-                      <div class="test-status mb-3">
-                          <span class="status-label">STATUS:</span>
-                          <span class="status-value" id="spiralTestStatus">STANDBY</span>
-                      </div>
-                      <div class="test-result mb-3 d-none" id="spiralTestResult">
-                          <div class="result-chart">
-                              <div class="progress mb-2">
-                                  <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="spiralHealthyBar" aria-valuenow="0"></div>
-                              </div>
-                              <div class="result-labels">
-                                  <span>Neural Stability: <span id="spiralHealthyPercent">0</span>%</span>
-                              </div>
-                              <div class="progress mb-2">
-                                  <div class="progress-bar bg-danger" role="progressbar" style="width: 0%" id="spiralParkinsonBar" aria-valuenow="0"></div>
-                              </div>
-                              <div class="result-labels">
-                                  <span>Anomaly Detection: <span id="spiralParkinsonPercent">0</span>%</span>
-                              </div>
-                          </div>
-                      </div>
-                      <p class="text-secondary">Neural motor control assessment through spiral pattern analysis.</p>
-                      <button class="btn btn-cyber" id="startSpiralTest">EXECUTE SCAN</button>
-                  </div>
-              </div>
-              
-              <div class="col-lg-6 mb-4">
-                  <div class="test-card h-100">
-                      <h3><i class="fas fa-crosshairs me-2"></i>REACTION MATRIX TEST</h3>
-                      <div class="test-status mb-3">
-                          <span class="status-label">STATUS:</span>
-                          <span class="status-value" id="tapTestStatus">STANDBY</span>
-                      </div>
-                      <div class="test-result mb-3 d-none" id="tapTestResult">
-                          <div class="result-chart">
-                              <div class="progress mb-2">
-                                  <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="tapHealthyBar" aria-valuenow="0"></div>
-                              </div>
-                              <div class="result-labels">
-                                  <span>Neural Stability: <span id="tapHealthyPercent">0</span>%</span>
-                              </div>
-                              <div class="progress mb-2">
-                                  <div class="progress-bar bg-danger" role="progressbar" style="width: 0%" id="tapParkinsonBar" aria-valuenow="0"></div>
-                              </div>
-                              <div class="result-labels">
-                                  <span>Anomaly Detection: <span id="tapParkinsonPercent">0</span>%</span>
-                              </div>
-                          </div>
-                      </div>
-                      <p class="text-secondary">Neural response speed and accuracy assessment protocol.</p>
-                      <button class="btn btn-cyber btn-cyber-pink" id="startTapTest">EXECUTE SCAN</button>
-                  </div>
-              </div>
-              
-              <div class="col-lg-6 mb-4">
-                  <div class="test-card h-100">
-                      <h3><i class="fas fa-stopwatch me-2"></i>TEMPORAL RESPONSE TEST</h3>
-                      <div class="test-status mb-3">
-                          <span class="status-label">STATUS:</span>
-                          <span class="status-value" id="reactionTestStatus">STANDBY</span>
-                      </div>
-                      <div class="test-result mb-3 d-none" id="reactionTestResult">
-                          <div class="result-chart">
-                              <div class="progress mb-2">
-                                  <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="reactionHealthyBar" aria-valuenow="0"></div>
-                              </div>
-                              <div class="result-labels">
-                                  <span>Neural Stability: <span id="reactionHealthyPercent">0</span>%</span>
-                              </div>
-                              <div class="progress mb-2">
-                                  <div class="progress-bar bg-danger" role="progressbar" style="width: 0%" id="reactionParkinsonBar" aria-valuenow="0"></div>
-                              </div>
-                              <div class="result-labels">
-                                  <span>Anomaly Detection: <span id="reactionParkinsonPercent">0</span>%</span>
-                              </div>
-                          </div>
-                      </div>
-                      <p class="text-secondary">Neural temporal response analysis and reaction time measurement.</p>
-                      <button class="btn btn-cyber btn-cyber-green" id="startReactionTest">EXECUTE SCAN</button>
-                  </div>
-              </div>
-              
-              <div class="col-lg-6 mb-4">
-                  <div class="test-card h-100">
-                      <h3><i class="fas fa-microphone me-2"></i>VOCAL PATTERN TEST</h3>
-                      <div class="test-status mb-3">
-                          <span class="status-label">STATUS:</span>
-                          <span class="status-value" id="voiceTestStatus">STANDBY</span>
-                      </div>
-                      <div class="test-result mb-3 d-none" id="voiceTestResult">
-                          <div class="result-chart">
-                              <div class="progress mb-2">
-                                  <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="voiceHealthyBar" aria-valuenow="0"></div>
-                              </div>
-                              <div class="result-labels">
-                                  <span>Neural Stability: <span id="voiceHealthyPercent">0</span>%</span>
-                              </div>
-                              <div class="progress mb-2">
-                                  <div class="progress-bar bg-danger" role="progressbar" style="width: 0%" id="voiceParkinsonBar" aria-valuenow="0"></div>
-                              </div>
-                              <div class="result-labels">
-                                  <span>Anomaly Detection: <span id="voiceParkinsonPercent">0</span>%</span>
-                              </div>
-                          </div>
-                      </div>
-                      <p class="text-secondary">Neural vocal control and speech pattern analysis protocol.</p>
-                      <button class="btn btn-cyber btn-cyber-pink" id="startVoiceTest">EXECUTE SCAN</button>
-                  </div>
-              </div>
-          </div>
-          <div class="row mt-4">
-              <div class="col-12 text-center">
-                  <button class="btn btn-cyber btn-cyber-green energy-pulse" id="viewResults" disabled>ACCESS NEURAL ANALYSIS</button>
-              </div>
-          </div>
-      </div>
-  </section>
+    <!-- Tests Section -->
+    <section class="py-5 d-none" id="tests">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Neurological Assessment Suite</h2>
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="test-card">
+                        <h3><i class="fas fa-draw-polygon"></i>Spiral Drawing Test</h3>
+                        <div class="test-status mb-3">
+                            <span class="status-label">Status:</span>
+                            <span class="status-value" id="spiralTestStatus">Not Tested</span>
+                        </div>
+                        <div class="test-result mb-3 d-none" id="spiralTestResult">
+                            <div class="result-chart">
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="spiralHealthyBar" aria-valuenow="0"></div>
+                                </div>
+                                <div class="result-labels">
+                                    <span>Healthy: <span id="spiralHealthyPercent">0</span>%</span>
+                                </div>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 0%" id="spiralParkinsonBar" aria-valuenow="0"></div>
+                                </div>
+                                <div class="result-labels">
+                                    <span>Parkinson's Risk: <span id="spiralParkinsonPercent">0</span>%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-secondary">Assess motor control and hand tremor through spiral drawing patterns.</p>
+                        <button class="btn btn-royal" id="startSpiralTest">Start Test</button>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="test-card">
+                        <h3><i class="fas fa-mouse-pointer"></i>Tap Speed Test</h3>
+                        <div class="test-status mb-3">
+                            <span class="status-label">Status:</span>
+                            <span class="status-value" id="tapTestStatus">Not Tested</span>
+                        </div>
+                        <div class="test-result mb-3 d-none" id="tapTestResult">
+                            <div class="result-chart">
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="tapHealthyBar" aria-valuenow="0"></div>
+                                </div>
+                                <div class="result-labels">
+                                    <span>Healthy: <span id="tapHealthyPercent">0</span>%</span>
+                                </div>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 0%" id="tapParkinsonBar" aria-valuenow="0"></div>
+                                </div>
+                                <div class="result-labels">
+                                    <span>Parkinson's Risk: <span id="tapParkinsonPercent">0</span>%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-secondary">Evaluate reaction speed and motor coordination through targeted tapping.</p>
+                        <button class="btn btn-royal" id="startTapTest">Start Test</button>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="test-card">
+                        <h3><i class="fas fa-stopwatch"></i>Reaction Time Test</h3>
+                        <div class="test-status mb-3">
+                            <span class="status-label">Status:</span>
+                            <span class="status-value" id="reactionTestStatus">Not Tested</span>
+                        </div>
+                        <div class="test-result mb-3 d-none" id="reactionTestResult">
+                            <div class="result-chart">
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="reactionHealthyBar" aria-valuenow="0"></div>
+                                </div>
+                                <div class="result-labels">
+                                    <span>Healthy: <span id="reactionHealthyPercent">0</span>%</span>
+                                </div>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 0%" id="reactionParkinsonBar" aria-valuenow="0"></div>
+                                </div>
+                                <div class="result-labels">
+                                    <span>Parkinson's Risk: <span id="reactionParkinsonPercent">0</span>%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-secondary">Measure neural response time and cognitive processing speed.</p>
+                        <button class="btn btn-royal" id="startReactionTest">Start Test</button>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="test-card">
+                        <h3><i class="fas fa-microphone"></i>Voice Analysis Test</h3>
+                        <div class="test-status mb-3">
+                            <span class="status-label">Status:</span>
+                            <span class="status-value" id="voiceTestStatus">Not Tested</span>
+                        </div>
+                        <div class="test-result mb-3 d-none" id="voiceTestResult">
+                            <div class="result-chart">
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="voiceHealthyBar" aria-valuenow="0"></div>
+                                </div>
+                                <div class="result-labels">
+                                    <span>Healthy: <span id="voiceHealthyPercent">0</span>%</span>
+                                </div>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 0%" id="voiceParkinsonBar" aria-valuenow="0"></div>
+                                </div>
+                                <div class="result-labels">
+                                    <span>Parkinson's Risk: <span id="voiceParkinsonPercent">0</span>%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-secondary">Analyze speech patterns and vocal control for neurological indicators.</p>
+                        <button class="btn btn-royal" id="startVoiceTest">Start Test</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <button class="btn btn-medical-green" id="viewResults" disabled>View Assessment Results</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Results Section -->
-  <section class="py-5 digital-noise d-none" id="results">
-      <div class="container">
-          <!-- Print-only header -->
-          <div class="print-header d-none">
-              <h1>NEUROSKETCH NEURAL ASSESSMENT REPORT</h1>
-              <p>Neural Interface Diagnostic System</p>
-              <div class="print-date">Report generated: <span id="reportDate"></span></div>
-          </div>
-          
-          <!-- User information -->
-          <div class="user-info d-none">
-              <h3>SUBJECT PROFILE</h3>
-              <div class="row">
-                  <div class="col-md-6">
-                      <p><strong>Subject:</strong> <span id="printName"></span></p>
-                      <p><strong>Neural Link:</strong> <span id="printEmail"></span></p>
-                      <p><strong>Temporal Origin:</strong> <span id="printAge"></span></p>
-                  </div>
-                  <div class="col-md-6">
-                      <p><strong>Classification:</strong> <span id="printGender"></span></p>
-                      <p><strong>Scan Date:</strong> <span id="printDate"></span></p>
-                      <p><strong>Report ID:</strong> <span id="printReportId"></span></p>
-                  </div>
-              </div>
-          </div>
-          
-          <h2 class="section-title text-center mb-5 holographic">NEURAL ANALYSIS RESULTS</h2>
-          <div class="row justify-content-center">
-              <div class="col-lg-8">
-                  <div class="cyber-card">
-                      <h3 class="cyber-card-title text-center mb-4">NEUROLOGICAL ASSESSMENT MATRIX</h3>
-                      <div class="results-summary mb-4">
-                          <div class="progress mb-3" style="height: 30px;">
-                              <div class="progress-bar bg-success" role="progressbar" id="overallHealthyBar" style="width: 0%" aria-valuenow="0">
-                                  <span class="progress-label">Neural Stability: <span id="overallHealthyPercent">0</span>%</span>
-                              </div>
-                              <div class="progress-bar bg-danger" role="progressbar" id="overallParkinsonBar" style="width: 0%" aria-valuenow="0">
-                                  <span class="progress-label">Anomaly Risk: <span id="overallParkinsonPercent">0</span>%</span>
-                              </div>
-                          </div>
-                      </div>
-                      
-                      <div class="test-details">
-                          <h4 class="mb-3 cyber-card-title">DIAGNOSTIC PROTOCOL RESULTS</h4>
-                          <div class="table-responsive">
-                              <table class="table table-bordered">
-                                  <thead>
-                                      <tr>
-                                          <th>PROTOCOL</th>
-                                          <th>STATUS</th>
-                                          <th>STABILITY</th>
-                                          <th>ANOMALY</th>
-                                          <th>RAW DATA</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <tr>
-                                          <td>Spiral Matrix</td>
-                                          <td id="spiralStatusResult">STANDBY</td>
-                                          <td id="spiralHealthyResult">0%</td>
-                                          <td id="spiralParkinsonResult">0%</td>
-                                          <td id="spiralRawResult">-</td>
-                                      </tr>
-                                      <tr>
-                                          <td>Reaction Matrix</td>
-                                          <td id="tapStatusResult">STANDBY</td>
-                                          <td id="tapHealthyResult">0%</td>
-                                          <td id="tapParkinsonResult">0%</td>
-                                          <td id="tapRawResult">-</td>
-                                      </tr>
-                                      <tr>
-                                          <td>Temporal Response</td>
-                                          <td id="reactionStatusResult">STANDBY</td>
-                                          <td id="reactionHealthyResult">0%</td>
-                                          <td id="reactionParkinsonResult">0%</td>
-                                          <td id="reactionRawResult">-</td>
-                                      </tr>
-                                      <tr>
-                                          <td>Vocal Pattern</td>
-                                          <td id="voiceStatusResult">STANDBY</td>
-                                          <td id="voiceHealthyResult">0%</td>
-                                          <td id="voiceParkinsonResult">0%</td>
-                                          <td id="voiceRawResult">-</td>
-                                      </tr>
-                                  </tbody>
-                              </table>
-                          </div>
-                      </div>
-                      
-                      <div class="conclusion mt-4 p-3 rounded" id="conclusionBox">
-                          <h4 class="conclusion-title" id="conclusionTitle">ASSESSMENT INCOMPLETE</h4>
-                          <p class="conclusion-text" id="conclusionText">Initialize at least one diagnostic protocol for comprehensive neural analysis.</p>
-                      </div>
-                      
-                      <!-- Recommendations section -->
-                      <div class="recommendations d-none">
-                          <h4>NEURAL PROTOCOL RECOMMENDATIONS</h4>
-                          <p id="recommendationsText">Based on neural analysis results:</p>
-                          <ul id="recommendationsList">
-                              <li>Consult with neural health specialist for comprehensive evaluation</li>
-                              <li>Continue neural monitoring and repeat assessment in 3-6 months</li>
-                              <li>Maintain optimal neural health through regular exercise and balanced nutrition</li>
-                          </ul>
-                      </div>
-                      
-                      <!-- Verification QR code -->
-                      <div class="verification-qr d-none">
-                          <p>Scan for report authentication:</p>
-                          <div id="qrcode"></div>
-                      </div>
-                      
-                      <div class="text-center mt-4">
-                          <button class="btn btn-cyber no-print me-2" id="backToTests">RETURN TO DIAGNOSTICS</button>
-                          <button class="btn btn-cyber btn-cyber-green no-print me-2" id="saveResults">SAVE TO DATABASE</button>
-                          <button class="btn btn-cyber btn-cyber-pink no-print" id="printResults">
-                              <i class="fas fa-print"></i> GENERATE REPORT
-                          </button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section>
+    <!-- Results Section -->
+    <section class="py-5 bg-light d-none" id="results">
+        <div class="container">
+            <!-- Print-only header -->
+            <div class="print-header d-none">
+                <h1>NeuroSketch Assessment Report</h1>
+                <p>Professional Neurological Assessment Platform</p>
+                <div class="print-date">Report generated on: <span id="reportDate"></span></div>
+            </div>
+            
+            <!-- User information -->
+            <div class="user-info d-none">
+                <h3>Patient Information</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Name:</strong> <span id="printName"></span></p>
+                        <p><strong>Email:</strong> <span id="printEmail"></span></p>
+                        <p><strong>Date of Birth:</strong> <span id="printAge"></span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Gender:</strong> <span id="printGender"></span></p>
+                        <p><strong>Assessment Date:</strong> <span id="printDate"></span></p>
+                        <p><strong>Report ID:</strong> <span id="printReportId"></span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="section-title text-center mb-5">Assessment Results</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="royal-card">
+                        <div class="royal-card-header text-center">
+                            <h3 class="royal-card-title">Neurological Assessment Summary</h3>
+                        </div>
+                        <div class="results-summary mb-4">
+                            <div class="progress mb-3" style="height: 30px;">
+                                <div class="progress-bar bg-success" role="progressbar" id="overallHealthyBar" style="width: 0%" aria-valuenow="0">
+                                    <span class="progress-label">Healthy: <span id="overallHealthyPercent">0</span>%</span>
+                                </div>
+                                <div class="progress-bar bg-danger" role="progressbar" id="overallParkinsonBar" style="width: 0%" aria-valuenow="0">
+                                    <span class="progress-label">Risk: <span id="overallParkinsonPercent">0</span>%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="test-details">
+                            <h4 class="mb-3">Detailed Test Results</h4>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Assessment</th>
+                                            <th>Status</th>
+                                            <th>Healthy</th>
+                                            <th>Risk Level</th>
+                                            <th>Raw Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Spiral Drawing</td>
+                                            <td id="spiralStatusResult">Not Tested</td>
+                                            <td id="spiralHealthyResult">0%</td>
+                                            <td id="spiralParkinsonResult">0%</td>
+                                            <td id="spiralRawResult">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tap Speed</td>
+                                            <td id="tapStatusResult">Not Tested</td>
+                                            <td id="tapHealthyResult">0%</td>
+                                            <td id="tapParkinsonResult">0%</td>
+                                            <td id="tapRawResult">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Reaction Time</td>
+                                            <td id="reactionStatusResult">Not Tested</td>
+                                            <td id="reactionHealthyResult">0%</td>
+                                            <td id="reactionParkinsonResult">0%</td>
+                                            <td id="reactionRawResult">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Voice Analysis</td>
+                                            <td id="voiceStatusResult">Not Tested</td>
+                                            <td id="voiceHealthyResult">0%</td>
+                                            <td id="voiceParkinsonResult">0%</td>
+                                            <td id="voiceRawResult">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="conclusion mt-4 p-3 rounded" id="conclusionBox">
+                            <h4 class="conclusion-title" id="conclusionTitle">Assessment Incomplete</h4>
+                            <p class="conclusion-text" id="conclusionText">Please complete at least one test to receive a comprehensive assessment.</p>
+                        </div>
+                        
+                        <!-- Recommendations section -->
+                        <div class="recommendations d-none">
+                            <h4>Clinical Recommendations</h4>
+                            <p id="recommendationsText">Based on your assessment results:</p>
+                            <ul id="recommendationsList">
+                                <li>Consult with a healthcare professional for comprehensive evaluation</li>
+                                <li>Continue monitoring symptoms and repeat assessment in 3-6 months</li>
+                                <li>Maintain healthy lifestyle with regular exercise and balanced nutrition</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Verification QR code -->
+                        <div class="verification-qr d-none">
+                            <p>Scan to verify report authenticity:</p>
+                            <div id="qrcode"></div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button class="btn btn-royal-outline no-print me-2" id="backToTests">Back to Tests</button>
+                            <button class="btn btn-medical-green no-print me-2" id="saveResults">Save Results</button>
+                            <button class="btn btn-royal no-print" id="printResults">
+                                <i class="fas fa-print"></i> Print Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Contact Section -->
-  <section class="py-5 circuit-board" id="contact">
-      <div class="container">
-          <div class="row justify-content-center">
-              <div class="col-lg-8 text-center">
-                  <h2 class="section-title mb-4 holographic">NEURAL TRANSMISSION</h2>
-                  <p class="lead mb-5 text-secondary">
-                      Establish communication link with our neural research team
-                  </p>
-                  <div class="contact-info">
-                      <div class="mb-3">
-                          <i class="fas fa-satellite-dish me-2 neon-glow" style="color: var(--neon-cyan);"></i>
-                          <span class="text-secondary">neurosketch@neural.net</span>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section>
+    <!-- Contact Section -->
+    <section class="py-5" id="contact">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="section-title mb-4">Contact Our Team</h2>
+                    <p class="lead mb-5">
+                        Have questions about our neurological assessment platform? Get in touch with our research team.
+                    </p>
+                    <div class="contact-info">
+                        <div class="mb-3">
+                            <i class="fas fa-envelope me-2 text-royal-blue"></i>
+                            <span>neurosketch@research.edu</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Footer -->
-  <footer class="py-4">
-      <div class="container">
-          <div class="row">
-              <div class="col-md-6">
-                  <h5 class="holographic">NEUROSKETCH</h5>
-                  <p class="text-secondary">Neural Interface Diagnostic System</p>
-              </div>
-              <div class="col-md-6 text-md-end">
-                  <ul class="list-inline">
-                      <li class="list-inline-item"><a href="#tests" class="text-secondary">DIAGNOSTICS</a></li>
-                      <li class="list-inline-item"><a href="#about" class="text-secondary">PROTOCOL</a></li>
-                      <li class="list-inline-item"><a href="#contact" class="text-secondary">TRANSMISSION</a></li>
-                  </ul>
-                  <p class="mt-2 text-secondary">Powered by Quantum Neural Networks</p>
-              </div>
-          </div>
-      </div>
-  </footer>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>NeuroSketch</h5>
+                    <p>Advanced Neurological Assessment Platform</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><a href="#tests">Assessment</a></li>
+                        <li class="list-inline-item"><a href="#about">About</a></li>
+                        <li class="list-inline-item"><a href="#contact">Contact</a></li>
+                    </ul>
+                    <p class="mt-2">Powered by Advanced AI Technology</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-  <!-- Test Modals -->
-  <!-- Spiral Test Modal -->
-  <div class="modal fade" id="spiralTestModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title">SPIRAL MATRIX DIAGNOSTIC</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <div class="test-instructions mb-3 cyber-card">
-                      <p><i class="fas fa-info-circle me-2"></i>Execute spiral pattern following numbered coordinates in sequence.</p>
-                  </div>
-                  <div class="spiral-test-area">
-                      <canvas id="spiralCanvas" width="600" height="400" class="border"></canvas>
-                  </div>
-                  <div class="spiral-controls mt-3 text-center">
-                      <button id="clearSpiralCanvas" class="btn btn-cyber me-2">RESET MATRIX</button>
-                      <button id="submitSpiralTest" class="btn btn-cyber btn-cyber-green">ANALYZE PATTERN</button>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+    <!-- Test Modals -->
+    <!-- Spiral Test Modal -->
+    <div class="modal fade" id="spiralTestModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Spiral Drawing Assessment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="test-instructions mb-3">
+                        <p><i class="fas fa-info-circle me-2"></i>Draw a spiral by following the numbered dots in sequence. Try to draw smoothly and accurately.</p>
+                    </div>
+                    <div class="spiral-test-area">
+                        <canvas id="spiralCanvas" width="600" height="400" class="border"></canvas>
+                    </div>
+                    <div class="spiral-controls mt-3 text-center">
+                        <button id="clearSpiralCanvas" class="btn btn-royal-outline me-2">Clear Canvas</button>
+                        <button id="submitSpiralTest" class="btn btn-medical-green">Submit Test</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <!-- Tap Test Modal -->
-  <div class="modal fade" id="tapTestModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title">REACTION MATRIX DIAGNOSTIC</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <div class="test-instructions mb-3 cyber-card">
-                      <p><i class="fas fa-crosshairs me-2"></i>Target neural response nodes as they materialize.</p>
-                      <p>Execute 10 precise targeting sequences. Neural accuracy and speed will be analyzed.</p>
-                  </div>
-                  <div class="tap-test-area">
-                      <div id="tapTestContainer" class="position-relative" style="height: 400px; border-radius: 15px;">
-                          <div id="tapCountdown" class="position-absolute top-50 start-50 translate-middle display-1 neon-glow"></div>
-                          <div id="tapDot" class="position-absolute rounded-circle" style="width: 50px; height: 50px; display: none;"></div>
-                      </div>
-                  </div>
-                  <div class="tap-controls mt-3 text-center">
-                      <div id="tapScore" class="mb-2 cyber-card-title">Neural Targets: 0/10</div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+    <!-- Tap Test Modal -->
+    <div class="modal fade" id="tapTestModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tap Speed Assessment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="test-instructions mb-3">
+                        <p><i class="fas fa-mouse-pointer me-2"></i>Tap on the circles as quickly and accurately as possible when they appear.</p>
+                        <p>You will need to tap 10 targets. Your accuracy and speed will be measured.</p>
+                    </div>
+                    <div class="tap-test-area">
+                        <div id="tapTestContainer" class="position-relative" style="height: 400px; border-radius: 12px;">
+                            <div id="tapCountdown" class="position-absolute top-50 start-50 translate-middle display-1"></div>
+                            <div id="tapDot" class="position-absolute rounded-circle" style="width: 50px; height: 50px; display: none;"></div>
+                        </div>
+                    </div>
+                    <div class="tap-controls mt-3 text-center">
+                        <div id="tapScore" class="mb-2">Score: 0/10</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <!-- Reaction Test Modal -->
-  <div class="modal fade" id="reactionTestModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title">TEMPORAL RESPONSE DIAGNOSTIC</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <div class="test-instructions mb-3 cyber-card">
-                      <p><i class="fas fa-stopwatch me-2"></i>Execute neural response when interface transitions to active state.</p>
-                      <p>Neural temporal response will be measured in milliseconds.</p>
-                  </div>
-                  <div class="reaction-test-area">
-                      <div id="reactionTestContainer" class="position-relative" style="height: 300px; border-radius: 15px; cursor: pointer;">
-                          <div id="reactionCountdown" class="position-absolute top-50 start-50 translate-middle display-1 neon-glow"></div>
-                          <div id="reactionTime" class="position-absolute top-50 start-50 translate-middle display-4 holographic" style="display: none;"></div>
-                      </div>
-                  </div>
-                  <div class="reaction-controls mt-3 text-center">
-                      <div id="reactionResult" class="mb-2 cyber-card-title">Execute response when interface activates</div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+    <!-- Reaction Test Modal -->
+    <div class="modal fade" id="reactionTestModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reaction Time Assessment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="test-instructions mb-3">
+                        <p><i class="fas fa-stopwatch me-2"></i>Click as soon as the screen turns green. Your reaction time will be measured in milliseconds.</p>
+                    </div>
+                    <div class="reaction-test-area">
+                        <div id="reactionTestContainer" class="position-relative" style="height: 300px; border-radius: 12px; cursor: pointer;">
+                            <div id="reactionCountdown" class="position-absolute top-50 start-50 translate-middle display-1"></div>
+                            <div id="reactionTime" class="position-absolute top-50 start-50 translate-middle display-4" style="display: none;"></div>
+                        </div>
+                    </div>
+                    <div class="reaction-controls mt-3 text-center">
+                        <div id="reactionResult" class="mb-2">Click when the screen turns green</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <!-- Voice Test Modal -->
-  <div class="modal fade" id="voiceTestModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title">VOCAL PATTERN DIAGNOSTIC</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <div class="test-instructions mb-3 cyber-card">
-                      <p><i class="fas fa-microphone me-2"></i>Vocalize the following neural pattern sequence:</p>
-                      <p class="fw-bold holographic">"The quick brown fox jumps over the lazy dog"</p>
-                  </div>
-                  <div class="voice-test-area text-center">
-                      <div class="mb-3">
-                          <button id="startRecording" class="btn btn-cyber btn-cyber-green">INITIALIZE RECORDING</button>
-                          <button id="stopRecording" class="btn btn-cyber btn-cyber-pink" disabled>TERMINATE RECORDING</button>
-                      </div>
-                      <div id="recordingStatus" class="mb-2 cyber-card-title">Execute 'Initialize Recording' when ready</div>
-                      <div class="audio-visualization">
-                          <canvas id="audioVisualization" width="500" height="100" class="border"></canvas>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+    <!-- Voice Test Modal -->
+    <div class="modal fade" id="voiceTestModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Voice Analysis Assessment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="test-instructions mb-3">
+                        <p><i class="fas fa-microphone me-2"></i>Please say the following sentence clearly:</p>
+                        <p class="fw-bold text-royal-blue">"The quick brown fox jumps over the lazy dog"</p>
+                    </div>
+                    <div class="voice-test-area text-center">
+                        <div class="mb-3">
+                            <button id="startRecording" class="btn btn-medical-green">Start Recording</button>
+                            <button id="stopRecording" class="btn btn-medical-red" disabled>Stop Recording</button>
+                        </div>
+                        <div id="recordingStatus" class="mb-2">Click 'Start Recording' when ready</div>
+                        <div class="audio-visualization">
+                            <canvas id="audioVisualization" width="500" height="100" class="border"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-  <script src="js/cyber-effects.js"></script>
-  <script src="js/bootstrap-modal-override.js"></script>
-  <script src="js/form-validation.js"></script>
-  <script src="js/direct-test-access.js"></script>
-  <script src="js/show-tests.js"></script>
-  <script src="js/test-manager.js"></script>
-  <script src="js/print-manager.js"></script>
-  <script src="js/main.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="js/tap-test-fix.js"></script>
+    <script src="js/bootstrap-modal-override.js"></script>
+    <script src="js/form-validation.js"></script>
+    <script src="js/direct-test-access.js"></script>
+    <script src="js/show-tests.js"></script>
+    <script src="js/test-manager.js"></script>
+    <script src="js/print-manager.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
