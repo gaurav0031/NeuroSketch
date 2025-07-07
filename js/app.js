@@ -1,4 +1,6 @@
 // NeuroSketch Application - Production Ready
+import { Modal } from "bootstrap"
+
 class NeuroSketchApp {
   constructor() {
     this.isRegistered = false
@@ -33,6 +35,7 @@ class NeuroSketchApp {
 
   // Navigation System
   initializeNavigation() {
+    // Handle navigation links
     document.querySelectorAll("[data-section]").forEach((element) => {
       element.addEventListener("click", (e) => {
         e.preventDefault()
@@ -47,6 +50,16 @@ class NeuroSketchApp {
         this.showSection(targetSection)
       })
     })
+
+    // Handle hero register button specifically
+    const heroRegisterBtn = document.getElementById("heroRegisterBtn")
+    if (heroRegisterBtn) {
+      heroRegisterBtn.addEventListener("click", (e) => {
+        e.preventDefault()
+        console.log("Hero register button clicked")
+        this.showSection("register")
+      })
+    }
   }
 
   showSection(sectionId) {
@@ -89,12 +102,18 @@ class NeuroSketchApp {
 
     form.addEventListener("submit", (e) => {
       e.preventDefault()
+      console.log("Registration form submitted")
       this.handleRegistration(form)
     })
   }
 
   handleRegistration(form) {
-    if (!this.validateRegistrationForm(form)) return
+    console.log("Handling registration...")
+
+    if (!this.validateRegistrationForm(form)) {
+      console.log("Form validation failed")
+      return
+    }
 
     const formData = new FormData(form)
     const userData = {
@@ -106,6 +125,8 @@ class NeuroSketchApp {
       medicalSituation: formData.get("medicalSituation"),
       registrationDate: new Date().toISOString(),
     }
+
+    console.log("User data:", userData)
 
     // Show loading
     const submitBtn = form.querySelector('button[type="submit"]')
@@ -133,20 +154,50 @@ class NeuroSketchApp {
     const requiredFields = form.querySelectorAll("[required]")
     let isValid = true
 
+    // Clear previous validation
+    form.querySelectorAll(".form-control, .form-check-input").forEach((field) => {
+      field.classList.remove("is-invalid", "is-valid")
+    })
+
     requiredFields.forEach((field) => {
       if (field.type === "radio") {
         const radioGroup = form.querySelectorAll(`[name="${field.name}"]`)
         const isChecked = Array.from(radioGroup).some((radio) => radio.checked)
-        if (!isChecked) isValid = false
+        if (!isChecked) {
+          isValid = false
+          radioGroup.forEach((radio) => radio.classList.add("is-invalid"))
+        } else {
+          radioGroup.forEach((radio) => radio.classList.add("is-valid"))
+        }
       } else if (field.type === "checkbox") {
-        if (!field.checked) isValid = false
+        if (!field.checked) {
+          isValid = false
+          field.classList.add("is-invalid")
+        } else {
+          field.classList.add("is-valid")
+        }
       } else {
-        if (!field.value.trim()) isValid = false
+        if (!field.value.trim()) {
+          isValid = false
+          field.classList.add("is-invalid")
+        } else {
+          field.classList.add("is-valid")
+        }
       }
     })
 
+    // Validate email format
+    const emailField = form.querySelector('input[type="email"]')
+    if (emailField && emailField.value.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(emailField.value.trim())) {
+        isValid = false
+        emailField.classList.add("is-invalid")
+      }
+    }
+
     if (!isValid) {
-      this.showNotification("Please fill in all required fields.", "error")
+      this.showNotification("Please fill in all required fields correctly.", "error")
     }
 
     return isValid
@@ -164,16 +215,19 @@ class NeuroSketchApp {
     document.getElementById("startTapTest")?.addEventListener("click", () => {
       if (!this.checkRegistration()) return
       this.showModal("tapTestModal")
+      setTimeout(() => this.initializeTapTest(), 500)
     })
 
     document.getElementById("startReactionTest")?.addEventListener("click", () => {
       if (!this.checkRegistration()) return
       this.showModal("reactionTestModal")
+      setTimeout(() => this.initializeReactionTest(), 500)
     })
 
     document.getElementById("startVoiceTest")?.addEventListener("click", () => {
       if (!this.checkRegistration()) return
       this.showModal("voiceTestModal")
+      setTimeout(() => this.initializeVoiceTest(), 500)
     })
 
     // Results buttons
@@ -761,12 +815,12 @@ class NeuroSketchApp {
 
   // Modal Management
   showModal(modalId) {
-    const modal = new bootstrap.Modal(document.getElementById(modalId))
+    const modal = new Modal(document.getElementById(modalId))
     modal.show()
   }
 
   hideModal(modalId) {
-    const modal = bootstrap.Modal.getInstance(document.getElementById(modalId))
+    const modal = Modal.getInstance(document.getElementById(modalId))
     if (modal) modal.hide()
   }
 
@@ -856,4 +910,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Export for global access
 window.scrollToSection = scrollToSection
-</merged_code>
