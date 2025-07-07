@@ -257,6 +257,95 @@
             color: var(--text-primary);
             border-color: #404040;
         }
+
+        /* Feature Cards */
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--royal-blue), var(--royal-purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 2rem;
+        }
+
+        /* Team Cards */
+        .team-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--royal-blue), var(--royal-purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 2.5rem;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--royal-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: none;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .scroll-to-top:hover {
+            background: var(--royal-purple);
+            transform: scale(1.1);
+        }
+
+        .scroll-to-top.show {
+            display: block;
+        }
     </style>
 </head>
 
@@ -269,6 +358,11 @@
     <!-- Voice Control -->
     <button class="voice-control" id="voiceControl" title="Voice Control">
         <i class="fas fa-microphone"></i>
+    </button>
+
+    <!-- Scroll to Top -->
+    <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
     </button>
 
     <!-- Navigation -->
@@ -289,13 +383,10 @@
                         <button class="nav-link btn btn-link" onclick="showSection('register')">Register</button>
                     </li>
                     <li class="nav-item">
-                        <button class="nav-link btn btn-link" onclick="showSection('tests')">Tests</button>
+                        <button class="nav-link btn btn-link" onclick="scrollToSection('about-home')">About</button>
                     </li>
                     <li class="nav-item">
-                        <button class="nav-link btn btn-link" onclick="showSection('about')">About</button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link btn btn-link" onclick="showSection('contact')">Contact</button>
+                        <button class="nav-link btn btn-link" onclick="scrollToSection('contact-home')">Contact</button>
                     </li>
                 </ul>
             </div>
@@ -305,19 +396,211 @@
     <!-- Home Section -->
     <section id="home" class="section">
         <div class="container">
-            <div class="row align-items-center">
+            <!-- Hero Section -->
+            <div class="row align-items-center mb-5">
                 <div class="col-lg-6">
                     <h1 class="display-4 fw-bold text-primary mb-4">NeuroSketch</h1>
                     <p class="lead mb-4">Advanced Neurological Assessment Platform for comprehensive digital health evaluation and early detection of neurological conditions.</p>
                     <div class="mt-4">
                         <button class="btn btn-primary btn-lg me-3" onclick="showSection('register')">Start Assessment</button>
-                        <button class="btn btn-outline-primary btn-lg" onclick="showSection('about')">Learn More</button>
+                        <button class="btn btn-outline-primary btn-lg" onclick="scrollToSection('about-home')">Learn More</button>
                     </div>
                 </div>
                 <div class="col-lg-6 text-center">
                     <i class="fas fa-brain fa-5x text-primary mb-3"></i>
                     <h3 class="text-primary">AI-Powered Assessment</h3>
                     <p class="text-secondary">Comprehensive neurological evaluation using advanced algorithms</p>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="row mb-5">
+                <div class="col-12 text-center mb-4">
+                    <h2 class="text-primary">Why Choose NeuroSketch?</h2>
+                    <p class="text-secondary">Advanced features for comprehensive neurological assessment</p>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-microscope"></i>
+                        </div>
+                        <h5>Advanced Analysis</h5>
+                        <p class="text-secondary">AI-powered algorithms analyze your test results with medical-grade precision</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h5>Secure & Private</h5>
+                        <p class="text-secondary">Your health data is encrypted and stored securely with HIPAA compliance</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h5>Quick Results</h5>
+                        <p class="text-secondary">Get comprehensive assessment results in minutes, not hours</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h5>Medical Grade</h5>
+                        <p class="text-secondary">Developed with neurologists and validated through clinical studies</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Us Section -->
+            <div id="about-home" class="row mb-5 py-5">
+                <div class="col-12 text-center mb-4">
+                    <h2 class="text-primary">About NeuroSketch</h2>
+                    <p class="text-secondary">Pioneering the future of neurological assessment</p>
+                </div>
+                <div class="col-lg-8 mx-auto">
+                    <div class="card border-0 shadow">
+                        <div class="card-body p-4">
+                            <h4 class="card-title text-primary mb-3">Our Mission</h4>
+                            <p class="mb-4">NeuroSketch combines traditional clinical evaluation methods with cutting-edge AI technology to provide comprehensive, accurate, and accessible neurological screening. Our platform democratizes access to neurological assessment, making early detection possible for everyone.</p>
+                            
+                            <h5 class="text-primary mt-4 mb-3">Key Features:</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Multi-modal assessment tests</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Real-time analysis and reporting</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Secure patient data management</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Professional-grade accuracy</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Voice-controlled interface</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Comprehensive result interpretation</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 p-3 bg-light rounded">
+                                <h6 class="text-primary mb-2">Clinical Validation</h6>
+                                <p class="mb-0 small">Our assessment tools have been validated through extensive clinical studies and are designed in collaboration with leading neurologists and researchers in the field of movement disorders.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Section -->
+            <div class="row mb-5">
+                <div class="col-12 text-center mb-4">
+                    <h2 class="text-primary">Our Expert Team</h2>
+                    <p class="text-secondary">Leading professionals in neurology and technology</p>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h5>Dr. Sarah Johnson</h5>
+                        <p class="text-primary mb-2">Chief Medical Officer</p>
+                        <p class="text-secondary small">Neurologist with 15+ years experience in movement disorders and Parkinson's disease research.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h5>Dr. Michael Chen</h5>
+                        <p class="text-primary mb-2">Chief Technology Officer</p>
+                        <p class="text-secondary small">AI researcher specializing in medical applications and machine learning algorithms.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h5>Dr. Emily Rodriguez</h5>
+                        <p class="text-primary mb-2">Head of Research</p>
+                        <p class="text-secondary small">Clinical researcher with expertise in digital health and neurological assessment validation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Us Section -->
+            <div id="contact-home" class="row py-5">
+                <div class="col-12 text-center mb-4">
+                    <h2 class="text-primary">Contact Us</h2>
+                    <p class="text-secondary">Get in touch with our medical and support team</p>
+                </div>
+                <div class="col-lg-8 mx-auto">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="contact-form">
+                                <h4 class="text-primary mb-3">Send us a Message</h4>
+                                <form id="contactForm">
+                                    <div class="mb-3">
+                                        <label for="contactName" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="contactName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="contactEmail" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="contactEmail" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="contactSubject" class="form-label">Subject</label>
+                                        <select class="form-control" id="contactSubject" required>
+                                            <option value="">Select a subject</option>
+                                            <option value="general">General Inquiry</option>
+                                            <option value="technical">Technical Support</option>
+                                            <option value="medical">Medical Questions</option>
+                                            <option value="partnership">Partnership</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="contactMessage" class="form-label">Message</label>
+                                        <textarea class="form-control" id="contactMessage" rows="4" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="contact-form">
+                                <h4 class="text-primary mb-3">Contact Information</h4>
+                                <div class="mb-4">
+                                    <h6><i class="fas fa-envelope text-primary me-2"></i>Email Support</h6>
+                                    <p class="text-secondary mb-1">General: info@neurosketch.com</p>
+                                    <p class="text-secondary mb-1">Medical: medical@neurosketch.com</p>
+                                    <p class="text-secondary">Technical: support@neurosketch.com</p>
+                                </div>
+                                <div class="mb-4">
+                                    <h6><i class="fas fa-phone text-primary me-2"></i>Phone Support</h6>
+                                    <p class="text-secondary mb-1">Main: +1 (555) 123-4567</p>
+                                    <p class="text-secondary">Emergency: +1 (555) 911-HELP</p>
+                                </div>
+                                <div class="mb-4">
+                                    <h6><i class="fas fa-map-marker-alt text-primary me-2"></i>Office Location</h6>
+                                    <p class="text-secondary mb-1">123 Medical Innovation Drive</p>
+                                    <p class="text-secondary mb-1">Healthcare District</p>
+                                    <p class="text-secondary">San Francisco, CA 94105</p>
+                                </div>
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>Medical Emergency:</strong> For medical emergencies, please contact your healthcare provider or call 911 immediately.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -471,59 +754,6 @@
                             <button class="btn btn-outline-primary btn-lg" onclick="printResults()" disabled>
                                 <i class="fas fa-print me-2"></i>Print Report
                             </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="section hidden">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="text-primary">About NeuroSketch</h2>
-                <p class="text-secondary">Advanced neurological assessment platform</p>
-            </div>
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title text-primary">Medical Innovation</h4>
-                            <p>NeuroSketch combines traditional clinical evaluation methods with modern AI technology to provide comprehensive, accurate, and accessible neurological screening.</p>
-                            <h5 class="text-primary mt-4">Key Features:</h5>
-                            <ul>
-                                <li>Comprehensive multi-modal assessment</li>
-                                <li>Real-time analysis and reporting</li>
-                                <li>Secure patient data management</li>
-                                <li>Professional-grade accuracy</li>
-                                <li>Voice-controlled interface</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="section hidden">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="text-primary">Contact Information</h2>
-                <p class="text-secondary">Get in touch with our medical team</p>
-            </div>
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h4 class="card-title text-primary">Professional Support</h4>
-                            <p><i class="fas fa-envelope text-primary me-2"></i>medical@neurosketch.com</p>
-                            <p><i class="fas fa-phone text-primary me-2"></i>+1 (555) 123-4567</p>
-                            <div class="alert alert-warning mt-3">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                For medical emergencies, please contact your healthcare provider immediately.
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -697,6 +927,8 @@
             initializeTheme();
             initializeVoiceControl();
             setupFormSubmission();
+            setupContactForm();
+            setupScrollToTop();
         });
 
         // Check Registration Status
@@ -738,6 +970,44 @@
             }
         }
 
+        // Scroll to section within home page
+        function scrollToSection(sectionId) {
+            // First ensure we're on the home page
+            showSection('home');
+            
+            // Then scroll to the specific section
+            setTimeout(() => {
+                const element = document.getElementById(sectionId);
+                if (element) {
+                    element.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }, 100);
+        }
+
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Setup scroll to top button
+        function setupScrollToTop() {
+            const scrollBtn = document.getElementById('scrollToTop');
+            
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    scrollBtn.classList.add('show');
+                } else {
+                    scrollBtn.classList.remove('show');
+                }
+            });
+        }
+
         // Form Submission
         function setupFormSubmission() {
             const form = document.getElementById('registrationForm');
@@ -772,6 +1042,30 @@
                     setTimeout(() => {
                         showSection('tests');
                     }, 1500);
+                });
+            }
+        }
+
+        // Contact Form Setup
+        function setupContactForm() {
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = {
+                        name: document.getElementById('contactName').value,
+                        email: document.getElementById('contactEmail').value,
+                        subject: document.getElementById('contactSubject').value,
+                        message: document.getElementById('contactMessage').value,
+                        timestamp: new Date().toISOString()
+                    };
+
+                    // Simulate sending message
+                    showNotification('Thank you for your message! We will get back to you soon.', 'success');
+                    
+                    // Reset form
+                    contactForm.reset();
                 });
             }
         }
@@ -972,7 +1266,7 @@
             return Math.round(score);
         }
 
-        // Tap Test Implementation
+        // Tap Test Implementation - SLOWER DOT RATE
         let tapTestActive = false;
         let tapScore = 0;
         let tapCount = 0;
@@ -1028,11 +1322,12 @@
                 dot.style.top = y + 'px';
                 dot.style.display = 'block';
 
-                // Auto-hide after 500ms
+                // SLOWER: Auto-hide after 800ms (increased from 500ms)
                 const dotTimeout = setTimeout(() => {
                     dot.style.display = 'none';
-                    setTimeout(showNextDot, 300);
-                }, 500);
+                    // SLOWER: Longer delay between dots (600ms instead of 300ms)
+                    setTimeout(showNextDot, 600);
+                }, 800);
 
                 // Dot click handler
                 dot.onclick = () => {
@@ -1041,7 +1336,8 @@
                     tapScore++;
                     dot.style.display = 'none';
                     scoreDisplay.textContent = `${tapScore}/10`;
-                    setTimeout(showNextDot, 300);
+                    // SLOWER: Longer delay after successful tap (600ms instead of 300ms)
+                    setTimeout(showNextDot, 600);
                 };
             }
 
@@ -1418,15 +1714,12 @@
                 } else if (command.includes('go to register') || command.includes('registration')) {
                     showSection('register');
                     showNotification('Navigating to registration', 'success');
-                } else if (command.includes('go to tests') || command.includes('test page')) {
-                    showSection('tests');
-                    showNotification('Navigating to tests', 'success');
-                } else if (command.includes('go to about') || command.includes('about page')) {
-                    showSection('about');
-                    showNotification('Navigating to about', 'success');
-                } else if (command.includes('go to contact') || command.includes('contact page')) {
-                    showSection('contact');
-                    showNotification('Navigating to contact', 'success');
+                } else if (command.includes('about') || command.includes('about us')) {
+                    scrollToSection('about-home');
+                    showNotification('Scrolling to about section', 'success');
+                } else if (command.includes('contact') || command.includes('contact us')) {
+                    scrollToSection('contact-home');
+                    showNotification('Scrolling to contact section', 'success');
                 } else if (command.includes('start spiral test')) {
                     startTest('spiral');
                     showNotification('Starting spiral test', 'success');
@@ -1449,7 +1742,7 @@
                     document.getElementById('themeToggle').click();
                     showNotification('Switching to light mode', 'success');
                 } else {
-                    showNotification('Command not recognized. Try "go to home", "start spiral test", etc.', 'warning');
+                    showNotification('Command not recognized. Try "go to home", "about", "contact", "start spiral test", etc.', 'warning');
                 }
 
                 if (recognition && isListening) {
