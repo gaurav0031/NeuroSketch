@@ -1,4 +1,4 @@
-// Fixed Tap Speed Test Implementation
+// Fixed Tap Speed Test Implementation with Slower Dot Rate
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Tap Test Fix loaded")
 
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Enhanced dot showing function
+    // Enhanced dot showing function with slower rate
     function showNextDot() {
       if (dotsShown >= 10) {
         endTapTest()
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Record appearance time
       dotAppearTimes[dotsShown - 1] = Date.now()
 
-      // Auto-hide after 2 seconds
+      // Auto-hide after 3 seconds (increased from 2 seconds for slower rate)
       dotTimeout = setTimeout(() => {
         if (tapDot.style.display === "block") {
           tapDot.style.display = "none"
@@ -127,14 +127,14 @@ document.addEventListener("DOMContentLoaded", () => {
             tapScore.innerHTML = `Score: ${dotsClicked}/10 <span style="color: var(--medical-red);">(Missed: ${missedDots})</span>`
           }
 
-          // Show next dot after brief delay
+          // Show next dot after longer delay (slower rate)
           setTimeout(() => {
             if (tapTestActive) {
               showNextDot()
             }
-          }, 300)
+          }, 800) // Increased delay between dots
         }
-      }, 2000)
+      }, 3000) // Increased dot display time
     }
 
     // Enhanced dot click handler
@@ -174,12 +174,12 @@ document.addEventListener("DOMContentLoaded", () => {
           dotTimeout = null
         }
 
-        // Show next dot
+        // Show next dot with longer delay (slower rate)
         setTimeout(() => {
           if (tapTestActive) {
             showNextDot()
           }
-        }, 300)
+        }, 800) // Increased delay between dots
       }, 200)
     }
 
@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
 
-    console.log("Tap test initialized successfully")
+    console.log("Tap test initialized successfully with slower dot rate")
   }
 
   // Initialize the fixed tap test
