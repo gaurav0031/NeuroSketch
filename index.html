@@ -718,7 +718,7 @@
                             <div class="test-status mb-3">
                                 <span class="status-label">Status:</span>
                                 <span id="voiceTestStatus" class="status-value">Not Tested</span>
-                            </div>
+                            
                             
                             <div id="voiceTestResult" class="result-chart d-none">
                                 <div class="result-labels">
@@ -1094,16 +1094,166 @@
     <!-- QR Code Library for printing -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     
-    <!-- Custom JavaScript -->
-    <script src="js/firebase-config.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/form-validation.js"></script>
-    <script src="js/test-manager.js"></script>
-    <script src="js/theme-toggle.js"></script>
-    <script src="js/voice-control-model.js"></script>
-    <script src="js/print-manager.js"></script>
-    
+    <!-- Custom JavaScript is now inline above -->
     <script>
+        // Simple Navigation System
+        let isRegistered = false;
+        
+        // Check registration status
+        function checkRegistration() {
+            const userData = localStorage.getItem("userData");
+            isRegistered = !!userData;
+            return isRegistered;
+        }
+        
+        // Show section function
+        function showSection(sectionId) {
+            console.log('Showing section:', sectionId);
+            
+            // Hide all sections
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('d-none');
+                section.style.display = 'none';
+            });
+            
+            // Show target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.remove('d-none');
+                targetSection.style.display = 'block';
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
+                if (activeLink && activeLink.classList.contains('nav-link')) {
+                    activeLink.classList.add('active');
+                }
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                console.log('Successfully showed section:', sectionId);
+            } else {
+                console.error('Section not found:', sectionId);
+            }
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+            
+            // Create notification
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show notification`;
+            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded, initializing navigation...');
+            
+            // Check registration status
+            checkRegistration();
+            
+            // Add click handlers to all navigation elements
+            document.querySelectorAll('[data-section]').forEach(element => {
+                element.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const targetSection = this.getAttribute('data-section');
+                    console.log('Navigation clicked:', targetSection);
+                    
+                    // Check if trying to access tests without registration
+                    if (targetSection === 'tests' && !isRegistered) {
+                        showNotification('Please complete registration first!', 'warning');
+                        showSection('register');
+                        return;
+                    }
+                    
+                    showSection(targetSection);
+                });
+            });
+            
+            // Handle registration form
+            const registrationForm = document.getElementById('registrationForm');
+            if (registrationForm) {
+                registrationForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form data
+                    const formData = new FormData(this);
+                    const userData = {
+                        fullName: formData.get('fullName'),
+                        email: formData.get('email'),
+                        age: formData.get('age'),
+                        gender: formData.get('gender'),
+                        familyHistory: formData.get('familyHistory'),
+                        medicalSituation: formData.get('medicalSituation'),
+                        registrationDate: new Date().toISOString()
+                    };
+                    
+                    // Simple validation
+                    if (!userData.fullName || !userData.email || !userData.age || !userData.gender) {
+                        showNotification('Please fill in all required fields.', 'error');
+                        return;
+                    }
+                    
+                    // Check consent
+                    const consent = document.getElementById('consent');
+                    if (!consent.checked) {
+                        showNotification('You must consent to proceed with the assessment.', 'error');
+                        return;
+                    }
+                    
+                    // Show loading
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                    submitBtn.disabled = true;
+                    
+                    // Save data and redirect
+                    setTimeout(() => {
+                        localStorage.setItem('userData', JSON.stringify(userData));
+                        isRegistered = true;
+                        
+                        // Reset button
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        
+                        showNotification('Registration completed successfully!', 'success');
+                        
+                        // Redirect to tests
+                        setTimeout(() => {
+                            showSection('tests');
+                        }, 1500);
+                    }, 1000);
+                });
+            }
+            
+            // Show home section initially
+            showSection('home');
+            
+            console.log('Navigation initialized successfully');
+        });
+        
         // Scroll to section function
         function scrollToSection(sectionId) {
             const element = document.getElementById(sectionId);
@@ -1115,63 +1265,66 @@
         // Scroll to top functionality
         window.addEventListener('scroll', function() {
             const scrollToTopBtn = document.getElementById('scrollToTop');
-            if (window.pageYOffset > 300) {
-                scrollToTopBtn.style.display = 'block';
-            } else {
-                scrollToTopBtn.style.display = 'none';
+            if (scrollToTopBtn) {
+                if (window.pageYOffset > 300) {
+                    scrollToTopBtn.style.display = 'block';
+                } else {
+                    scrollToTopBtn.style.display = 'none';
+                }
             }
         });
         
-        document.getElementById('scrollToTop').addEventListener('click', function() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        // Scroll to top button
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+        if (scrollToTopBtn) {
+            scrollToTopBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
         
         // Contact form handling
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
-            const contactData = {
-                name: formData.get('contactName'),
-                email: formData.get('contactEmail'),
-                phone: formData.get('contactPhone'),
-                subject: formData.get('contactSubject'),
-                message: formData.get('contactMessage'),
-                timestamp: new Date().toISOString()
-            };
-            
-            // Show loading state
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
-            submitBtn.disabled = true;
-            
-            // Simulate sending (in real app, this would send to server)
-            setTimeout(() => {
-                // Reset form
-                this.reset();
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
                 
-                // Reset button
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+                // Show loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+                submitBtn.disabled = true;
                 
-                // Show success message
-                alert('Thank you for your message! We will get back to you within 24 hours.');
-                
-                // Store contact submission locally
-                const contacts = JSON.parse(localStorage.getItem('contactSubmissions') || '[]');
-                contacts.push(contactData);
-                localStorage.setItem('contactSubmissions', JSON.stringify(contacts));
-                
-            }, 1500);
-        });
-        
-        // Enhanced voice commands
-        if (window.voiceCommands) {
-            window.voiceCommands.about = () => scrollToSection('about');
-            window.voiceCommands.contact = () => scrollToSection('contact');
+                // Simulate sending
+                setTimeout(() => {
+                    this.reset();
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    showNotification('Thank you for your message! We will get back to you within 24 hours.', 'success');
+                }, 1500);
+            });
         }
+        
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.body.getAttribute('data-theme') || 'light';
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                document.body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                showNotification(`Switched to ${newTheme} mode`, 'info');
+            });
+        }
+        
+        // Make functions globally available
+        window.showSection = showSection;
+        window.showNotification = showNotification;
+        window.scrollToSection = scrollToSection;
+        window.isRegistered = isRegistered;
     </script>
 </body>
 </html>
