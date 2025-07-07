@@ -12,22 +12,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/royal-medical-theme.css">
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/print-styles.css">
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
 <body data-theme="light">
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div class="container">
-            <a class="navbar-brand brand-text" href="#" data-section="home">
+            <a class="navbar-brand fw-bold" href="#" data-section="home">
                 <i class="fas fa-brain me-2"></i>NeuroSketch
             </a>
             
@@ -58,8 +55,7 @@
                         </a>
                     </li>
                     <li class="nav-item ms-3">
-                        <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
-                            <i class="fas fa-sun"></i>
+                        <button class="btn btn-outline-light btn-sm" id="themeToggle" title="Toggle Dark Mode">
                             <i class="fas fa-moon"></i>
                         </button>
                     </li>
@@ -71,33 +67,33 @@
     <!-- Home Section -->
     <section id="home" class="section">
         <!-- Hero Section -->
-        <div class="hero-section animated-bg hero">
+        <div class="hero-section bg-light">
             <div class="container">
                 <div class="row align-items-center min-vh-100">
                     <div class="col-lg-6">
                         <div class="hero-content">
-                            <h1 class="hero-title fade-in">
+                            <h1 class="display-4 fw-bold text-primary mb-4">
                                 Advanced Neurological Assessment Platform
                             </h1>
-                            <p class="hero-subtitle slide-in">
+                            <p class="lead text-muted mb-4">
                                 Early detection and monitoring of neurological conditions through innovative digital assessments
                             </p>
-                            <div class="hero-buttons mt-4">
-                                <button class="btn btn-royal me-3" data-section="register">
+                            <div class="hero-buttons">
+                                <button class="btn btn-primary btn-lg me-3" data-section="register">
                                     <i class="fas fa-rocket me-2"></i>Start Assessment
                                 </button>
-                                <button class="btn btn-royal-outline" onclick="scrollToSection('about')">
+                                <button class="btn btn-outline-primary btn-lg" onclick="scrollToSection('about')">
                                     <i class="fas fa-info-circle me-2"></i>Learn More
                                 </button>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="hero-image text-center">
-                            <div class="royal-card gradient-card primary">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-brain fa-5x text-royal-blue mb-3"></i>
-                                    <h3 class="text-royal-blue">AI-Powered Analysis</h3>
+                        <div class="text-center">
+                            <div class="card border-0 shadow-lg">
+                                <div class="card-body p-5">
+                                    <i class="fas fa-brain fa-5x text-primary mb-3"></i>
+                                    <h3 class="text-primary">AI-Powered Analysis</h3>
                                     <p class="text-muted">Advanced algorithms for precise neurological assessment</p>
                                 </div>
                             </div>
@@ -105,67 +101,53 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Floating Elements -->
-            <div class="float-element float-1"></div>
-            <div class="float-element float-2"></div>
-            <div class="float-element float-3"></div>
-            <div class="float-element float-4"></div>
         </div>
 
         <!-- Features Section -->
         <div class="container my-5 py-5">
             <div class="row">
                 <div class="col-12 text-center mb-5">
-                    <h2 class="section-title">Why Choose NeuroSketch?</h2>
+                    <h2 class="display-5 fw-bold">Why Choose NeuroSketch?</h2>
                     <p class="lead text-muted">Comprehensive neurological assessment tools designed by medical professionals</p>
                 </div>
             </div>
             
             <div class="row g-4">
                 <div class="col-md-6 col-lg-3">
-                    <div class="royal-card text-center h-100 gradient-card primary">
-                        <div class="card-body">
-                            <div class="feature-icon mb-3">
-                                <i class="fas fa-microscope fa-3x text-royal-blue"></i>
-                            </div>
-                            <h5 class="royal-card-title">Clinical Precision</h5>
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-microscope fa-3x text-primary mb-3"></i>
+                            <h5 class="fw-bold">Clinical Precision</h5>
                             <p class="text-muted">Medically validated tests with high accuracy rates for early detection</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
-                    <div class="royal-card text-center h-100 gradient-card success">
-                        <div class="card-body">
-                            <div class="feature-icon mb-3">
-                                <i class="fas fa-clock fa-3x text-medical-green"></i>
-                            </div>
-                            <h5 class="royal-card-title">Quick Assessment</h5>
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-clock fa-3x text-success mb-3"></i>
+                            <h5 class="fw-bold">Quick Assessment</h5>
                             <p class="text-muted">Complete comprehensive testing in under 15 minutes from anywhere</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
-                    <div class="royal-card text-center h-100 gradient-card warning">
-                        <div class="card-body">
-                            <div class="feature-icon mb-3">
-                                <i class="fas fa-shield-alt fa-3x text-royal-gold"></i>
-                            </div>
-                            <h5 class="royal-card-title">Secure & Private</h5>
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-shield-alt fa-3x text-warning mb-3"></i>
+                            <h5 class="fw-bold">Secure & Private</h5>
                             <p class="text-muted">HIPAA-compliant platform ensuring your medical data stays protected</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
-                    <div class="royal-card text-center h-100 gradient-card danger">
-                        <div class="card-body">
-                            <div class="feature-icon mb-3">
-                                <i class="fas fa-chart-line fa-3x text-royal-purple"></i>
-                            </div>
-                            <h5 class="royal-card-title">Detailed Reports</h5>
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-chart-line fa-3x text-info mb-3"></i>
+                            <h5 class="fw-bold">Detailed Reports</h5>
                             <p class="text-muted">Comprehensive analysis with actionable insights and recommendations</p>
                         </div>
                     </div>
@@ -173,179 +155,74 @@
             </div>
         </div>
 
-        <!-- About Us Section -->
-        <div id="about" class="container my-5 py-5">
-            <div class="row">
-                <div class="col-12 text-center mb-5">
-                    <h2 class="section-title">About NeuroSketch</h2>
-                    <p class="lead text-muted">Pioneering the future of neurological assessment through technology</p>
+        <!-- About Section -->
+        <div id="about" class="bg-light py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center mb-5">
+                        <h2 class="display-5 fw-bold">About NeuroSketch</h2>
+                        <p class="lead text-muted">Pioneering the future of neurological assessment through technology</p>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="row align-items-center mb-5">
-                <div class="col-lg-6">
-                    <div class="royal-card">
-                        <div class="card-body">
-                            <h3 class="royal-card-title">Our Mission</h3>
-                            <p class="mb-3">
-                                NeuroSketch is dedicated to revolutionizing neurological healthcare through innovative digital assessment tools. 
-                                We believe that early detection and continuous monitoring are key to improving patient outcomes and quality of life.
-                            </p>
-                            <p class="mb-3">
-                                Our platform combines cutting-edge technology with clinical expertise to provide accessible, 
-                                accurate, and comprehensive neurological assessments that can be performed anywhere, anytime.
-                            </p>
-                            <div class="row mt-4">
-                                <div class="col-6">
-                                    <div class="text-center">
-                                        <h4 class="text-royal-blue">10,000+</h4>
+                
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <h3 class="fw-bold text-primary">Our Mission</h3>
+                                <p class="mb-3">
+                                    NeuroSketch is dedicated to revolutionizing neurological healthcare through innovative digital assessment tools. 
+                                    We believe that early detection and continuous monitoring are key to improving patient outcomes and quality of life.
+                                </p>
+                                <p class="mb-3">
+                                    Our platform combines cutting-edge technology with clinical expertise to provide accessible, 
+                                    accurate, and comprehensive neurological assessments that can be performed anywhere, anytime.
+                                </p>
+                                <div class="row mt-4">
+                                    <div class="col-6 text-center">
+                                        <h4 class="text-primary fw-bold">10,000+</h4>
                                         <small class="text-muted">Assessments Completed</small>
                                     </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="text-center">
-                                        <h4 class="text-medical-green">95%</h4>
+                                    <div class="col-6 text-center">
+                                        <h4 class="text-success fw-bold">95%</h4>
                                         <small class="text-muted">Accuracy Rate</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="col-lg-6">
-                    <div class="royal-card">
-                        <div class="card-body">
-                            <h3 class="royal-card-title">Key Features</h3>
-                            <div class="feature-list">
-                                <div class="feature-item mb-3">
-                                    <i class="fas fa-check-circle text-medical-green me-2"></i>
-                                    <strong>Spiral Drawing Test:</strong> Assess fine motor control and tremor detection
-                                </div>
-                                <div class="feature-item mb-3">
-                                    <i class="fas fa-check-circle text-medical-green me-2"></i>
-                                    <strong>Tap Speed Test:</strong> Measure finger tapping speed and coordination
-                                </div>
-                                <div class="feature-item mb-3">
-                                    <i class="fas fa-check-circle text-medical-green me-2"></i>
-                                    <strong>Reaction Time Test:</strong> Evaluate cognitive processing speed
-                                </div>
-                                <div class="feature-item mb-3">
-                                    <i class="fas fa-check-circle text-medical-green me-2"></i>
-                                    <strong>Voice Analysis:</strong> Detect speech pattern changes and vocal tremors
-                                </div>
-                                <div class="feature-item mb-3">
-                                    <i class="fas fa-check-circle text-medical-green me-2"></i>
-                                    <strong>AI-Powered Analysis:</strong> Advanced algorithms for precise assessment
-                                </div>
-                                <div class="feature-item">
-                                    <i class="fas fa-check-circle text-medical-green me-2"></i>
-                                    <strong>Comprehensive Reports:</strong> Detailed results with medical insights
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Clinical Validation -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="royal-card">
-                        <div class="royal-card-header">
-                            <h3 class="royal-card-title mb-0">
-                                <i class="fas fa-certificate text-royal-gold me-2"></i>
-                                Clinical Validation & Research
-                            </h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="validation-item text-center">
-                                        <i class="fas fa-university fa-2x text-royal-blue mb-2"></i>
-                                        <h5>Research Partnerships</h5>
-                                        <p class="text-muted">Collaborating with leading medical institutions and universities</p>
+                    
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <h3 class="fw-bold text-primary">Key Features</h3>
+                                <div class="feature-list">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-check-circle text-success me-3"></i>
+                                        <div>
+                                            <strong>Spiral Drawing Test:</strong> Assess fine motor control and tremor detection
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="validation-item text-center">
-                                        <i class="fas fa-award fa-2x text-royal-gold mb-2"></i>
-                                        <h5>FDA Guidelines</h5>
-                                        <p class="text-muted">Developed following FDA digital health guidelines and standards</p>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-check-circle text-success me-3"></i>
+                                        <div>
+                                            <strong>Tap Speed Test:</strong> Measure finger tapping speed and coordination
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="validation-item text-center">
-                                        <i class="fas fa-stethoscope fa-2x text-medical-green mb-2"></i>
-                                        <h5>Clinical Studies</h5>
-                                        <p class="text-muted">Validated through peer-reviewed clinical research studies</p>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-check-circle text-success me-3"></i>
+                                        <div>
+                                            <strong>Reaction Time Test:</strong> Evaluate cognitive processing speed
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-check-circle text-success me-3"></i>
+                                        <div>
+                                            <strong>Voice Analysis:</strong> Detect speech pattern changes and vocal tremors
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Team Section -->
-        <div class="container my-5 py-5">
-            <div class="row">
-                <div class="col-12 text-center mb-5">
-                    <h2 class="section-title">Our Expert Team</h2>
-                    <p class="lead text-muted">Medical professionals and technology experts working together</p>
-                </div>
-            </div>
-            
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-3">
-                    <div class="royal-card team-card text-center h-100">
-                        <div class="card-body">
-                            <div class="team-avatar mb-3">
-                                <i class="fas fa-user-md fa-4x text-royal-blue"></i>
-                            </div>
-                            <h5 class="royal-card-title">Dr. Sarah Johnson</h5>
-                            <p class="text-royal-purple">Chief Medical Officer</p>
-                            <p class="text-muted">Neurologist with 15+ years experience in movement disorders and Parkinson's disease research.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-6 col-lg-3">
-                    <div class="royal-card team-card text-center h-100">
-                        <div class="card-body">
-                            <div class="team-avatar mb-3">
-                                <i class="fas fa-laptop-code fa-4x text-royal-purple"></i>
-                            </div>
-                            <h5 class="royal-card-title">Dr. Michael Chen</h5>
-                            <p class="text-royal-purple">CTO & AI Research Lead</p>
-                            <p class="text-muted">Computer scientist specializing in machine learning applications in healthcare and medical AI.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-6 col-lg-3">
-                    <div class="royal-card team-card text-center h-100">
-                        <div class="card-body">
-                            <div class="team-avatar mb-3">
-                                <i class="fas fa-brain fa-4x text-medical-green"></i>
-                            </div>
-                            <h5 class="royal-card-title">Dr. Emily Rodriguez</h5>
-                            <p class="text-royal-purple">Clinical Research Director</p>
-                            <p class="text-muted">Neuroscientist focused on digital biomarkers and early detection of neurodegenerative diseases.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-6 col-lg-3">
-                    <div class="royal-card team-card text-center h-100">
-                        <div class="card-body">
-                            <div class="team-avatar mb-3">
-                                <i class="fas fa-shield-alt fa-4x text-royal-gold"></i>
-                            </div>
-                            <h5 class="royal-card-title">James Wilson</h5>
-                            <p class="text-royal-purple">Head of Security & Compliance</p>
-                            <p class="text-muted">Healthcare IT security expert ensuring HIPAA compliance and data protection standards.</p>
                         </div>
                     </div>
                 </div>
@@ -356,21 +233,20 @@
         <div id="contact" class="container my-5 py-5">
             <div class="row">
                 <div class="col-12 text-center mb-5">
-                    <h2 class="section-title">Contact Us</h2>
+                    <h2 class="display-5 fw-bold">Contact Us</h2>
                     <p class="lead text-muted">Get in touch with our team for support or inquiries</p>
                 </div>
             </div>
             
             <div class="row">
                 <div class="col-lg-8">
-                    <div class="royal-card">
-                        <div class="royal-card-header">
-                            <h3 class="royal-card-title mb-0">
-                                <i class="fas fa-envelope text-royal-blue me-2"></i>
-                                Send us a Message
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="mb-0">
+                                <i class="fas fa-envelope me-2"></i>Send us a Message
                             </h3>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             <form id="contactForm">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
@@ -382,34 +258,11 @@
                                         <input type="email" class="form-control" id="contactEmail" required>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="contactPhone" class="form-label">Phone Number</label>
-                                        <input type="tel" class="form-control" id="contactPhone">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="contactSubject" class="form-label">Subject *</label>
-                                        <select class="form-control" id="contactSubject" required>
-                                            <option value="">Select a subject</option>
-                                            <option value="general">General Inquiry</option>
-                                            <option value="technical">Technical Support</option>
-                                            <option value="medical">Medical Questions</option>
-                                            <option value="partnership">Partnership Opportunities</option>
-                                            <option value="research">Research Collaboration</option>
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="mb-3">
                                     <label for="contactMessage" class="form-label">Message *</label>
-                                    <textarea class="form-control" id="contactMessage" rows="5" required placeholder="Please describe your inquiry in detail..."></textarea>
+                                    <textarea class="form-control" id="contactMessage" rows="5" required></textarea>
                                 </div>
-                                <div class="mb-3 form-check">
-                                    <input type="checkbox" class="form-check-input" id="contactConsent" required>
-                                    <label class="form-check-label" for="contactConsent">
-                                        I consent to being contacted regarding my inquiry *
-                                    </label>
-                                </div>
-                                <button type="submit" class="btn btn-royal">
+                                <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-paper-plane me-2"></i>Send Message
                                 </button>
                             </form>
@@ -418,74 +271,32 @@
                 </div>
                 
                 <div class="col-lg-4">
-                    <div class="royal-card h-100">
-                        <div class="royal-card-header">
-                            <h3 class="royal-card-title mb-0">
-                                <i class="fas fa-map-marker-alt text-royal-blue me-2"></i>
-                                Contact Information
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="mb-0">
+                                <i class="fas fa-map-marker-alt me-2"></i>Contact Information
                             </h3>
                         </div>
-                        <div class="card-body">
-                            <div class="contact-info">
-                                <div class="contact-item mb-4">
-                                    <div class="contact-icon">
-                                        <i class="fas fa-building text-royal-blue"></i>
-                                    </div>
-                                    <div class="contact-details">
-                                        <h6>Office Address</h6>
-                                        <p class="text-muted mb-0">
-                                            NeuroSketch Medical Center<br>
-                                            123 Innovation Drive, Suite 400<br>
-                                            Medical District, CA 90210
-                                        </p>
-                                    </div>
-                                </div>
-                                
-                                <div class="contact-item mb-4">
-                                    <div class="contact-icon">
-                                        <i class="fas fa-phone text-medical-green"></i>
-                                    </div>
-                                    <div class="contact-details">
-                                        <h6>Phone Numbers</h6>
-                                        <p class="text-muted mb-1">Main: +1 (555) 123-4567</p>
-                                        <p class="text-muted mb-0">Support: +1 (555) 123-4568</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="contact-item mb-4">
-                                    <div class="contact-icon">
-                                        <i class="fas fa-envelope text-royal-purple"></i>
-                                    </div>
-                                    <div class="contact-details">
-                                        <h6>Email Addresses</h6>
-                                        <p class="text-muted mb-1">info@neurosketch.com</p>
-                                        <p class="text-muted mb-0">support@neurosketch.com</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="contact-item mb-4">
-                                    <div class="contact-icon">
-                                        <i class="fas fa-clock text-royal-gold"></i>
-                                    </div>
-                                    <div class="contact-details">
-                                        <h6>Business Hours</h6>
-                                        <p class="text-muted mb-1">Monday - Friday: 8:00 AM - 6:00 PM</p>
-                                        <p class="text-muted mb-1">Saturday: 9:00 AM - 2:00 PM</p>
-                                        <p class="text-muted mb-0">Sunday: Closed</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="contact-item">
-                                    <div class="contact-icon">
-                                        <i class="fas fa-ambulance text-medical-red"></i>
-                                    </div>
-                                    <div class="contact-details">
-                                        <h6>Emergency Support</h6>
-                                        <p class="text-muted mb-0">
-                                            For medical emergencies, please contact your healthcare provider or call 911.
-                                        </p>
-                                    </div>
-                                </div>
+                        <div class="card-body p-4">
+                            <div class="mb-4">
+                                <h6 class="fw-bold">Office Address</h6>
+                                <p class="text-muted mb-0">
+                                    NeuroSketch Medical Center<br>
+                                    123 Innovation Drive, Suite 400<br>
+                                    Medical District, CA 90210
+                                </p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="fw-bold">Phone Numbers</h6>
+                                <p class="text-muted mb-1">Main: +1 (555) 123-4567</p>
+                                <p class="text-muted mb-0">Support: +1 (555) 123-4568</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="fw-bold">Email Addresses</h6>
+                                <p class="text-muted mb-1">info@neurosketch.com</p>
+                                <p class="text-muted mb-0">support@neurosketch.com</p>
                             </div>
                         </div>
                     </div>
@@ -499,15 +310,14 @@
         <div class="container my-5 py-5">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
-                    <div class="royal-card">
-                        <div class="royal-card-header text-center">
-                            <h2 class="royal-card-title mb-0">
-                                <i class="fas fa-user-plus text-royal-blue me-2"></i>
-                                Patient Registration
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h2 class="mb-0">
+                                <i class="fas fa-user-plus me-2"></i>Patient Registration
                             </h2>
-                            <p class="text-muted mt-2">Please provide your information to begin the neurological assessment</p>
+                            <p class="mt-2 mb-0">Please provide your information to begin the neurological assessment</p>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-5">
                             <form id="registrationForm" novalidate>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
@@ -544,7 +354,6 @@
                                                 <label class="form-check-label" for="other">Other</label>
                                             </div>
                                         </div>
-                                        <div class="invalid-feedback">Please select your gender.</div>
                                     </div>
                                 </div>
                                 
@@ -571,7 +380,7 @@
                                 </div>
                                 
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-royal btn-lg">
+                                    <button type="submit" class="btn btn-primary btn-lg">
                                         <i class="fas fa-arrow-right me-2"></i>Begin Assessment
                                     </button>
                                 </div>
@@ -588,7 +397,7 @@
         <div class="container my-5 py-5">
             <div class="row">
                 <div class="col-12 text-center mb-5">
-                    <h2 class="section-title">Neurological Assessment Tests</h2>
+                    <h2 class="display-5 fw-bold">Neurological Assessment Tests</h2>
                     <p class="lead text-muted">Complete all four tests for a comprehensive neurological assessment</p>
                 </div>
             </div>
@@ -596,36 +405,27 @@
             <div class="row g-4 mb-5">
                 <!-- Spiral Test -->
                 <div class="col-md-6 col-lg-3">
-                    <div class="test-card royal-card h-100">
-                        <div class="card-body text-center">
+                    <div class="card h-100 border-2 border-primary shadow-sm test-card">
+                        <div class="card-body text-center p-4">
                             <div class="test-icon mb-3">
-                                <i class="fas fa-pencil-alt fa-3x text-royal-blue"></i>
+                                <i class="fas fa-pencil-alt fa-4x text-primary"></i>
                             </div>
-                            <h3 class="royal-card-title">Spiral Drawing Test</h3>
+                            <h4 class="fw-bold text-primary">Spiral Drawing Test</h4>
                             <p class="text-muted mb-3">Draw a spiral to assess fine motor control and detect tremors</p>
                             
                             <div class="test-status mb-3">
-                                <span class="status-label">Status:</span>
-                                <span id="spiralTestStatus" class="status-value">Not Tested</span>
+                                <span class="badge bg-secondary" id="spiralTestStatus">NOT TESTED</span>
                             </div>
                             
-                            <div id="spiralTestResult" class="result-chart d-none">
-                                <div class="result-labels">
-                                    <span>Healthy</span>
-                                    <span>Risk</span>
+                            <div id="spiralTestResult" class="result-chart d-none mb-3">
+                                <div class="progress mb-2">
+                                    <div id="spiralHealthyBar" class="progress-bar bg-success" style="width: 0%"></div>
                                 </div>
-                                <div class="progress animated-progress">
-                                    <div id="spiralHealthyBar" class="progress-bar bg-success" style="width: 0%" aria-valuenow="0"></div>
-                                    <div id="spiralParkinsonBar" class="progress-bar bg-danger" style="width: 0%" aria-valuenow="0"></div>
-                                </div>
-                                <div class="result-labels">
-                                    <span><span id="spiralHealthyPercent">0</span>%</span>
-                                    <span><span id="spiralParkinsonPercent">0</span>%</span>
-                                </div>
+                                <small class="text-muted">Score: <span id="spiralScore">0</span>%</small>
                             </div>
                             
-                            <button id="startSpiralTest" class="btn btn-royal">
-                                <i class="fas fa-play me-2"></i>Start Test
+                            <button id="startSpiralTest" class="btn btn-primary">
+                                <i class="fas fa-play me-2"></i>START TEST
                             </button>
                         </div>
                     </div>
@@ -633,36 +433,27 @@
                 
                 <!-- Tap Speed Test -->
                 <div class="col-md-6 col-lg-3">
-                    <div class="test-card royal-card h-100">
-                        <div class="card-body text-center">
+                    <div class="card h-100 border-2 border-primary shadow-sm test-card">
+                        <div class="card-body text-center p-4">
                             <div class="test-icon mb-3">
-                                <i class="fas fa-hand-pointer fa-3x text-royal-purple"></i>
+                                <i class="fas fa-hand-pointer fa-4x text-primary"></i>
                             </div>
-                            <h3 class="royal-card-title">Tap Speed Test</h3>
+                            <h4 class="fw-bold text-primary">Tap Speed Test</h4>
                             <p class="text-muted mb-3">Tap the dots as quickly as possible to measure coordination</p>
                             
                             <div class="test-status mb-3">
-                                <span class="status-label">Status:</span>
-                                <span id="tapTestStatus" class="status-value">Not Tested</span>
+                                <span class="badge bg-secondary" id="tapTestStatus">NOT TESTED</span>
                             </div>
                             
-                            <div id="tapTestResult" class="result-chart d-none">
-                                <div class="result-labels">
-                                    <span>Healthy</span>
-                                    <span>Risk</span>
+                            <div id="tapTestResult" class="result-chart d-none mb-3">
+                                <div class="progress mb-2">
+                                    <div id="tapHealthyBar" class="progress-bar bg-success" style="width: 0%"></div>
                                 </div>
-                                <div class="progress animated-progress">
-                                    <div id="tapHealthyBar" class="progress-bar bg-success" style="width: 0%" aria-valuenow="0"></div>
-                                    <div id="tapParkinsonBar" class="progress-bar bg-danger" style="width: 0%" aria-valuenow="0"></div>
-                                </div>
-                                <div class="result-labels">
-                                    <span><span id="tapHealthyPercent">0</span>%</span>
-                                    <span><span id="tapParkinsonPercent">0</span>%</span>
-                                </div>
+                                <small class="text-muted">Score: <span id="tapScore">0</span>%</small>
                             </div>
                             
-                            <button id="startTapTest" class="btn btn-royal">
-                                <i class="fas fa-play me-2"></i>Start Test
+                            <button id="startTapTest" class="btn btn-primary">
+                                <i class="fas fa-play me-2"></i>START TEST
                             </button>
                         </div>
                     </div>
@@ -670,36 +461,27 @@
                 
                 <!-- Reaction Time Test -->
                 <div class="col-md-6 col-lg-3">
-                    <div class="test-card royal-card h-100">
-                        <div class="card-body text-center">
+                    <div class="card h-100 border-2 border-primary shadow-sm test-card">
+                        <div class="card-body text-center p-4">
                             <div class="test-icon mb-3">
-                                <i class="fas fa-stopwatch fa-3x text-medical-green"></i>
+                                <i class="fas fa-stopwatch fa-4x text-success"></i>
                             </div>
-                            <h3 class="royal-card-title">Reaction Time Test</h3>
+                            <h4 class="fw-bold text-success">Reaction Time Test</h4>
                             <p class="text-muted mb-3">Click when the screen turns green to measure reaction speed</p>
                             
                             <div class="test-status mb-3">
-                                <span class="status-label">Status:</span>
-                                <span id="reactionTestStatus" class="status-value">Not Tested</span>
+                                <span class="badge bg-secondary" id="reactionTestStatus">NOT TESTED</span>
                             </div>
                             
-                            <div id="reactionTestResult" class="result-chart d-none">
-                                <div class="result-labels">
-                                    <span>Healthy</span>
-                                    <span>Risk</span>
+                            <div id="reactionTestResult" class="result-chart d-none mb-3">
+                                <div class="progress mb-2">
+                                    <div id="reactionHealthyBar" class="progress-bar bg-success" style="width: 0%"></div>
                                 </div>
-                                <div class="progress animated-progress">
-                                    <div id="reactionHealthyBar" class="progress-bar bg-success" style="width: 0%" aria-valuenow="0"></div>
-                                    <div id="reactionParkinsonBar" class="progress-bar bg-danger" style="width: 0%" aria-valuenow="0"></div>
-                                </div>
-                                <div class="result-labels">
-                                    <span><span id="reactionHealthyPercent">0</span>%</span>
-                                    <span><span id="reactionParkinsonPercent">0</span>%</span>
-                                </div>
+                                <small class="text-muted">Score: <span id="reactionScore">0</span>%</small>
                             </div>
                             
-                            <button id="startReactionTest" class="btn btn-royal">
-                                <i class="fas fa-play me-2"></i>Start Test
+                            <button id="startReactionTest" class="btn btn-success">
+                                <i class="fas fa-play me-2"></i>START TEST
                             </button>
                         </div>
                     </div>
@@ -707,36 +489,27 @@
                 
                 <!-- Voice Test -->
                 <div class="col-md-6 col-lg-3">
-                    <div class="test-card royal-card h-100">
-                        <div class="card-body text-center">
+                    <div class="card h-100 border-2 border-warning shadow-sm test-card">
+                        <div class="card-body text-center p-4">
                             <div class="test-icon mb-3">
-                                <i class="fas fa-microphone fa-3x text-royal-gold"></i>
+                                <i class="fas fa-microphone fa-4x text-warning"></i>
                             </div>
-                            <h3 class="royal-card-title">Voice Analysis Test</h3>
+                            <h4 class="fw-bold text-warning">Voice Analysis Test</h4>
                             <p class="text-muted mb-3">Record your voice to analyze speech patterns and tremors</p>
                             
                             <div class="test-status mb-3">
-                                <span class="status-label">Status:</span>
-                                <span id="voiceTestStatus" class="status-value">Not Tested</span>
-                            
-                            
-                            <div id="voiceTestResult" class="result-chart d-none">
-                                <div class="result-labels">
-                                    <span>Healthy</span>
-                                    <span>Risk</span>
-                                </div>
-                                <div class="progress animated-progress">
-                                    <div id="voiceHealthyBar" class="progress-bar bg-success" style="width: 0%" aria-valuenow="0"></div>
-                                    <div id="voiceParkinsonBar" class="progress-bar bg-danger" style="width: 0%" aria-valuenow="0"></div>
-                                </div>
-                                <div class="result-labels">
-                                    <span><span id="voiceHealthyPercent">0</span>%</span>
-                                    <span><span id="voiceParkinsonPercent">0</span>%</span>
-                                </div>
+                                <span class="badge bg-secondary" id="voiceTestStatus">NOT TESTED</span>
                             </div>
                             
-                            <button id="startVoiceTest" class="btn btn-royal">
-                                <i class="fas fa-play me-2"></i>Start Test
+                            <div id="voiceTestResult" class="result-chart d-none mb-3">
+                                <div class="progress mb-2">
+                                    <div id="voiceHealthyBar" class="progress-bar bg-success" style="width: 0%"></div>
+                                </div>
+                                <small class="text-muted">Score: <span id="voiceScore">0</span>%</small>
+                            </div>
+                            
+                            <button id="startVoiceTest" class="btn btn-warning">
+                                <i class="fas fa-play me-2"></i>START TEST
                             </button>
                         </div>
                     </div>
@@ -747,11 +520,11 @@
             <div class="row">
                 <div class="col-12 text-center">
                     <div class="action-buttons">
-                        <button id="viewResults" class="btn btn-medical-green btn-lg me-3" disabled>
+                        <button id="viewResults" class="btn btn-success btn-lg me-3" disabled>
                             <i class="fas fa-chart-bar me-2"></i>View Results
                         </button>
-                        <button id="printResults" class="btn btn-royal-outline btn-lg" disabled>
-                            <i class="fas fa-print me-2"></i>Print Report
+                        <button id="printResults" class="btn btn-outline-primary btn-lg" disabled>
+                            <i class="fas fa-print me-2"></i>PRINT REPORT
                         </button>
                     </div>
                 </div>
@@ -764,65 +537,33 @@
         <div class="container my-5 py-5">
             <div class="row">
                 <div class="col-12 text-center mb-5">
-                    <h2 class="section-title">Assessment Results</h2>
+                    <h2 class="display-5 fw-bold">Assessment Results</h2>
                     <p class="lead text-muted">Comprehensive analysis of your neurological assessment</p>
-                </div>
-            </div>
-            
-            <!-- Print Header (Hidden by default, shown only when printing) -->
-            <div class="print-header d-none">
-                <h1>NeuroSketch Assessment Report</h1>
-                <p>Advanced Neurological Assessment Platform</p>
-            </div>
-            
-            <!-- Print Date (Hidden by default, shown only when printing) -->
-            <div class="print-date d-none">
-                Report generated on: <span id="reportDate"></span>
-            </div>
-            
-            <!-- User Information (Hidden by default, shown only when printing) -->
-            <div class="user-info d-none">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4>Patient Information</h4>
-                        <p><strong>Name:</strong> <span id="printName"></span></p>
-                        <p><strong>Email:</strong> <span id="printEmail"></span></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Age:</strong> <span id="printAge"></span></p>
-                        <p><strong>Gender:</strong> <span id="printGender"></span></p>
-                        <p><strong>Report ID:</strong> <span id="printReportId"></span></p>
-                    </div>
                 </div>
             </div>
             
             <!-- Overall Results -->
             <div class="row mb-5">
                 <div class="col-12">
-                    <div class="royal-card">
-                        <div class="royal-card-header">
-                            <h3 class="royal-card-title mb-0">
-                                <i class="fas fa-chart-pie text-royal-blue me-2"></i>
-                                Overall Assessment
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="mb-0">
+                                <i class="fas fa-chart-pie me-2"></i>Overall Assessment
                             </h3>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h5 class="mb-3">Healthy Indicators</h5>
-                                    <div class="progress animated-progress mb-2" style="height: 30px;">
-                                        <div id="overallHealthyBar" class="progress-bar bg-success" style="width: 0%" aria-valuenow="0">
-                                            <span id="overallHealthyPercent">0</span>%
+                                    <h5 class="mb-3">Overall Score</h5>
+                                    <div class="progress mb-2" style="height: 30px;">
+                                        <div id="overallHealthyBar" class="progress-bar bg-success" style="width: 0%">
+                                            <span id="overallHealthyPercent" class="fw-bold">0%</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <h5 class="mb-3">Risk Indicators</h5>
-                                    <div class="progress animated-progress mb-2" style="height: 30px;">
-                                        <div id="overallParkinsonBar" class="progress-bar bg-danger" style="width: 0%" aria-valuenow="0">
-                                            <span id="overallParkinsonPercent">0</span>%
-                                        </div>
-                                    </div>
+                                    <h5 class="mb-3">Tests Completed</h5>
+                                    <div class="display-6 fw-bold text-primary" id="testsCompleted">0/4</div>
                                 </div>
                             </div>
                         </div>
@@ -830,56 +571,50 @@
                 </div>
             </div>
             
-            <!-- Detailed Results Table -->
+            <!-- Detailed Results -->
             <div class="row mb-5">
                 <div class="col-12">
-                    <div class="royal-card">
-                        <div class="royal-card-header">
-                            <h3 class="royal-card-title mb-0">
-                                <i class="fas fa-table text-royal-blue me-2"></i>
-                                Detailed Test Results
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="mb-0">
+                                <i class="fas fa-table me-2"></i>Detailed Test Results
                             </h3>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             <div class="table-responsive">
-                                <table class="table table-bordered">
+                                <table class="table table-striped">
                                     <thead>
                                         <tr>
                                             <th>Test Name</th>
                                             <th>Status</th>
-                                            <th>Healthy Score</th>
-                                            <th>Risk Score</th>
-                                            <th>Raw Score</th>
+                                            <th>Score</th>
+                                            <th>Assessment</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="resultsTableBody">
                                         <tr>
-                                            <td><i class="fas fa-pencil-alt text-royal-blue me-2"></i>Spiral Drawing</td>
-                                            <td><span id="spiralStatusResult">Not Tested</span></td>
-                                            <td><span id="spiralHealthyResult">-</span></td>
-                                            <td><span id="spiralParkinsonResult">-</span></td>
-                                            <td><span id="spiralRawResult">-</span></td>
+                                            <td><i class="fas fa-pencil-alt text-primary me-2"></i>Spiral Drawing</td>
+                                            <td><span class="badge bg-secondary">Not Tested</span></td>
+                                            <td>-</td>
+                                            <td>-</td>
                                         </tr>
                                         <tr>
-                                            <td><i class="fas fa-hand-pointer text-royal-purple me-2"></i>Tap Speed</td>
-                                            <td><span id="tapStatusResult">Not Tested</span></td>
-                                            <td><span id="tapHealthyResult">-</span></td>
-                                            <td><span id="tapParkinsonResult">-</span></td>
-                                            <td><span id="tapRawResult">-</span></td>
+                                            <td><i class="fas fa-hand-pointer text-primary me-2"></i>Tap Speed</td>
+                                            <td><span class="badge bg-secondary">Not Tested</span></td>
+                                            <td>-</td>
+                                            <td>-</td>
                                         </tr>
                                         <tr>
-                                            <td><i class="fas fa-stopwatch text-medical-green me-2"></i>Reaction Time</td>
-                                            <td><span id="reactionStatusResult">Not Tested</span></td>
-                                            <td><span id="reactionHealthyResult">-</span></td>
-                                            <td><span id="reactionParkinsonResult">-</span></td>
-                                            <td><span id="reactionRawResult">-</span></td>
+                                            <td><i class="fas fa-stopwatch text-success me-2"></i>Reaction Time</td>
+                                            <td><span class="badge bg-secondary">Not Tested</span></td>
+                                            <td>-</td>
+                                            <td>-</td>
                                         </tr>
                                         <tr>
-                                            <td><i class="fas fa-microphone text-royal-gold me-2"></i>Voice Analysis</td>
-                                            <td><span id="voiceStatusResult">Not Tested</span></td>
-                                            <td><span id="voiceHealthyResult">-</span></td>
-                                            <td><span id="voiceParkinsonResult">-</span></td>
-                                            <td><span id="voiceRawResult">-</span></td>
+                                            <td><i class="fas fa-microphone text-warning me-2"></i>Voice Analysis</td>
+                                            <td><span class="badge bg-secondary">Not Tested</span></td>
+                                            <td>-</td>
+                                            <td>-</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -890,35 +625,21 @@
             </div>
             
             <!-- Assessment Conclusion -->
-            <div id="conclusionBox" class="conclusion mt-4 p-3 rounded">
-                <h4 id="conclusionTitle" class="conclusion-title">Assessment Results</h4>
-                <p id="conclusionText" class="conclusion-text">Complete the tests to see your assessment results.</p>
-            </div>
-            
-            <!-- Recommendations (Hidden by default, shown only when printing) -->
-            <div class="recommendations d-none">
-                <h4>Medical Recommendations</h4>
-                <ul id="recommendationsList">
-                    <li>Consult with a healthcare professional for a comprehensive evaluation</li>
-                </ul>
-            </div>
-            
-            <!-- QR Code for Verification (Hidden by default, shown only when printing) -->
-            <div class="verification-qr d-none text-center">
-                <h5>Verification</h5>
-                <div id="qrcode"></div>
+            <div id="conclusionBox" class="alert alert-info">
+                <h4 class="alert-heading">Assessment Results</h4>
+                <p id="conclusionText">Complete the tests to see your assessment results.</p>
             </div>
             
             <!-- Action Buttons -->
             <div class="row mt-5">
                 <div class="col-12 text-center">
-                    <button id="backToTests" class="btn btn-royal-outline me-3">
+                    <button id="backToTests" class="btn btn-outline-primary me-3">
                         <i class="fas fa-arrow-left me-2"></i>Back to Tests
                     </button>
-                    <button id="saveResults" class="btn btn-medical-green me-3">
+                    <button id="saveResults" class="btn btn-success me-3">
                         <i class="fas fa-save me-2"></i>Save Results
                     </button>
-                    <button id="printResults" class="btn btn-royal" onclick="window.print()">
+                    <button class="btn btn-primary" onclick="window.print()">
                         <i class="fas fa-print me-2"></i>Print Report
                     </button>
                 </div>
@@ -932,30 +653,32 @@
     <div class="modal fade" id="spiralTestModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title">
                         <i class="fas fa-pencil-alt me-2"></i>Spiral Drawing Test
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="test-instructions">
+                <div class="modal-body p-4">
+                    <div class="alert alert-info">
                         <h6><i class="fas fa-info-circle me-2"></i>Instructions:</h6>
-                        <p>1. Use your mouse or finger to draw a spiral following the gray guide</p>
-                        <p>2. Try to draw smoothly and steadily</p>
-                        <p>3. Start from the center and work your way outward</p>
-                        <p>4. Take your time and draw naturally</p>
+                        <ul class="mb-0">
+                            <li>Use your mouse or finger to draw a spiral following the gray guide</li>
+                            <li>Try to draw smoothly and steadily</li>
+                            <li>Start from the center and work your way outward</li>
+                            <li>Take your time and draw naturally</li>
+                        </ul>
                     </div>
                     
                     <div class="text-center mb-3">
-                        <canvas id="spiralCanvas" width="400" height="400" class="border rounded"></canvas>
+                        <canvas id="spiralCanvas" width="400" height="400" class="border rounded shadow-sm"></canvas>
                     </div>
                     
                     <div class="text-center">
-                        <button id="clearCanvas" class="btn btn-royal-outline me-2">
+                        <button id="clearCanvas" class="btn btn-outline-secondary me-2">
                             <i class="fas fa-eraser me-2"></i>Clear
                         </button>
-                        <button id="submitSpiral" class="btn btn-medical-green">
+                        <button id="submitSpiral" class="btn btn-success">
                             <i class="fas fa-check me-2"></i>Submit Drawing
                         </button>
                     </div>
@@ -968,31 +691,33 @@
     <div class="modal fade" id="tapTestModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title">
                         <i class="fas fa-hand-pointer me-2"></i>Tap Speed Test
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="test-instructions">
+                <div class="modal-body p-4">
+                    <div class="alert alert-info">
                         <h6><i class="fas fa-info-circle me-2"></i>Instructions:</h6>
-                        <p>1. Click or tap the blue dots as quickly as possible</p>
-                        <p>2. Each dot will appear for a short time</p>
-                        <p>3. Try to tap all 10 dots that appear</p>
-                        <p>4. The test will start after a 3-second countdown</p>
+                        <ul class="mb-0">
+                            <li>Click or tap the blue dots as quickly as possible</li>
+                            <li>Each dot will appear for a short time</li>
+                            <li>Try to tap all 10 dots that appear</li>
+                            <li>The test will start after a 3-second countdown</li>
+                        </ul>
                     </div>
                     
                     <div class="text-center mb-3">
-                        <div id="tapTestContainer" class="position-relative border rounded" style="height: 400px; width: 100%; background-color: #f8f9fc;">
-                            <div id="tapCountdown" class="position-absolute top-50 start-50 translate-middle" style="font-size: 3rem; font-weight: bold; display: none;">3</div>
-                            <div id="tapDot" class="position-absolute rounded-circle" style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--royal-blue), var(--royal-purple)); border: 3px solid white; cursor: pointer; display: none; z-index: 100;"></div>
+                        <div id="tapTestContainer" class="position-relative border rounded shadow-sm" style="height: 400px; background-color: #f8f9fa;">
+                            <div id="tapCountdown" class="position-absolute top-50 start-50 translate-middle display-1 fw-bold text-primary" style="display: none;">3</div>
+                            <div id="tapDot" class="position-absolute rounded-circle bg-primary" style="width: 50px; height: 50px; cursor: pointer; display: none; z-index: 100;"></div>
                         </div>
                     </div>
                     
                     <div class="text-center">
                         <div id="tapScore" class="mb-3 h5">Score: 0/10</div>
-                        <button id="startTapTestBtn" class="btn btn-medical-green" onclick="if(window.startTapTestFunction) window.startTapTestFunction()">
+                        <button id="startTapTestBtn" class="btn btn-success">
                             <i class="fas fa-play me-2"></i>Start Test
                         </button>
                     </div>
@@ -1005,31 +730,33 @@
     <div class="modal fade" id="reactionTestModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title">
                         <i class="fas fa-stopwatch me-2"></i>Reaction Time Test
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="test-instructions">
+                <div class="modal-body p-4">
+                    <div class="alert alert-info">
                         <h6><i class="fas fa-info-circle me-2"></i>Instructions:</h6>
-                        <p>1. Wait for the screen to turn green</p>
-                        <p>2. Click anywhere on the screen as soon as it turns green</p>
-                        <p>3. Do NOT click before it turns green (this will restart the test)</p>
-                        <p>4. You will complete 3 trials for an average reaction time</p>
+                        <ul class="mb-0">
+                            <li>Wait for the screen to turn green</li>
+                            <li>Click anywhere on the screen as soon as it turns green</li>
+                            <li>Do NOT click before it turns green (this will restart the test)</li>
+                            <li>You will complete 3 trials for an average reaction time</li>
+                        </ul>
                     </div>
                     
                     <div class="text-center mb-3">
-                        <div id="reactionTestContainer" class="border rounded d-flex align-items-center justify-content-center position-relative" style="height: 300px; background-color: #f8f9fc; cursor: pointer;">
-                            <div id="reactionCountdown" class="position-absolute" style="font-size: 2rem; font-weight: bold;">Click to Start</div>
-                            <div id="reactionTime" class="position-absolute" style="font-size: 2rem; font-weight: bold; display: none;"></div>
+                        <div id="reactionTestContainer" class="border rounded shadow-sm d-flex align-items-center justify-content-center position-relative" style="height: 300px; background-color: #f8f9fa; cursor: pointer;">
+                            <div id="reactionCountdown" class="h3 fw-bold">Click to Start</div>
+                            <div id="reactionTime" class="h3 fw-bold" style="display: none;"></div>
                         </div>
                     </div>
                     
                     <div class="text-center">
                         <div id="reactionResult" class="mb-3">Click the button below to start the reaction time test</div>
-                        <button id="startReactionTestBtn" class="btn btn-medical-green" onclick="if(window.startReactionTestFunction) window.startReactionTestFunction()">
+                        <button id="startReactionTestBtn" class="btn btn-success">
                             <i class="fas fa-play me-2"></i>Start Test
                         </button>
                     </div>
@@ -1042,36 +769,43 @@
     <div class="modal fade" id="voiceTestModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-warning text-dark">
                     <h5 class="modal-title">
                         <i class="fas fa-microphone me-2"></i>Voice Analysis Test
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="test-instructions">
+                <div class="modal-body p-4">
+                    <div class="alert alert-info">
                         <h6><i class="fas fa-info-circle me-2"></i>Instructions:</h6>
-                        <p>1. Click "Start Recording" and allow microphone access</p>
-                        <p>2. Read the following text clearly and naturally:</p>
-                        <div class="alert alert-info">
+                        <ul class="mb-2">
+                            <li>Click "Start Recording" and allow microphone access</li>
+                            <li>Read the following text clearly and naturally</li>
+                            <li>Speak at your normal pace and volume</li>
+                            <li>Click "Stop Recording" when finished</li>
+                        </ul>
+                        <div class="alert alert-secondary mt-3">
                             <strong>Text to read:</strong><br>
                             "The quick brown fox jumps over the lazy dog. Peter Piper picked a peck of pickled peppers. 
-                            She sells seashells by the seashore. How much wood would a woodchuck chuck if a woodchuck could chuck wood?"
+                            She sells seashells by the seashore."
                         </div>
-                        <p>3. Speak at your normal pace and volume</p>
-                        <p>4. Click "Stop Recording" when finished</p>
                     </div>
                     
                     <div class="text-center mb-3">
-                        <canvas id="audioVisualization" width="400" height="100" class="border rounded mb-3"></canvas>
-                        <div id="voiceResult" class="mb-3">Click "Start Recording" to begin the voice test</div>
+                        <div id="voiceResult" class="mb-3 h6">Click "Start Recording" to begin the voice test</div>
+                        <div id="recordingIndicator" class="d-none">
+                            <div class="spinner-border text-danger me-2" role="status">
+                                <span class="visually-hidden">Recording...</span>
+                            </div>
+                            <span class="text-danger fw-bold">Recording in progress...</span>
+                        </div>
                     </div>
                     
                     <div class="text-center">
-                        <button id="startVoiceRecording" class="btn btn-medical-green me-2">
+                        <button id="startVoiceRecording" class="btn btn-success me-2">
                             <i class="fas fa-microphone me-2"></i>Start Recording
                         </button>
-                        <button id="stopVoiceRecording" class="btn btn-medical-red" disabled>
+                        <button id="stopVoiceRecording" class="btn btn-danger" disabled>
                             <i class="fas fa-stop me-2"></i>Stop Recording
                         </button>
                     </div>
@@ -1080,251 +814,13 @@
         </div>
     </div>
 
-    <!-- Scroll to Top Button -->
-    <button id="scrollToTop" class="btn btn-royal position-fixed" style="bottom: 20px; right: 20px; z-index: 1000; display: none; border-radius: 50%; width: 50px; height: 50px;">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
     <!-- Notification Container -->
     <div id="notificationContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- QR Code Library for printing -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    
-    <!-- Custom JavaScript is now inline above -->
-    <script>
-        // Simple Navigation System
-        let isRegistered = false;
-        
-        // Check registration status
-        function checkRegistration() {
-            const userData = localStorage.getItem("userData");
-            isRegistered = !!userData;
-            return isRegistered;
-        }
-        
-        // Show section function
-        function showSection(sectionId) {
-            console.log('Showing section:', sectionId);
-            
-            // Hide all sections
-            document.querySelectorAll('section').forEach(section => {
-                section.classList.add('d-none');
-                section.style.display = 'none';
-            });
-            
-            // Show target section
-            const targetSection = document.getElementById(sectionId);
-            if (targetSection) {
-                targetSection.classList.remove('d-none');
-                targetSection.style.display = 'block';
-                
-                // Update active nav link
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.classList.remove('active');
-                });
-                
-                const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
-                if (activeLink && activeLink.classList.contains('nav-link')) {
-                    activeLink.classList.add('active');
-                }
-                
-                // Scroll to top
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                
-                console.log('Successfully showed section:', sectionId);
-            } else {
-                console.error('Section not found:', sectionId);
-            }
-        }
-        
-        // Show notification
-        function showNotification(message, type = 'info') {
-            // Remove existing notifications
-            document.querySelectorAll('.notification').forEach(n => n.remove());
-            
-            // Create notification
-            const notification = document.createElement('div');
-            notification.className = `alert alert-${type} alert-dismissible fade show notification`;
-            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
-            notification.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Auto-remove after 5 seconds
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.remove();
-                }
-            }, 5000);
-        }
-        
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Page loaded, initializing navigation...');
-            
-            // Check registration status
-            checkRegistration();
-            
-            // Add click handlers to all navigation elements
-            document.querySelectorAll('[data-section]').forEach(element => {
-                element.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    const targetSection = this.getAttribute('data-section');
-                    console.log('Navigation clicked:', targetSection);
-                    
-                    // Check if trying to access tests without registration
-                    if (targetSection === 'tests' && !isRegistered) {
-                        showNotification('Please complete registration first!', 'warning');
-                        showSection('register');
-                        return;
-                    }
-                    
-                    showSection(targetSection);
-                });
-            });
-            
-            // Handle registration form
-            const registrationForm = document.getElementById('registrationForm');
-            if (registrationForm) {
-                registrationForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    // Get form data
-                    const formData = new FormData(this);
-                    const userData = {
-                        fullName: formData.get('fullName'),
-                        email: formData.get('email'),
-                        age: formData.get('age'),
-                        gender: formData.get('gender'),
-                        familyHistory: formData.get('familyHistory'),
-                        medicalSituation: formData.get('medicalSituation'),
-                        registrationDate: new Date().toISOString()
-                    };
-                    
-                    // Simple validation
-                    if (!userData.fullName || !userData.email || !userData.age || !userData.gender) {
-                        showNotification('Please fill in all required fields.', 'error');
-                        return;
-                    }
-                    
-                    // Check consent
-                    const consent = document.getElementById('consent');
-                    if (!consent.checked) {
-                        showNotification('You must consent to proceed with the assessment.', 'error');
-                        return;
-                    }
-                    
-                    // Show loading
-                    const submitBtn = this.querySelector('button[type="submit"]');
-                    const originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
-                    submitBtn.disabled = true;
-                    
-                    // Save data and redirect
-                    setTimeout(() => {
-                        localStorage.setItem('userData', JSON.stringify(userData));
-                        isRegistered = true;
-                        
-                        // Reset button
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                        
-                        showNotification('Registration completed successfully!', 'success');
-                        
-                        // Redirect to tests
-                        setTimeout(() => {
-                            showSection('tests');
-                        }, 1500);
-                    }, 1000);
-                });
-            }
-            
-            // Show home section initially
-            showSection('home');
-            
-            console.log('Navigation initialized successfully');
-        });
-        
-        // Scroll to section function
-        function scrollToSection(sectionId) {
-            const element = document.getElementById(sectionId);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-        
-        // Scroll to top functionality
-        window.addEventListener('scroll', function() {
-            const scrollToTopBtn = document.getElementById('scrollToTop');
-            if (scrollToTopBtn) {
-                if (window.pageYOffset > 300) {
-                    scrollToTopBtn.style.display = 'block';
-                } else {
-                    scrollToTopBtn.style.display = 'none';
-                }
-            }
-        });
-        
-        // Scroll to top button
-        const scrollToTopBtn = document.getElementById('scrollToTop');
-        if (scrollToTopBtn) {
-            scrollToTopBtn.addEventListener('click', function() {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        }
-        
-        // Contact form handling
-        const contactForm = document.getElementById('contactForm');
-        if (contactForm) {
-            contactForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Show loading state
-                const submitBtn = this.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
-                submitBtn.disabled = true;
-                
-                // Simulate sending
-                setTimeout(() => {
-                    this.reset();
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                    showNotification('Thank you for your message! We will get back to you within 24 hours.', 'success');
-                }, 1500);
-            });
-        }
-        
-        // Theme toggle
-        const themeToggle = document.getElementById('themeToggle');
-        if (themeToggle) {
-            // Load saved theme
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.body.setAttribute('data-theme', savedTheme);
-            
-            themeToggle.addEventListener('click', function() {
-                const currentTheme = document.body.getAttribute('data-theme') || 'light';
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                document.body.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                showNotification(`Switched to ${newTheme} mode`, 'info');
-            });
-        }
-        
-        // Make functions globally available
-        window.showSection = showSection;
-        window.showNotification = showNotification;
-        window.scrollToSection = scrollToSection;
-        window.isRegistered = isRegistered;
-    </script>
+    <!-- Main JavaScript -->
+    <script src="js/app.js"></script>
 </body>
 </html>
