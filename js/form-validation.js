@@ -1,4 +1,4 @@
-// Enhanced Form Validation
+// Form validation with animations
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Form validation initialized")
 
@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return
   }
 
-  const inputs = registrationForm.querySelectorAll("input, textarea, select")
+  const inputs = registrationForm.querySelectorAll("input, textarea")
 
   // Add validation classes on blur
   inputs.forEach((input) => {
@@ -67,11 +67,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!consentCheckbox.checked) {
       isValid = false
       consentCheckbox.classList.add("is-invalid")
-      showFieldError(consentCheckbox.closest(".mb-4"), "You must consent to proceed with the assessment.")
+      showFieldError(consentCheckbox.closest(".mb-3"), "You must consent to proceed with the assessment.")
     } else {
       consentCheckbox.classList.remove("is-invalid")
       consentCheckbox.classList.add("is-valid")
-      clearFieldError(consentCheckbox.closest(".mb-4"))
+      clearFieldError(consentCheckbox.closest(".mb-3"))
     }
 
     if (isValid) {
@@ -99,9 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.isRegistered = true
 
         // Show success message
-        if (window.showNotification) {
-          window.showNotification("Registration completed successfully! Redirecting to tests...", "success")
-        }
+        alert("Registration completed successfully! Redirecting to tests...")
 
         // Reset button
         submitBtn.innerHTML = originalText
@@ -109,16 +107,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Redirect to tests
         setTimeout(() => {
-          if (window.showSection) {
-            window.showSection("tests")
-          }
+          window.location.href = "tests.html"
         }, 1500)
       }, 1000)
     } else {
       // Show error message
-      if (window.showNotification) {
-        window.showNotification("Please correct the errors in the form before submitting.", "error")
-      }
+      alert("Please correct the errors in the form before submitting.")
 
       // Scroll to first error
       const firstError = registrationForm.querySelector(".is-invalid")
@@ -228,11 +222,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (this.checked) {
         this.classList.remove("is-invalid")
         this.classList.add("is-valid")
-        clearFieldError(this.closest(".mb-4"))
+        clearFieldError(this.closest(".mb-3"))
       } else {
         this.classList.remove("is-valid")
         this.classList.add("is-invalid")
-        showFieldError(this.closest(".mb-4"), "You must consent to proceed with the assessment.")
+        showFieldError(this.closest(".mb-3"), "You must consent to proceed with the assessment.")
       }
     })
   }

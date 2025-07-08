@@ -1,20 +1,52 @@
-// Firebase Configuration and Database Functions
-console.log("Firebase config loaded")
+// Import the functions you need from Firebase SDK
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  doc,
+  getDoc,
+  updateDoc,
+  setDoc,
+  getDocs,
+  query,
+  where,
+  serverTimestamp,
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
 
-// Initialize Firebase (already done in HTML)
-const db = window.db
-const auth = window.auth
+// Firebase configuration with the provided details
+const firebaseConfig = {
+  apiKey: "AIzaSyAuwZCQy9f5iS8WxtWjOfOOSAZU1eEtvOs",
+  authDomain: "neurosketch-b1011.firebaseapp.com",
+  projectId: "neurosketch-b1011",
+  storageBucket: "neurosketch-b1011.firebasestorage.app",
+  messagingSenderId: "460372908007",
+  appId: "1:460372908007:web:fd4dd388b2f5633a108f42",
+  measurementId: "G-TEX9628980",
+}
 
-// Save results to Firebase
+// Initialize Firebase
+const app = initializeApp(firebaseConfig)
+const auth = getAuth(app)
+const db = getFirestore(app)
+
+// Firebase helper functions
+// Save results to Firestore
 async function saveResultsToFirebase(userData, testResults) {
   try {
-    // Generate unique document ID
-    const timestamp = Date.now().toString(36)
-    const randomStr = Math.random().toString(36).substring(2, 8)
-    const reportId = `NS-${timestamp}-${randomStr}`.toUpperCase()
+    // Create a timestamp
+    const timestamp = new Date().toISOString()
+    const serverTime = serverTimestamp()
 
-    // Prepare data for Firebase
-    const resultsData = {
+    // Combine user data and test results
+    const data = {
       // User information
       fullName: userData.fullName || "",
       email: userData.email || "",
@@ -24,42 +56,42 @@ async function saveResultsToFirebase(userData, testResults) {
       medicalSituation: userData.medicalSituation || "",
 
       // Test results
-      testResults: testResults,
+      testResults: {
+        spiral: testResults.spiral || { status: "Not Tested", healthy: 0, parkinsons: 0, rawScore: 0 },
+        tap: testResults.tap || { status: "Not Tested", healthy: 0, parkinsons: 0, rawScore: 0 },
+        reaction: testResults.reaction || { status: "Not Tested", healthy: 0, parkinsons: 0, rawScore: 0 },
+        voice: testResults.voice || { status: "Not Tested", healthy: 0, parkinsons: 0, rawScore: 0 },
+      },
 
       // Overall assessment
       overallHealthy: calculateOverallScore(testResults, "healthy"),
       overallParkinsons: calculateOverallScore(testResults, "parkinsons"),
 
       // Timestamps
-      timestamp: new Date().toISOString(),
-      reportId: reportId,
-
-      // Additional metadata
-      userAgent: navigator.userAgent,
-      screenResolution: `${screen.width}x${screen.height}`,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      timestamp: timestamp,
+      createdAt: serverTime,
+      reportId: generateReportId(),
     }
 
     // Save to Firestore
-    await db.collection("assessmentResults").doc(reportId).set(resultsData)
-
-    console.log("Results saved to Firebase with ID:", reportId)
-    return { success: true, id: reportId }
+    const docRef = await addDoc(collection(db, "testResults"), data)
+    console.log("Results saved with ID: ", docRef.id)
+    return { success: true, id: docRef.id }
   } catch (error) {
-    console.error("Error saving to Firebase:", error)
-    return { success: false, error: error.message }
+    console.error("Error saving results to Firebase:", error)
+    return { success: false, error }
   }
 }
 
-// Helper function to calculate overall score
+// Calculate overall score from test results
 function calculateOverallScore(testResults, scoreType) {
   let totalScore = 0
   let testsCompleted = 0
 
   // Check each test
   Object.values(testResults).forEach((test) => {
-    if (test.completed) {
-      totalScore += test.score
+    if (test.status !== "Not Tested") {
+      totalScore += test[scoreType]
       testsCompleted++
     }
   })
@@ -68,30 +100,64 @@ function calculateOverallScore(testResults, scoreType) {
   return testsCompleted > 0 ? Math.round(totalScore / testsCompleted) : 0
 }
 
-// Get user results from Firebase
-async function getUserResults(email) {
+// Generate a unique report ID
+function generateReportId() {
+  const timestamp = Date.now().toString(36)
+  const randomStr = Math.random().toString(36).substring(2, 8)
+  return `NS-${timestamp}-${randomStr}`.toUpperCase()
+}
+
+// Get results from Firestore by user email
+async function getResultsByEmail(email) {
   try {
-    const snapshot = await db
-      .collection("assessmentResults")
-      .where("email", "==", email)
-      .orderBy("timestamp", "desc")
-      .get()
+    const snapshot = await getDocs(query(collection(db, "testResults"), where("email", "==", email)))
 
     const results = []
     snapshot.forEach((doc) => {
-      results.push({
-        id: doc.id,
-        ...doc.data(),
-      })
+      results.push({ id: doc.id, ...doc.data() })
     })
 
-    return { success: true, results: results }
+    return results
   } catch (error) {
-    console.error("Error getting user results:", error)
-    return { success: false, error: error.message }
+    console.error("Error getting results:", error)
+    return []
   }
 }
 
-// Export functions
-window.saveResultsToFirebase = saveResultsToFirebase
-window.getUserResults = getUserResults
+// Get a specific test result by ID
+async function getResultById(resultId) {
+  try {
+    const docRef = doc(db, "testResults", resultId)
+    const docSnap = await getDoc(docRef)
+
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() }
+    } else {
+      console.log("No such document!")
+      return null
+    }
+  } catch (error) {
+    console.error("Error getting result:", error)
+    return null
+  }
+}
+
+// Export everything we need
+export {
+  app,
+  auth,
+  db,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+  collection,
+  addDoc,
+  doc,
+  getDoc,
+  updateDoc,
+  setDoc,
+  saveResultsToFirebase,
+  getResultsByEmail,
+  getResultById,
+}

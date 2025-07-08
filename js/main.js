@@ -62,12 +62,6 @@ function initializeNavigation() {
       showSection(targetSection)
     })
   })
-
-  // Handle navbar brand click
-  document.querySelector(".navbar-brand").addEventListener("click", (e) => {
-    e.preventDefault()
-    showSection("home")
-  })
 }
 
 // Show section function
@@ -524,7 +518,7 @@ function analyzeSpiralDrawing(path) {
   return Math.round(score)
 }
 
-// Tap Test Implementation - SLOWER VERSION
+// Tap Test Implementation
 function initializeTapTest() {
   console.log("Initializing tap test")
 
@@ -536,7 +530,7 @@ function initializeTapTest() {
   const container = document.getElementById("tapTestContainer")
   const dot = document.getElementById("tapDot")
   const countdown = document.getElementById("tapCountdown")
-  const scoreDisplay = document.getElementById("tapScore")
+  const scoreDisplay = document.getElementById("tapScoreValue")
 
   if (!container || !dot) {
     console.error("Tap test elements not found")
@@ -551,7 +545,7 @@ function initializeTapTest() {
     tapScore = 0
     tapCount = 0
 
-    if (scoreDisplay) scoreDisplay.textContent = "Score: 0/10"
+    if (scoreDisplay) scoreDisplay.textContent = "0/10"
 
     // Countdown
     let count = 3
@@ -584,7 +578,7 @@ function initializeTapTest() {
     tapCount++
 
     // Position dot randomly
-    const dotSize = 50
+    const dotSize = 60
     const maxX = container.offsetWidth - dotSize
     const maxY = container.offsetHeight - dotSize
 
@@ -595,12 +589,11 @@ function initializeTapTest() {
     dot.style.top = y + "px"
     dot.style.display = "block"
 
-    // SLOWER: Auto-hide after 800ms (increased from 500ms)
+    // Auto-hide after 500ms
     tapTimeout = setTimeout(() => {
       dot.style.display = "none"
-      // SLOWER: Longer delay between dots (600ms instead of 300ms)
-      setTimeout(showNextDot, 600)
-    }, 800)
+      setTimeout(showNextDot, 300)
+    }, 500)
   }
 
   // Dot click handler
@@ -611,10 +604,9 @@ function initializeTapTest() {
     tapScore++
     dot.style.display = "none"
 
-    if (scoreDisplay) scoreDisplay.textContent = `Score: ${tapScore}/10`
+    if (scoreDisplay) scoreDisplay.textContent = `${tapScore}/10`
 
-    // SLOWER: Longer delay after successful tap (600ms instead of 300ms)
-    setTimeout(showNextDot, 600)
+    setTimeout(showNextDot, 300)
   }
 
   function endTapTest() {
@@ -672,7 +664,7 @@ function initializeReactionTest() {
       return
     }
 
-    container.style.background = "#f8f9fc"
+    container.style.background = "#f8f9fa"
     if (countdown) countdown.style.display = "block"
     if (result) result.textContent = `Trial ${currentTrial + 1}/3 - Click when the screen turns green!`
 
@@ -843,10 +835,10 @@ function initializeVoiceTest() {
 
 // Update test status
 function updateTestStatus(testName, status) {
-  const statusElement = document.getElementById(`${testName}TestStatus`)
+  const statusElement = document.getElementById(`${testName}Status`)
   if (statusElement) {
-    statusElement.textContent = status === "completed" ? "Completed" : "Not Tested"
-    statusElement.className = `status-value ${status === "completed" ? "completed" : ""}`
+    statusElement.textContent = status === "completed" ? "Completed" : "Pending"
+    statusElement.className = `test-status ${status}`
   }
 }
 

@@ -1,38 +1,41 @@
 // Theme Toggle Functionality
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("Theme toggle initialized")
+
   const themeToggle = document.getElementById("themeToggle")
-  const body = document.body
+  const themeIcon = themeToggle?.querySelector("i")
 
   // Load saved theme or default to light
   const savedTheme = localStorage.getItem("theme") || "light"
-  setTheme(savedTheme)
+  applyTheme(savedTheme)
 
-  // Theme toggle click handler
-  themeToggle.addEventListener("click", () => {
-    const currentTheme = body.getAttribute("data-theme") || "light"
-    const newTheme = currentTheme === "light" ? "dark" : "light"
-    setTheme(newTheme)
-    localStorage.setItem("theme", newTheme)
+  // Theme toggle event listener
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const currentTheme = document.documentElement.getAttribute("data-theme") || "light"
+      const newTheme = currentTheme === "light" ? "dark" : "light"
 
-    // Show notification
-    if (window.showNotification) {
-      window.showNotification(`Switched to ${newTheme} mode`, "info")
+      applyTheme(newTheme)
+      localStorage.setItem("theme", newTheme)
+
+      // Show notification
+      if (window.showNotification) {
+        window.showNotification(`Switched to ${newTheme} mode`, "info")
+      }
+    })
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme)
+
+    if (themeIcon) {
+      if (theme === "dark") {
+        themeIcon.className = "fas fa-sun"
+      } else {
+        themeIcon.className = "fas fa-moon"
+      }
     }
-  })
 
-  function setTheme(theme) {
-    body.setAttribute("data-theme", theme)
-
-    // Update toggle button icons
-    const sunIcon = themeToggle.querySelector(".fa-sun")
-    const moonIcon = themeToggle.querySelector(".fa-moon")
-
-    if (theme === "dark") {
-      sunIcon.style.display = "inline-block"
-      moonIcon.style.display = "none"
-    } else {
-      sunIcon.style.display = "none"
-      moonIcon.style.display = "inline-block"
-    }
+    console.log(`Applied ${theme} theme`)
   }
 })
